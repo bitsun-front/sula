@@ -4,7 +4,7 @@ import { readFileSync, writeFileSync } from 'fs';
 
 export default function (api: IApi) {
   api.describe({
-    key: 'sula',
+    key: 'bitsunsula',
     config: {
       schema(joi) {
         return joi.object({
@@ -20,7 +20,7 @@ export default function (api: IApi) {
   });
 
   api.onGenerateFiles(() => {
-    const { locale = {} } = api.config.sula;
+    const { locale = {} } = api.config.bitsunsula;
     const configProviderTpl = readFileSync(
       join(__dirname, '../template/configProvider.js'),
       'utf-8',
@@ -37,7 +37,7 @@ export default function (api: IApi) {
 
   api.addEntryCodeAhead(() =>
     `
-import { registerFieldPlugins, registerRenderPlugins, registerActionPlugins, registerFilterPlugins } from 'sula';
+import { registerFieldPlugins, registerRenderPlugins, registerActionPlugins, registerFilterPlugins } from '@bistun/sula';
 
 registerFieldPlugins();
 registerRenderPlugins();

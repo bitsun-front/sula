@@ -2,7 +2,7 @@ import { join } from 'path';
 
 export default {
   plugins: [join(__dirname, './packages/umi-plugin-sula/src')],
-  sula: {},
+  bitsunsula: {},
   outputPath: '.doc',
   extraBabelPlugins: [
     [

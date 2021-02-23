@@ -11,7 +11,8 @@
     "test:unit": "umi-test 'test.(j|t)s' --coverage",
     "test:watch": "umi-test 'test.(j|t)s' --coverage --watch",
     "predeploy": "npm run build",
-    "deploy": "now deploy ./dist -n sula --prod"
+    "deploy": "now deploy ./dist -n sula --prod",
+    "publish": "npm run compile && lerna publish -m \"chore: publish\""
   },
   "repository": {
     "type": "git",
