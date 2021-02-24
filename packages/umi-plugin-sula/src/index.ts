@@ -1,10 +1,17 @@
+/*
+ * @Description: 
+ * @Author: rodchen
+ * @Date: 2021-02-23 11:19:45
+ * @LastEditTime: 2021-02-24 10:56:49
+ * @LastEditors: rodchen
+ */
 import { join } from 'path';
 import { IApi } from 'umi';
 import { readFileSync, writeFileSync } from 'fs';
 
 export default function (api: IApi) {
   api.describe({
-    key: 'bitsunsula',
+    key: 'bssula',
     config: {
       schema(joi) {
         return joi.object({
@@ -20,7 +27,7 @@ export default function (api: IApi) {
   });
 
   api.onGenerateFiles(() => {
-    const { locale = {} } = api.config.bitsunsula;
+    const { locale = {} } = api.config.bssula;
     const configProviderTpl = readFileSync(
       join(__dirname, '../template/configProvider.js'),
       'utf-8',
@@ -37,8 +44,8 @@ export default function (api: IApi) {
 
   api.addEntryCodeAhead(() =>
     `
-import { registerFieldPlugins, registerRenderPlugins, registerActionPlugins, registerFilterPlugins } from 'bistun-sula';
-
+import { registerFieldPlugins, registerRenderPlugins, registerActionPlugins, registerFilterPlugins } from 'bssula';
+debugger
 registerFieldPlugins();
 registerRenderPlugins();
 registerActionPlugins();

@@ -105,16 +105,18 @@ export default class QueryTable extends React.Component<Props> {
     this.remoteDataSource = assign(remoteDataSource, { init: false });
 
     return (
-      <Table
-        {...tableProps}
-        rowSelection={rowSelection}
-        columns={columns}
-        actionsRender={actionsRender}
-        leftActionsRender={rowSelection ? ['rowselection'] : leftActionsRender}
-        remoteDataSource={this.remoteDataSource}
-        rowKey={rowKey}
-        ref={this.tableRef}
-      />
+        <div style={{padding: '0 16px', background: '#ffffff'}}>
+          <Table
+            {...tableProps}
+            rowSelection={rowSelection}
+            columns={columns}
+            actionsRender={actionsRender}
+            leftActionsRender={rowSelection ? ['rowselection'] : leftActionsRender}
+            remoteDataSource={this.remoteDataSource}
+            rowKey={rowKey}
+            ref={this.tableRef}
+          />
+        </div>
     );
   };
 
@@ -122,6 +124,7 @@ export default class QueryTable extends React.Component<Props> {
     return (
       <React.Fragment>
         {this.props.fields && this.props.fields.length ? this.renderForm() : null}
+        <br />
         {this.renderTable()}
       </React.Fragment>
     );

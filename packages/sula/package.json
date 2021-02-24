@@ -1,10 +1,10 @@
 {
-  "name": "bistun-sula",
-  "version": "1.0.3",
+  "name": "bssula",
+  "version": "0.0.9",
   "module": "./es/index.js",
   "main": "./es/index.js",
   "types": "./es/index.d.ts",
-  "description": "bistun-sula",
+  "description": "bssula",
   "peerDependencies": {
     "@ant-design/icons": "^4.0.0",
     "antd": "^4.0.0",

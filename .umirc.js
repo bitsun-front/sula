@@ -2,7 +2,7 @@ import { join } from 'path';
 
 export default {
   plugins: [join(__dirname, './packages/umi-plugin-sula/src')],
-  bitsunsula: {},
+  bssula: {},
   outputPath: '.doc',
   extraBabelPlugins: [
     [
@@ -16,6 +16,7 @@ export default {
   ],
   alias: {
     '@sula/charts': join(__dirname, './packages/sula-charts/src'),
+    'sula': join(__dirname, './packages/sula/src'),
   },
   title: 'Sula',
   exportStatic: {},

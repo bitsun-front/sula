@@ -224,10 +224,12 @@ const RefTable: React.FunctionComponent<TableProps> = (props, ref) => {
   };
 
   tableProps.columns = getColumns(tableProps.columns as ColumnProps[]);
-
+  debugger
   return (
     <React.Fragment>
-      <ATable {...tableProps} />
+      <div style={{paddingTop: tableProps.title ? 0 : '16px', paddingBottom: tableProps?.pagination ? 0 : '16px'}}>
+        <ATable {...tableProps} />
+      </div>
       <ModalForm type="drawer" ref={drawerFormRef} />
       <ModalForm ref={modalFormRef} />
     </React.Fragment>

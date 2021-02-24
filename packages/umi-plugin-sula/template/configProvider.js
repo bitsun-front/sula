@@ -1,5 +1,5 @@
 import React from 'react';
-import { ConfigProvider } from 'bistun-sula';
+import { ConfigProvider } from 'bssula';
 import { history } from 'umi';
 
 const baseSeparator = '{{{baseSeparator}}}' || '-';
@@ -11,7 +11,7 @@ function getLocale() {
 
   let locale;
   try {
-    locale = require(`bistun-sula/es/localereceiver/${langFile}`);
+    locale = require(`bssula/es/localereceiver/${langFile}`);
     locale = locale.default || locale;
   } catch (error) {}
   return locale;
