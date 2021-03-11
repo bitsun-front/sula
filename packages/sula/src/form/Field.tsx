@@ -6,7 +6,7 @@ import assign from 'lodash/assign';
 import { FormItemProps } from 'antd/lib/form/FormItem';
 import { Rule } from 'antd/lib/form';
 import { FieldPlugin, ValidatorPlugin, RenderPlugin } from '../types/plugin';
-import { FieldNamePath, FieldNameList } from '../types/form';
+import { FieldNamePath, FieldNameList, FieldSource } from '../types/form';
 import { RequestConfig } from '../types/request';
 import { Dependencies } from '../types/dependency';
 import { toArray, assignWithDefined } from '../_util/common';
@@ -31,7 +31,7 @@ export interface FieldProps
   collect?: boolean;
   initialDisabled?: boolean;
   initialVisible?: boolean;
-  initialSource?: any;
+  initialSource?: FieldSource;
   initialValue?: any;
   remoteSource?: RequestConfig;
   dependency?: Dependencies;
@@ -39,7 +39,7 @@ export interface FieldProps
   itemLayout?: ItemLayout;
   layout?: Layout;
   rules?: Array<
-    Omit<Rule, 'validator'> & {
+    Rule & {
       validator?: ValidatorPlugin;
     }
   >;
@@ -105,7 +105,10 @@ export default class Field extends React.Component<FieldProps> {
   private initFieldSource = (ctx) => {
     if (this.props.remoteSource && this.props.remoteSource.init !== false) {
       triggerActionPlugin(ctx, this.props.remoteSource).then((data: any) => {
-        ctx.form.setFieldSource(this.getName(), data);
+        /**
+         * 如果有fieldKey，则使用fieldKey注册
+         */
+        ctx.form.setFieldSource(this.getName(true), data);
       });
     }
   };
@@ -297,7 +300,7 @@ export default class Field extends React.Component<FieldProps> {
     }
 
     const { getCtx } = formContext.getInternalHooks(HOOK_MARK);
-    const ctx = getCtx({ disabled: this.disabled, source: this.source });
+    const ctx = getCtx({ disabled: this.disabled, source: this.source, name: this.props.name });
 
     const extraConfig = {
       layout,

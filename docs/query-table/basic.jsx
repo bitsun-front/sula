@@ -11,19 +11,32 @@ export default () => {
           results: params.pageSize,
           ...params,
         };
-      },
-      converter({ data }) {
-        return {
-          list: data.results.map((item, index) => {
-            return {
-              ...item,
-              id: `${index}`,
-              name: `${item.name.first} ${item.name.last}`,
-            };
-          }),
-          total: 100,
-        };
-      },
+      }),
+      total: 100,
+    };
+  },
+};
+
+export const columns = [
+  {
+    title: '序号',
+    key: 'index',
+  },
+  {
+    title: '国家',
+    key: 'nat',
+  },
+  {
+    title: '名字',
+    key: 'name',
+    ellipsis: true,
+    width: 200,
+  },
+  {
+    title: '年龄',
+    key: 'age',
+    render: (ctx) => {
+      return <span>{ctx.record.registered.age}</span>;
     },
     layout: 'vertical',
     fields: [

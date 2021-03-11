@@ -1,7 +1,7 @@
 import React from 'react';
-import { QueryTable } from 'sula';
+import { QueryTable, QueryTableProps } from 'sula';
 
-const queryFields = Array(10)
+const queryFields: QueryTableProps['fields'] = Array(10)
   .fill(0)
   .map((_, index) => {
     return {
@@ -11,32 +11,34 @@ const queryFields = Array(10)
     };
   });
 
-export const remoteDataSource = {
+export const remoteDataSource: QueryTableProps['remoteDataSource'] = {
   url: 'https://randomuser.me/api',
   method: 'GET',
   convertParams({ params }) {
     return {
-      results: 20,
+      results: params.pageSize,
       ...params,
     };
   },
   converter({ data }) {
-    return data.results.map((item, index) => {
-      return {
-        ...item,
-        id: `${index}`,
-        name: `${item.name.first} ${item.name.last}`,
-        index,
-      };
-    });
+    return {
+      list: data.results.map((item: any, index: number) => {
+        return {
+          ...item,
+          id: `${index}`,
+          name: `${item.name.first} ${item.name.last}`,
+          index,
+        };
+      }),
+      total: 100,
+    };
   },
 };
 
-export const columns = [
+export const columns: QueryTableProps['columns'] = [
   {
     title: '序号',
     key: 'index',
-    sorter: true,
   },
   {
     title: '国家',
@@ -45,7 +47,6 @@ export const columns = [
   {
     title: '名字',
     key: 'name',
-    copyable: true,
     ellipsis: true,
     width: 200,
   },
@@ -83,7 +84,7 @@ export const columns = [
   },
 ];
 
-const actions = [
+const actions: QueryTableProps['actionsRender'] = [
   {
     type: 'button',
     disabled: (ctx) => {
@@ -134,17 +135,13 @@ export default class BasicDemo extends React.Component {
     return (
       <div style={{ background: 'rgb(241, 242, 246)', padding: 16, marginTop: 16 }}>
         <QueryTable
-          layout="horizontal"
+          layout="vertical"
           columns={columns}
           remoteDataSource={remoteDataSource}
           fields={queryFields}
           rowKey="id"
           actionsRender={actions}
-          tableProps={{
-            initialPaging: {
-              pagination: false,
-            },
-          }}
+          rowSelection={{}}
         />
       </div>
     );
