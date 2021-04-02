@@ -19,10 +19,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/umijs/sula.git"
+    "url": "git+https://github.com/bitsun-front/sula.git"
   },
   "bugs": {
-    "url": "https://github.com/umijs/sula/issues"
+    "url": "https://github.com/bitsun-front/sula/issues"
   },
   "devDependencies": {
     "@ant-design/icons": "^4.1.0",
