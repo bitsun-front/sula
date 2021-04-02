@@ -3,36 +3,51 @@ import DownOutlined from '@ant-design/icons/DownOutlined';
 import cx from 'classnames';
 import { getItemSpan } from '../form/utils/layoutUtil';
 import FieldGroupContext from '../form/FieldGroupContext';
-import { FieldGroup, Field, FormAction, FieldProps, FormInstance } from '../form';
+import { FieldGroup, Field, FormAction, FieldProps, FormInstance, FormProps } from '../form';
 import './style/query-fields.less';
 import LocaleReceiver from '../localereceiver';
-import { ItemLayout, Layout } from '../form/FieldGroup';
+import { toArray } from '../_util/common';
 
-interface QueryFieldsProps {
+export interface QueryFieldsProps {
   fields: FieldProps[];
-  visibleFieldsCount: number;
-  itemLayout: ItemLayout;
-  layout: Layout;
+  visibleFieldsCount?: number | true;
+  hasBottomBorder?: boolean;
+  actionsRender: FormProps['actionsRender'],
+  /** @private */
   getFormInstance: () => FormInstance;
-  hasActionsRender: boolean;
 }
 
 export default class QueryFields extends React.Component<QueryFieldsProps> {
   static contextType = FieldGroupContext;
 
+  static defaultProps = {
+    visibleFieldsCount: 5,
+    fields: [],
+  };
+
   state = {
     collapsed: true,
   };
 
-  renderFields = () => {
-    const { fields, visibleFieldsCount, itemLayout } = this.props;
+  getVisibleFieldsCount = (): number => {
+    if (this.props.visibleFieldsCount === true) {
+      return this.props.fields.length;
+    }
 
-    const { matchedPoint } = this.context;
+    return this.props.visibleFieldsCount!;
+  };
+
+  renderFields = () => {
+    const { fields } = this.props;
+
+    const { matchedPoint, itemLayout } = this.context;
 
     const fieldsNameList = [];
 
     let allSpan = 0;
     let visibleAllSpan = 0;
+
+    const visibleFieldsCount = this.getVisibleFieldsCount();
 
     const finalFields = fields.map((field, index) => {
       fieldsNameList.push(field.name);
@@ -51,12 +66,15 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
   };
 
   hasMoreQueryFields() {
-    return this.props.visibleFieldsCount < this.props.fields.length;
+    const visibleFieldsCount = this.getVisibleFieldsCount();
+    return visibleFieldsCount < this.props.fields.length;
   }
 
   updateVisibleFields() {
-    const { getFormInstance, fields, visibleFieldsCount } = this.props;
+    const { getFormInstance, fields } = this.props;
     const formInstance = getFormInstance();
+
+    const visibleFieldsCount = this.getVisibleFieldsCount();
 
     fields.forEach((field, index) => {
       if (index >= visibleFieldsCount) {
@@ -66,40 +84,10 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
   }
 
   renderFormAction = (locale) => {
-    const { layout } = this.props;
+    const { layout } = this.context;
     const { collapsed } = this.state;
     const actionsRender = [
-      {
-        type: 'button',
-        props: {
-          type: 'primary',
-          children: locale.queryText,
-        },
-        action: [
-          { type: 'validateQueryFields', resultPropName: '$queryFieldsValue' },
-          {
-            type: 'refreshTable',
-            args: [{ current: 1 }, '#{result}'],
-          },
-        ],
-      },
-      {
-        type: 'button',
-        props: {
-          children: locale.resetText,
-        },
-        action: [
-          'resetFields',
-          {
-            type: 'resetTable',
-            args: [false],
-          },
-          {
-            type: 'refreshTable',
-            args: [{ current: 1 }, '#{form.getFieldsValue(true)}'],
-          },
-        ],
-      },
+      ...(toArray(this.props.actionsRender)),
       ...(this.hasMoreQueryFields()
         ? [
             {
@@ -132,17 +120,17 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
     const finalSpan = this.state.collapsed ? this.collapseSpan : this.expandSpan;
     const layoutProps = {} as any;
 
-    if(finalSpan === 24) {
+    if (finalSpan === 24) {
       layoutProps.actionsPosition = 'right';
       layoutProps.style = {
         marginBottom: 24,
-      }
+      };
     } else {
       layoutProps.style = {
         display: 'flex',
         justifyContent: 'flex-end',
         ...(layout === 'vertical' ? { marginTop: 30 } : {}),
-      }
+      };
     }
 
     return (
@@ -157,7 +145,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
   };
 
   render() {
-    const { hasActionsRender } = this.props;
+    const { hasBottomBorder } = this.props;
     return (
       <LocaleReceiver>
         {(locale) => {
@@ -167,7 +155,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                 type: 'div',
                 props: {
                   className: cx(`sula-template-query-table-fields-wrapper`, {
-                    [`sula-template-query-table-fields-divider`]: hasActionsRender,
+                    [`sula-template-query-table-fields-divider`]: hasBottomBorder,
                   }),
                 },
               }}

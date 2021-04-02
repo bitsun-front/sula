@@ -71,13 +71,40 @@ export const columns = [
         title: '邮箱',
       },
     ],
-    rowKey: 'id',
-  };
-  return (
-    <div
-      style={{ background: 'rgb(241, 242, 246)', padding: 16, marginTop: 16 }}
-    >
-      <QueryTable {...config} />
-    </div>
-  );
-};
+  },
+];
+
+export default class BasicDemo extends React.Component {
+  state = {
+  }
+
+  componentDidMount() {}
+
+  changevisibleFieldsCount = (v) => {
+    this.setState({visibleFieldsCount: v});
+  }
+
+  render() {
+    const {visibleFieldsCount } = this.state;
+    return (
+      <div>
+        <button onClick={() => this.changevisibleFieldsCount(4)}>4</button>
+        <button onClick={() => this.changevisibleFieldsCount(3)}>3</button>
+        <button onClick={() => this.changevisibleFieldsCount(true)}>无</button>
+        <div style={{ background: 'rgb(241, 242, 246)', padding: 16, marginTop: 16 }}>
+          <QueryTable
+            key={visibleFieldsCount || 'all'}
+            visibleFieldsCount={visibleFieldsCount}
+            layout="vertical"
+            columns={columns}
+            remoteDataSource={remoteDataSource}
+            fields={queryFields}
+            rowKey="id"
+            actionsRender={actions}
+            rowSelection={{}}
+          />
+        </div>
+      </div>
+    );
+  }
+}

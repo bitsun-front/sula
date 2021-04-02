@@ -45,7 +45,6 @@ export default function (api: IApi) {
   api.addEntryCodeAhead(() =>
     `
 import { registerFieldPlugins, registerRenderPlugins, registerActionPlugins, registerFilterPlugins } from 'bssula';
-debugger
 registerFieldPlugins();
 registerRenderPlugins();
 registerActionPlugins();

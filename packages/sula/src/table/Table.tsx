@@ -226,7 +226,6 @@ const RefTable: React.FunctionComponent<TableProps> = (props, ref) => {
   };
 
   tableProps.columns = getColumns(tableProps.columns as ColumnProps[]);
-  debugger
   return (
     <React.Fragment>
       <div style={{paddingTop: tableProps.title ? 0 : '16px', paddingBottom: tableProps?.pagination ? 0 : '16px'}}>

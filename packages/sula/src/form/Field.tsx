@@ -71,14 +71,21 @@ export default class Field extends React.Component<FieldProps> {
   private cancelRegisterField: () => void | null = null;
 
   componentDidMount() {
-    const { registerField, getFormDependency, getCtx } = this.context.formContext.getInternalHooks(
-      HOOK_MARK,
-    );
+    if (!this.props.name) {
+      return;
+    }
+    const {
+      registerField,
+      getFormDependency,
+      getCtx,
+      linkFieldNameAndFieldKey,
+    } = this.context.formContext.getInternalHooks(HOOK_MARK);
 
     this.initFieldSource(getCtx());
 
     const { parentGroupName } = this.context;
     this.cancelRegisterField = registerField(parentGroupName, this);
+    linkFieldNameAndFieldKey(this.getName(true), this.getName());
 
     if (!this.props.dependency) {
       return;
@@ -90,7 +97,40 @@ export default class Field extends React.Component<FieldProps> {
     formDependency.parseFormDependency(this.props, this.getFieldNameList);
   }
 
+  componentDidUpdate(prevProps: FieldProps) {
+    if (!this.props.name) {
+      return;
+    }
+    if (this.props.fieldKey && this.props.fieldKey !== prevProps.fieldKey) {
+      const {
+        linkFieldNameAndFieldKey,
+        unlinkFieldNameAndFieldKey,
+      } = this.context.formContext.getInternalHooks(HOOK_MARK);
+
+      const oldFieldName = this.getFieldNameList(prevProps.name!);
+
+      // 动态添加
+      unlinkFieldNameAndFieldKey(oldFieldName);
+      linkFieldNameAndFieldKey(this.getName(true), this.getName());
+    }
+  }
+
   componentWillUnmount() {
+    if (!this.props.name) {
+      return;
+    }
+    const {
+      getFormDependency,
+      unlinkFieldNameAndFieldKey,
+    } = this.context.formContext.getInternalHooks(HOOK_MARK);
+    if (this.props.dependency) {
+      const formDependency: FormDependency = getFormDependency();
+      formDependency.removeDependency(this.getName());
+    }
+
+    // 动态删除
+    unlinkFieldNameAndFieldKey(this.getName(true));
+
     this.cancelRegister();
     this.destroy = true;
   }
@@ -108,7 +148,7 @@ export default class Field extends React.Component<FieldProps> {
         /**
          * 如果有fieldKey，则使用fieldKey注册
          */
-        ctx.form.setFieldSource(this.getName(true), data);
+        ctx.form.setFieldSource(this.getName(), data);
       });
     }
   };
@@ -126,9 +166,12 @@ export default class Field extends React.Component<FieldProps> {
     return toArray(name);
   };
 
-  public getName = (needFieldKey?: boolean): FieldNameList | undefined => {
+  public getName = (needFieldNameList?: boolean): FieldNameList | undefined => {
+    /** fieldKey 只在动态增减使用，此时fieldKey是确定的，name是变化的 */
     const { name, fieldKey } = this.props;
-    const finalName = (needFieldKey && !isUndefined(fieldKey) ? fieldKey : name) as FieldNamePath;
+    const finalName = (!isUndefined(fieldKey) && !needFieldNameList
+      ? fieldKey
+      : name) as FieldNamePath;
     if (isUndefined(finalName)) {
       return;
     }
@@ -203,7 +246,7 @@ export default class Field extends React.Component<FieldProps> {
   private renderField(ctx, fieldConfig: FieldPlugin, extraConf) {
     const { itemLayout, visible, childrenContainer, formItemProps, isList } = extraConf;
 
-    const { children, valuePropName = 'value' } = formItemProps;
+    const { children, valuePropName = 'value', noStyle, } = formItemProps;
 
     /** 如果是 isList 可能没有 itemLayout */
     const { wrapperCol, labelCol } = itemLayout;
@@ -237,7 +280,7 @@ export default class Field extends React.Component<FieldProps> {
       </FormItem>
     );
 
-    if (!isList && (needWrapCols(itemLayout.span) || itemLayout.offset)) {
+    if (noStyle !== true && !isList && (needWrapCols(itemLayout.span) || itemLayout.offset)) {
       return (
         <Col
           style={{ display: visible === false ? 'none' : '' }}
@@ -248,9 +291,10 @@ export default class Field extends React.Component<FieldProps> {
         </Col>
       );
     } else {
+      const display = formItemProps.style ? formItemProps.style.display : '';
       return React.cloneElement(fieldItemElem, {
         style: assign({}, fieldItemElem.props.style, {
-          display: visible === false ? 'none' : '',
+          display: visible === false ? 'none' : display,
         }),
       });
     }
@@ -260,8 +304,8 @@ export default class Field extends React.Component<FieldProps> {
     const {
       field: fieldProps,
       initialSource,
-      initialVisible,
-      initialDisabled,
+      initialVisible = true,
+      initialDisabled = false,
       collect,
       remoteSource,
       itemLayout, // 无cols
@@ -315,7 +359,15 @@ export default class Field extends React.Component<FieldProps> {
 
     const fieldNode = this.renderField(ctx, fieldProps, extraConfig);
 
-    return fieldNode;
+    const subFormContext = {
+      formContext,
+      parentGroupName,
+      layout,
+    };
+
+    return (
+      <FieldGroupContext.Provider value={subFormContext}>{fieldNode}</FieldGroupContext.Provider>
+    );
   }
 }
 
