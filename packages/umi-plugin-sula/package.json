@@ -4,7 +4,7 @@
   "main": "lib/index.js",
   "peerDependencies": {
     "@umijs/plugin-locale": "^0.10.8",
-    "bssula": "^1.0.5",
+    "bssula": "^1.0.6",
     "umi": "^3.0.0"
   },
   "devDependencies": {
