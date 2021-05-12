@@ -200,6 +200,8 @@ class ContextStore {
 
         getFieldKeyByFieldName: this.getFieldKeyByFieldName,
         getFieldNameByFieldKey: this.getFieldNameByFieldKey,
+        getPrevFieldNameByFieldKey: this.getPrevFieldNameByFieldKey,
+        isNeverUpdate: this.isNeverUpdate,
 
         setAsyncCascade: this.setAsyncCascade,
         getAsyncCascade: this.getAsyncCascade,
@@ -211,7 +213,7 @@ class ContextStore {
   /** dep start */
   // 值关联的时候用fieldName找fieldKey再找dep
   private getFieldKeyByFieldName = (fieldNameList: FieldNameList): FieldNameList => {
-    return this.fieldNameAndFieldKeyMap.get(fieldNameList)!;
+    return this.fieldNameAndFieldKeyMap.getByValue(fieldNameList)!;
   };
 
   private getFieldValueByFieldKey = (fieldNameList: FieldNameList): any => {
@@ -226,14 +228,21 @@ class ContextStore {
     return this.getField(fieldNameKey).getName(true)!;
   };
 
+  private getPrevFieldNameByFieldKey = (fieldNameKey: FieldNameList): FieldNameList => {
+    return this.getField(fieldNameKey).getPrevName()!;
+  };
+
+  private isNeverUpdate = (fieldNameKey: FieldNameList): boolean => {
+    return this.getField(fieldNameKey).mountedAndNeverUpdate;
+  };
 
   private setAsyncCascade = (needAsyncCascade: boolean) => {
     this.needAsyncCascade = needAsyncCascade;
-  }
+  };
 
   private getAsyncCascade = () => {
     return this.needAsyncCascade;
-  }
+  };
 
   /** dep end */
 
@@ -255,13 +264,13 @@ class ContextStore {
     return finalCtx;
   };
 
-  private linkFieldNameAndFieldKey = (newFieldName: FieldNameList, newFieldKey: FieldNameList) => {
-    this.fieldNameAndFieldKeyMap.set(newFieldName, newFieldKey);
-  }
+  private linkFieldNameAndFieldKey = (newFieldKey: FieldNameList, newFieldName: FieldNameList) => {
+    this.fieldNameAndFieldKeyMap.set(newFieldKey, newFieldName);
+  };
 
-  private unlinkFieldNameAndFieldKey = (oldFieldName: FieldNameList) => {
-    this.fieldNameAndFieldKeyMap.delete(oldFieldName);
-  }
+  private unlinkFieldNameAndFieldKey = (oldFieldKey: FieldNameList) => {
+    this.fieldNameAndFieldKeyMap.delete(oldFieldKey);
+  };
 
   /**
    * fieldNameMap: 以 fieldNameList 保存 field 或 支持依赖的 fieldGroup 实例
@@ -353,7 +362,9 @@ class ContextStore {
     }
 
     finalStore.forEach(({ name }) => {
-      const field = this.getField(name);
+      // fieldName -> fieldKey
+      const fieldKey = this.getFieldKeyByFieldName(name);
+      const field = this.getField(fieldKey);
       /** 动态表单删掉前面的field为空，应该不需要加了，下个版本验证下 */
       if (field) {
         field.reRender();

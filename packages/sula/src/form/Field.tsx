@@ -21,6 +21,7 @@ import { Form as AForm, Col } from 'antd';
 import { needWrapCols } from './utils/layoutUtil';
 import FormDependency from './dependency';
 import { ItemLayout, Layout } from './FieldGroup';
+import { matchNameList } from '../_util/NameListMap';
 
 const FormItem = AForm.Item;
 
@@ -70,7 +71,13 @@ export default class Field extends React.Component<FieldProps> {
 
   private cancelRegisterField: () => void | null = null;
 
+  private prevName: FieldNamePath;
+
+  public mountedAndNeverUpdate: boolean = false;
+
   componentDidMount() {
+    this.mountedAndNeverUpdate = true;
+
     if (!this.props.name) {
       return;
     }
@@ -85,7 +92,7 @@ export default class Field extends React.Component<FieldProps> {
 
     const { parentGroupName } = this.context;
     this.cancelRegisterField = registerField(parentGroupName, this);
-    linkFieldNameAndFieldKey(this.getName(true), this.getName());
+    linkFieldNameAndFieldKey(this.getName(), this.getName(true));
 
     if (!this.props.dependency) {
       return;
@@ -98,20 +105,24 @@ export default class Field extends React.Component<FieldProps> {
   }
 
   componentDidUpdate(prevProps: FieldProps) {
+    this.mountedAndNeverUpdate = false;
     if (!this.props.name) {
       return;
     }
-    if (this.props.fieldKey && this.props.fieldKey !== prevProps.fieldKey) {
+
+    /**
+     * fieldKey 代表是动态表单项，如果更新前后两次name不一样，说明只是在values的位置上发生改变（上面增加了，或者删除了）
+     */
+    if (this.props.fieldKey && !matchNameList(toArray(this.props.name), toArray(prevProps.name))) {
+      this.prevName = prevProps.name!;
       const {
         linkFieldNameAndFieldKey,
         unlinkFieldNameAndFieldKey,
       } = this.context.formContext.getInternalHooks(HOOK_MARK);
 
-      const oldFieldName = this.getFieldNameList(prevProps.name!);
-
       // 动态添加
-      unlinkFieldNameAndFieldKey(oldFieldName);
-      linkFieldNameAndFieldKey(this.getName(true), this.getName());
+      unlinkFieldNameAndFieldKey(this.getName());
+      linkFieldNameAndFieldKey(this.getName(), this.getName(true));
     }
   }
 
@@ -129,7 +140,7 @@ export default class Field extends React.Component<FieldProps> {
     }
 
     // 动态删除
-    unlinkFieldNameAndFieldKey(this.getName(true));
+    unlinkFieldNameAndFieldKey(this.getName());
 
     this.cancelRegister();
     this.destroy = true;
@@ -179,6 +190,10 @@ export default class Field extends React.Component<FieldProps> {
     return this.getFieldNameList(finalName);
   };
 
+  public getPrevName = () => {
+    return this.prevName ? this.getFieldNameList(this.prevName) : this.getName(true);
+  };
+
   public getSource() {
     return this.source;
   }
@@ -187,20 +202,20 @@ export default class Field extends React.Component<FieldProps> {
     return this.disabled;
   }
 
-  public setSource(source: any) {
+  public setSource = (source: any) => {
     this.source = source;
     this.reRender();
-  }
+  };
 
-  public setVisible(visible: boolean) {
+  public setVisible = (visible: boolean) => {
     this.visible = visible;
     this.reRender();
-  }
+  };
 
-  public setDisabled(disabled: boolean) {
+  public setDisabled = (disabled: boolean) => {
     this.disabled = disabled;
     this.reRender();
-  }
+  };
 
   public getVisible() {
     return this.visible;
@@ -246,7 +261,7 @@ export default class Field extends React.Component<FieldProps> {
   private renderField(ctx, fieldConfig: FieldPlugin, extraConf) {
     const { itemLayout, visible, childrenContainer, formItemProps, isList } = extraConf;
 
-    const { children, valuePropName = 'value', noStyle, } = formItemProps;
+    const { children, valuePropName = 'value', noStyle } = formItemProps;
 
     /** 如果是 isList 可能没有 itemLayout */
     const { wrapperCol, labelCol } = itemLayout;

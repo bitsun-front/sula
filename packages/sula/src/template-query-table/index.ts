@@ -1,4 +1,5 @@
-import { default as QueryTable, QueryTableProps } from './QueryTable';
-import { default as QueryForm, QueryFormProps } from './QueryForm';
+export type { QueryTableProps } from './QueryTable';
+export type { QueryFormProps } from './QueryForm';
 
-export { QueryTable, QueryForm, QueryTableProps, QueryFormProps };
+export { default as QueryTable } from './QueryTable';
+export { default as QueryForm } from './QueryForm';
