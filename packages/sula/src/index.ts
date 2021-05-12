@@ -1,8 +1,8 @@
 /*
  * @Author: your name
  * @Date: 2021-05-12 11:28:17
- * @LastEditTime: 2021-05-12 15:09:08
- * @LastEditors: your name
+ * @LastEditTime: 2021-05-12 15:38:00
+ * @LastEditors: Please set LastEditors
  * @Description: In User Settings Edit
  * @FilePath: \sula\packages\sula\src\index.ts
  */
@@ -23,5 +23,6 @@ export * from './action-plugin';
 export * from './table/filter-plugin';
 export * from './plugin';
 export * from './convertParamsType-plugin';
+export * from './converter-plugin';
 
 export { ConfigProvider, ModalForm, LocaleReceiver };
