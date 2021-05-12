@@ -1,20 +1,18 @@
+/* eslint-disable import/export */
+/* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
 import { QueryTable } from 'bssula';
 
-export default () => {
-  const config = {
-    remoteDataSource: {
-      url: 'https://randomuser.me/api',
-      method: 'GET',
-      convertParams({ params }) {
-        return {
-          results: params.pageSize,
-          ...params,
-        };
-      }),
-      total: 100,
+export const remoteDataSource = {
+  url: 'https://randomuser.me/api',
+  method: 'GET',
+  convertParams({ params }) {
+    return {
+      results: params.pageSize,
+      ...params,
     };
   },
+  total: 100,
 };
 
 export const columns = [
@@ -75,17 +73,16 @@ export const columns = [
 ];
 
 export default class BasicDemo extends React.Component {
-  state = {
-  }
+  state = {};
 
   componentDidMount() {}
 
   changevisibleFieldsCount = (v) => {
-    this.setState({visibleFieldsCount: v});
-  }
+    this.setState({ visibleFieldsCount: v });
+  };
 
   render() {
-    const {visibleFieldsCount } = this.state;
+    const { visibleFieldsCount } = this.state;
     return (
       <div>
         <button onClick={() => this.changevisibleFieldsCount(4)}>4</button>
@@ -96,11 +93,10 @@ export default class BasicDemo extends React.Component {
             key={visibleFieldsCount || 'all'}
             visibleFieldsCount={visibleFieldsCount}
             layout="vertical"
-            columns={columns}
+            {...columns}
             remoteDataSource={remoteDataSource}
-            fields={queryFields}
             rowKey="id"
-            actionsRender={actions}
+            // actionsRender={actions}
             rowSelection={{}}
           />
         </div>
