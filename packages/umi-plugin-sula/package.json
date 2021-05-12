@@ -15,7 +15,5 @@
   "files": [
     "lib",
     "template"
-  ],
-  "license": "MIT",
-  "gitHead": "7a8b2429a72dd66544720760cc83011ae7314038"
+  ]
 }
