@@ -4,7 +4,7 @@
   "main": "lib/index.js",
   "peerDependencies": {
     "@umijs/plugin-locale": "^0.10.8",
-    "bssula": "^1.0.4",
+    "bssula": "^1.0.5",
     "umi": "^3.0.0"
   },
   "devDependencies": {
@@ -16,5 +16,6 @@
     "lib",
     "template"
   ],
-  "license": "MIT"
+  "license": "MIT",
+  "gitHead": "7a8b2429a72dd66544720760cc83011ae7314038"
 }
