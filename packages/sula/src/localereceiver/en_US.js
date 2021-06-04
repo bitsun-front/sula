@@ -7,6 +7,7 @@ export default {
   okText: 'OK',
   backText: 'Back',
   queryText: 'Query',
+  basicQueryText: 'BasicQuery',
   resetText: 'Reset',
   nextText: 'Next',
   previousText: 'Previous',

@@ -7,6 +7,7 @@ export default {
   okText: '确定',
   backText: '返回',
   queryText: '查询',
+  basicQueryText: '搜索',
   resetText: '重置',
   nextText: '下一步',
   previousText: '上一步',
