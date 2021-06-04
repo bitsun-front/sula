@@ -38,7 +38,7 @@ const defaultProps = {
   autoInit: true,
 };
 
-const prefixCls = 'sula-template-query-table';
+const prefixCls = 'sula-basic-query-table';
 
 type Props = QueryTableProps & typeof defaultProps;
 

@@ -154,8 +154,8 @@ export default class BasicQueryFields extends React.Component<QueryFieldsProps> 
               container={{
                 type: 'div',
                 props: {
-                  className: cx(`sula-template-query-table-fields-wrapper`, {
-                    [`sula-template-query-table-fields-divider`]: hasBottomBorder,
+                  className: cx(`sula-basic-query-table-fields-wrapper`, {
+                    [`sula-basic-query-table-fields-divider`]: hasBottomBorder,
                   }),
                 },
               }}
