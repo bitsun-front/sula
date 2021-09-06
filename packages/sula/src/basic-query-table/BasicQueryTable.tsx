@@ -58,8 +58,59 @@ export default class BasicQueryTable extends React.Component<Props> {
   }
 
   renderForm = (locale) => {
-    const { formProps, layout, itemLayout, fields, initialValues, visibleFieldsCount } = this.props;
+    const { formProps, layout, itemLayout, fields, initialValues, visibleFieldsCount, isReset } =
+      this.props;
 
+    const actionsRen = isReset
+      ? [
+          {
+            type: 'button',
+            props: {
+              type: 'primary',
+              children: locale.basicQueryText,
+            },
+            action: [
+              { type: 'validateQueryFields', resultPropName: '$queryFieldsValue' },
+              {
+                type: 'refreshTable',
+                args: [{ current: 1 }, '#{result}'],
+              },
+            ],
+          },
+          {
+            type: 'button',
+            props: {
+              children: locale.resetText,
+            },
+            action: [
+              'resetFields',
+              {
+                type: 'resetTable',
+                args: [false],
+              },
+              {
+                type: 'refreshTable',
+                args: [{ current: 1 }, '#{form.getFieldsValue(true)}'],
+              },
+            ],
+          },
+        ]
+      : [
+          {
+            type: 'button',
+            props: {
+              type: 'primary',
+              children: locale.basicQueryText,
+            },
+            action: [
+              { type: 'validateQueryFields', resultPropName: '$queryFieldsValue' },
+              {
+                type: 'refreshTable',
+                args: [{ current: 1 }, '#{result}'],
+              },
+            ],
+          },
+        ];
     return (
       <BasicQueryForm
         {...formProps}
@@ -75,22 +126,7 @@ export default class BasicQueryTable extends React.Component<Props> {
         fields={fields}
         initialValues={initialValues}
         visibleFieldsCount={visibleFieldsCount}
-        actionsRender={[
-          {
-            type: 'button',
-            props: {
-              type: 'primary',
-              children: locale.basicQueryText,
-            },
-            action: [
-              { type: 'validateQueryFields', resultPropName: '$queryFieldsValue' },
-              {
-                type: 'refreshTable',
-                args: [{ current: 1 }, '#{result}'],
-              },
-            ],
-          },
-        ]}
+        actionsRender={[...actionsRen]}
       />
     );
   };
@@ -113,19 +149,19 @@ export default class BasicQueryTable extends React.Component<Props> {
     this.remoteDataSource = assign(remoteDataSource, { init: false });
 
     return (
-        <div style={{padding: '0 16px', background: '#ffffff'}}>
-          <Table
-            {...tableProps}
-            className={cx(tableProps.className, `${prefixCls}`)}
-            rowSelection={rowSelection}
-            columns={columns}
-            actionsRender={actionsRender}
-            leftActionsRender={rowSelection ? ['rowselection'] : leftActionsRender}
-            remoteDataSource={this.remoteDataSource}
-            rowKey={rowKey}
-            ref={this.tableRef}
-          />
-        </div>
+      <div style={{ padding: '0 16px', background: '#ffffff' }}>
+        <Table
+          {...tableProps}
+          className={cx(tableProps.className, `${prefixCls}`)}
+          rowSelection={rowSelection}
+          columns={columns}
+          actionsRender={actionsRender}
+          leftActionsRender={rowSelection ? ['rowselection'] : leftActionsRender}
+          remoteDataSource={this.remoteDataSource}
+          rowKey={rowKey}
+          ref={this.tableRef}
+        />
+      </div>
     );
   };
 
