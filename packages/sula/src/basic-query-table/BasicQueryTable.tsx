@@ -36,6 +36,7 @@ const defaultProps = {
   fields: [],
   columns: [],
   autoInit: true,
+  isReset: false,
 };
 
 const prefixCls = 'sula-basic-query-table';
