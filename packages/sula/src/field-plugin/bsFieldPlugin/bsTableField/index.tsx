@@ -30,7 +30,7 @@ export default (props: any) => {
 
   // 弹出框内表格选中项变化方法
   const selectLengthChange = (selectedRowKeys: any) => {
-    console.log('selectedRowKeys changed: ', selectedRowKeys);
+    console.log('selectedRowKeys changed1: ', selectedRowKeys);
     // setSelectLength(selectedRowKeys.length);
   };
 
