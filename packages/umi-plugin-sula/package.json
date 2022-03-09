@@ -15,6 +15,11 @@
   "files": [
     "lib",
     "template"
+<<<<<<< HEAD
   ],
   "gitHead": "a952872f2d434215d0a629487dbccf4b20a62fa3"
 }
+=======
+  ]
+}
+>>>>>>> f2515bcfe9d03842eba70f23c4864c38d15c71d4
