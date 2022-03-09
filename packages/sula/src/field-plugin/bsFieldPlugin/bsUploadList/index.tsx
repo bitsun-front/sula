@@ -93,7 +93,6 @@ export default class BitsunUploadList extends React.Component {
               // })),
               fileListIds: fileIds,
             });
-            // console.log(nextProps.value, newFileList, fileIds);
 
             return;
           }
