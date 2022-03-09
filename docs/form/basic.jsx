@@ -90,10 +90,26 @@ export default class BasicDemo extends React.Component {
             valuePropName: 'checked',
           },
           {
-            name: 'select',
-            label: 'select',
-            field: 'select',
+            name: 'bitsun-numberRange',
+            label: 'bitsun-numberRange',
+            field: 'bitsun-numberRange',
+            // field: {
+            //   type: 'bitsun-searchSelect',
+            //   props: {
+            //     requestConfig: {
+            //       url: `/api/advertisingArea/getAdvertisingAreaList`,
+            //       filter: 'qp-areaName-like',
+            //       mappingTextField: 'areaName',
+            //       mappingValueField: 'id',
+            //     },
+            //   },
+            // },
             initialSource,
+          },
+          {
+            name: 'bitsun-uploadList',
+            label: 'bitsun-uploadList',
+            field: 'bitsun-uploadList',
           },
           {
             name: 'cascader',
