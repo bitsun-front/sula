@@ -1,14 +1,15 @@
 /*
  * @Author: your name
  * @Date: 2021-05-12 11:28:17
- * @LastEditTime: 2021-05-12 15:38:00
- * @LastEditors: Please set LastEditors
+ * @LastEditTime: 2022-04-17 20:57:16
+ * @LastEditors: rodchen
  * @Description: In User Settings Edit
  * @FilePath: \sula\packages\sula\src\index.ts
  */
 import ConfigProvider from './config-provider';
 import ModalForm from './modalform';
 import LocaleReceiver from './localereceiver';
+
 
 export * from './form';
 export * from './table';
