@@ -7,7 +7,7 @@
  * @FilePath: \sula\packages\umi-plugin-sula\template\configProvider.js
  */
 import React from 'react';
-import { ConfigProvider } from 'bssula';
+import { ConfigProvider } from 'bstempsula';
 import { history, getLocale } from 'umi';
 
 const baseSeparator = '{{{baseSeparator}}}' || '-';
@@ -24,7 +24,7 @@ function getLocaleData () {
 
   let locale;
   try {
-    locale = require(`bssula/es/localereceiver/${langFile}`);
+    locale = require(`bstempsula/es/localereceiver/${langFile}`);
     locale = locale.default || locale;
   } catch (error) { }
   return locale;

@@ -1,5 +1,5 @@
 import React from 'react';
-import { BasicQueryTable } from 'bssula';
+import { BasicQueryTable } from 'bstempsula';
 import { remoteDataSource } from './utils';
 
 export default () => {

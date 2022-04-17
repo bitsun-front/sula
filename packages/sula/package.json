@@ -1,23 +1,21 @@
 {
-  "name": "bssula",
+  "name": "bstempsula",
   "version": "1.0.13",
   "module": "./es/index.js",
   "main": "./es/index.js",
   "types": "./es/index.d.ts",
-  "description": "bssula",
-  "peerDependencies": {
-    "@ant-design/icons": "^4.0.0",
-    "antd": "^4.0.0",
-    "lodash": "^4.17.19",
-    "react": "^16.8.6",
-    "react-dom": "^16.8.6"
-  },
+  "description": "bstempsula",
   "dependencies": {
     "axios": "^0.21.1",
     "classnames": "^2.2.6",
     "query-string": "^6.12.1",
     "react-media": "^1.10.0",
-    "tplstr": "^1.0.1"
+    "tplstr": "^1.0.1",
+    "@ant-design/icons": "^4.0.0",
+    "antd": "^4.0.0",
+    "lodash": "^4.17.19",
+    "react": "^16.8.6",
+    "react-dom": "^16.8.6"
   },
   "files": [
     "es"

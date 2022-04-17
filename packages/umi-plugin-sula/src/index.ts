@@ -11,7 +11,7 @@ import { readFileSync, writeFileSync } from 'fs';
 
 export default function (api: IApi) {
   api.describe({
-    key: 'bssula',
+    key: 'bstempsula',
     config: {
       schema(joi) {
         return joi.object({
@@ -27,7 +27,7 @@ export default function (api: IApi) {
   });
 
   api.onGenerateFiles(() => {
-    const { locale = {} } = api.config.bssula;
+    const { locale = {} } = api.config.bstempsula;
     const configProviderTpl = readFileSync(
       join(__dirname, '../template/configProvider.js'),
       'utf-8',
@@ -44,7 +44,7 @@ export default function (api: IApi) {
 
   api.addEntryCodeAhead(() =>
     `
-import { registerFieldPlugins, registerRenderPlugins, registerActionPlugins, registerFilterPlugins } from 'bssula';
+import { registerFieldPlugins, registerRenderPlugins, registerActionPlugins, registerFilterPlugins } from 'bstempsula';
 registerFieldPlugins();
 registerRenderPlugins();
 registerActionPlugins();

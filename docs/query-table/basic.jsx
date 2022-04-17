@@ -1,7 +1,7 @@
 /* eslint-disable import/export */
 /* eslint-disable @typescript-eslint/no-unused-vars */
 import React from 'react';
-import { QueryTable } from 'bssula';
+import { QueryTable } from 'bstempsula';
 
 export const remoteDataSource = {
   url: 'https://randomuser.me/api',
