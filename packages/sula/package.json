@@ -1,21 +1,21 @@
 {
   "name": "bstempsula",
-  "version": "1.0.13",
+  "version": "1.1.0",
   "module": "./es/index.js",
   "main": "./es/index.js",
   "types": "./es/index.d.ts",
   "description": "bstempsula",
   "dependencies": {
-    "axios": "^0.21.1",
-    "classnames": "^2.2.6",
-    "query-string": "^6.12.1",
-    "react-media": "^1.10.0",
-    "tplstr": "^1.0.1",
     "@ant-design/icons": "^4.0.0",
     "antd": "^4.0.0",
+    "axios": "^0.21.1",
+    "classnames": "^2.2.6",
     "lodash": "^4.17.19",
+    "query-string": "^6.12.1",
     "react": "^16.8.6",
-    "react-dom": "^16.8.6"
+    "react-dom": "^16.8.6",
+    "react-media": "^1.10.0",
+    "tplstr": "^1.0.1"
   },
   "files": [
     "es"
