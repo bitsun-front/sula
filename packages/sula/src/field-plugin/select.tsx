@@ -38,7 +38,7 @@ export default class Select extends React.Component<SelectProps> {
   render() {
     const { source = [], ...restProps } = this.props;
     return (
-      <ASelect {...restProps}>
+      <ASelect {...restProps} getPopupContainer={triggerNode => triggerNode.parentElement}>
         {source.map((item) => {
           if ((item as SelectGroupItem).children) {
             return this.renderGroupOptions(item as SelectGroupItem);
