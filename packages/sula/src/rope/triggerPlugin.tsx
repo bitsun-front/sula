@@ -4,7 +4,7 @@ import isFunction from 'lodash/isFunction';
 import isString from 'lodash/isString';
 import isArray from 'lodash/isArray';
 import toLower from 'lodash/toLower';
-import { Space } from 'antd';
+import { Space, Button, Dropdown, Menu } from 'antd';
 import { LazyPluginCtx, LazyPluginCtxGetter, PluginCtx } from '../types/ctx';
 import {
   RenderPlugin,
@@ -21,6 +21,7 @@ import sula from '../core';
 import { toArray } from '../_util/common';
 import Rope from '.';
 import RopeContainer from './RopeContainer';
+import { MoreOutlined } from '@ant-design/icons';
 
 export const getLazyCtx = (ctx: LazyPluginCtx) => {
   if (!ctx) {
@@ -140,6 +141,64 @@ export const triggerRenderPlugin = (
     </Space>
   );
 };
+
+export const triggerTableRowRenderPlugin = (
+  lazyCtx: LazyPluginCtx | PluginCtx,
+  config: RenderPlugin | RenderPlugin[],
+): any => {
+  const ctx = getLazyCtx(lazyCtx) as PluginCtx;
+  //过滤掉不显示的
+  const arrayConf = toArray(config).filter((iterConf) => {
+    const visible = transformConfig(iterConf.visible, ctx);
+    return visible != false;
+  });
+
+  if (arrayConf.length === 0) {
+    return null;
+  } else if (arrayConf.length === 1) {
+    // 不能传 finalCtx，要传 lazyCtx
+    return triggerSingleRenderPlugin(lazyCtx, arrayConf[0]);
+  }
+
+  return (
+    <Space>
+      <ButtonListWrapper>
+        {arrayConf.map((conf, index) => {
+          const actionNode = triggerSingleRenderPlugin(lazyCtx, conf);
+          return React.cloneElement(actionNode, { key: index });
+        })}
+      </ButtonListWrapper>
+    </Space>
+  );
+};
+
+export const ButtonListWrapper = ({children}: {children: Element | any}) => {
+  if (children.length <= 4) {
+    return children;
+  }
+  let childCopy = [...children]
+  const moreOperate = childCopy.splice(3);
+  const menu = (
+    <Menu>
+      {
+        moreOperate.map((item: any,index:number) => (
+          <Menu.Item key={index}>
+            {item}
+          </Menu.Item>
+        ))
+      }
+    </Menu>
+  );
+  return (<div>
+    {childCopy}
+    <Dropdown overlay={menu} >
+      <Button type='link'>
+        <MoreOutlined />
+        <span style={{margin: '0px'}}>更多</span>
+      </Button>
+    </Dropdown>
+  </div>);
+}
 
 /**
  * 针对单个，渲染插件可携带action

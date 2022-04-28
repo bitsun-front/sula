@@ -7,7 +7,7 @@ import omit from 'lodash/omit';
 import isUndefined from 'lodash/isUndefined';
 import assign from 'lodash/assign';
 import useTableContext, { HOOK_MARK } from './useTableContext';
-import { triggerRenderPlugin, triggerPlugin } from '../rope/triggerPlugin';
+import { triggerTableRowRenderPlugin, triggerPlugin } from '../rope/triggerPlugin';
 import TableAction from './TableAction';
 import ModalForm from '../modalform';
 import { SulaConfigContext } from '../config-provider/context';
@@ -216,7 +216,7 @@ const RefTable: React.FunctionComponent<TableProps> = (props, ref) => {
               history: configContext.history,
             });
 
-            return triggerRenderPlugin(ctx, column.render);
+            return triggerTableRowRenderPlugin(ctx, column.render);
           };
         }
       }
