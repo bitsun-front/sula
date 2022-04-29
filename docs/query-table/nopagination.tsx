@@ -1,15 +1,64 @@
 import React from 'react';
 import { QueryTable } from 'sula';
 
-const queryFields = Array(10)
-  .fill(0)
-  .map((_, index) => {
-    return {
-      name: `input${index}`,
-      label: `Input${index}`,
-      field: 'input',
-    };
-  });
+const queryFields: QueryTableProps['fields'] = [
+  {
+    name: 'nat',
+    label: '国家',
+    initialSource: [
+      {
+        text: '国家A',
+        value: '0001'
+      },
+      {
+        text: '国家B',
+        value: '0002'
+      },
+      {
+        text: '国家C',
+        value: '0003'
+      },
+      {
+        text: '国家D',
+        value: '0004'
+      },
+    ],
+    field: 'select',
+  },
+  {
+    name: 'name',
+    label: '名字',
+    initialSource: [
+      {
+        text: 'name1',
+        value: '0001'
+      },
+      {
+        text: 'name2',
+        value: '0002'
+      },
+      {
+        text: 'name3',
+        value: '0003'
+      },
+      {
+        text: 'name4',
+        value: '0004'
+      },
+    ],
+    field: {
+      type: 'select',
+      props: {
+        mode: 'multiple',
+      }
+    },
+  },
+  {
+    name: 'age',
+    label: '年龄',
+    field: 'input',
+  },
+];
 
 export const remoteDataSource = {
   url: 'https://randomuser.me/api',
@@ -41,17 +90,57 @@ export const columns = [
   {
     title: '国家',
     key: 'nat',
+    tableHeadFilterKey: 'nat',
+    customerFilterOptions: [
+      {
+        label: '选项一',
+        value: 1
+      },
+      {
+        label: '选项二',
+        value: 2
+      },
+      {
+        label: '选项三',
+        value: 3
+      },
+      {
+        label: '选项四',
+        value: 4
+      },
+    ]
   },
   {
     title: '名字',
     key: 'name',
     copyable: true,
     ellipsis: true,
+    tableHeadFilterKey: 'name',
+    customerFilterOptions: [
+      {
+        label: 'name1',
+        value: '0001'
+      },
+      {
+        label: 'name2',
+        value: '0002'
+      },
+      {
+        label: 'name3',
+        value: '0003'
+      },
+      {
+        label: 'name4',
+        value: '0004'
+      },
+    ],
+    customerFilterType: 'checkbox',
     width: 200,
   },
   {
     title: '年龄',
     key: 'age',
+    tableHeadFilterKey: 'age',
     render: (ctx) => {
       return <span>{ctx.record.registered.age}</span>;
     },
@@ -60,6 +149,82 @@ export const columns = [
     title: '操作',
     key: 'operation',
     render: [
+      {
+        confirm: '是否删除？',
+        type: 'icon',
+        props: {
+          type: 'appstore',
+        },
+        action: [
+          {
+            type: 'request',
+            url: 'https://www.mocky.io/v2/5185415ba171ea3a00704eed',
+            method: 'POST',
+            params: {
+              id: '#{record.id}',
+            },
+            successMessage: '删除成功',
+          },
+          'refreshTable',
+        ],
+      },
+      {
+        confirm: '是否删除？',
+        type: 'icon',
+        props: {
+          type: 'appstore',
+        },
+        action: [
+          {
+            type: 'request',
+            url: 'https://www.mocky.io/v2/5185415ba171ea3a00704eed',
+            method: 'POST',
+            params: {
+              id: '#{record.id}',
+            },
+            successMessage: '删除成功',
+          },
+          'refreshTable',
+        ],
+      },
+      {
+        confirm: '是否删除？',
+        type: 'icon',
+        props: {
+          type: 'appstore',
+        },
+        action: [
+          {
+            type: 'request',
+            url: 'https://www.mocky.io/v2/5185415ba171ea3a00704eed',
+            method: 'POST',
+            params: {
+              id: '#{record.id}',
+            },
+            successMessage: '删除成功',
+          },
+          'refreshTable',
+        ],
+      },
+      {
+        confirm: '是否删除？',
+        type: 'icon',
+        props: {
+          type: 'appstore',
+        },
+        action: [
+          {
+            type: 'request',
+            url: 'https://www.mocky.io/v2/5185415ba171ea3a00704eed',
+            method: 'POST',
+            params: {
+              id: '#{record.id}',
+            },
+            successMessage: '删除成功',
+          },
+          'refreshTable',
+        ],
+      },
       {
         confirm: '是否删除？',
         type: 'icon',

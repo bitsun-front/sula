@@ -1,15 +1,23 @@
 import React from 'react';
 import { QueryTable, QueryTableProps } from 'sula';
 
-const queryFields: QueryTableProps['fields'] = Array(10)
-  .fill(0)
-  .map((_, index) => {
-    return {
-      name: `input${index}`,
-      label: `Input${index}`,
-      field: 'input',
-    };
-  });
+const queryFields: QueryTableProps['fields'] = [
+  {
+    name: 'nat',
+    label: '国家',
+    field: 'input',
+  },
+  {
+    name: 'name',
+    label: '名字',
+    field: 'input',
+  },
+  {
+    name: 'age',
+    label: '年龄',
+    field: 'input',
+  },
+];
 
 export const remoteDataSource: QueryTableProps['remoteDataSource'] = {
   url: 'https://randomuser.me/api',

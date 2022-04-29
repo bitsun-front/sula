@@ -1,5 +1,5 @@
 import React from 'react';
-import { Table as ATable } from 'antd';
+import { Table as ATable, Tag } from 'antd';
 import { TableProps as ATableProps, ColumnProps as AColumnProps } from 'antd/lib/table';
 import { SortOrder } from 'antd/lib/table/interface';
 import { PaginationConfig } from 'antd/lib/pagination';
@@ -31,11 +31,23 @@ export interface TableProps extends Omit<ATableProps<RowRecord>, 'title' | 'data
   actionsRender?: RenderPlugin | RenderPlugin[];
   leftActionsRender?: RenderPlugin | RenderPlugin[];
   ctxGetter?: () => Record<string, any>;
+  onCloseTag?: any;
+  getCurrentFormValue?: any;
+  getFilterValueLabel?: any;
+  getFilterKeyLabel?: any;
 }
 
 export interface ColumnProps extends Omit<AColumnProps<any>, 'render'> {
   filterRender?: FilterPlugin;
   render?: RenderPlugin | RenderPlugin[];
+  tableHeadFilterKey?: string;
+  customerFilterOptions?: filterOption[];
+  customerFilterType?: string;
+}
+
+export interface filterOption {
+  label: string;
+  value: string | number;
 }
 
 export interface Sorter {
@@ -225,10 +237,34 @@ const RefTable: React.FunctionComponent<TableProps> = (props, ref) => {
     });
   };
 
+  const judgeIsEmpty = (value: any) => {
+    if (value == null || value == undefined || String(value).trim() == '') {
+      return true;
+    }
+    return false;
+  };
+
   tableProps.columns = getColumns(tableProps.columns as ColumnProps[]);
+  let filterValues = tableProps?.getCurrentFormValue?.() || {};
+  const filterFields = Object.keys(filterValues).filter(item => !judgeIsEmpty(filterValues[item]));
   return (
     <React.Fragment>
       <div style={{paddingTop: tableProps.title ? 0 : '16px', paddingBottom: tableProps?.pagination ? 0 : '16px'}}>
+        {
+          !!filterFields.length && (
+            <div key={filterFields.length}  style={{padding: '10px'}}>
+              {
+                filterFields
+                .map(item => (
+                  <Tag style={{padding: '5px 10px', marginBottom: '10px'}} color={tableProps?.tagColor || "#297eff"} closable onClose={() => {tableProps?.onCloseTag?.(item)}}>
+                      {`${tableProps?.getFilterKeyLabel?.(item)}: ${tableProps?.getFilterValueLabel?.(item, filterValues[item])}`}
+                      &nbsp;&nbsp;
+                  </Tag>
+                ))
+              }
+            </div>
+          )
+        }
         <ATable {...tableProps} />
       </div>
       <ModalForm type="drawer" ref={drawerFormRef} />
