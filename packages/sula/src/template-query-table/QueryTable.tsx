@@ -198,7 +198,7 @@ export default class QueryTable extends React.Component<Props> {
     const { getFieldSource } = this.formRef.current || {};
     const { columns, fields } = this.props;
     let fieldSource;
-    if (fields.find(item => item.name === 'key')) {
+    if (fields.find(item => item.name === key)) {
       fieldSource = getFieldSource(key);
     }
     //获取筛选条件数据源只考虑source为数组情况
