@@ -151,7 +151,45 @@ export const columns = [
     render: [
       {
         confirm: '是否删除？',
-        type: 'icon',
+        type: 'link',
+        props: {
+           children: '测试1111'         
+        },
+        action: [
+          {
+            type: 'request',
+            url: 'https://www.mocky.io/v2/5185415ba171ea3a00704eed',
+            method: 'POST',
+            params: {
+              id: '#{record.id}',
+            },
+            successMessage: '删除成功',
+          },
+          'refreshTable',
+        ],
+      },
+      {
+        confirm: '是否删除？',
+        type: 'link',
+        props: {
+          children: '测试1111'
+        },
+        action: [
+          {
+            type: 'request',
+            url: 'https://www.mocky.io/v2/5185415ba171ea3a00704eed',
+            method: 'POST',
+            params: {
+              id: '#{record.id}',
+            },
+            successMessage: '删除成功',
+          },
+          'refreshTable',
+        ],
+      },
+      {
+        confirm: '是否删除？',
+        type: 'link',
         props: {
           type: 'appstore',
         },
@@ -170,9 +208,9 @@ export const columns = [
       },
       {
         confirm: '是否删除？',
-        type: 'icon',
+        type: 'link',
         props: {
-          type: 'appstore',
+          children: '测试1111'
         },
         action: [
           {
@@ -189,47 +227,9 @@ export const columns = [
       },
       {
         confirm: '是否删除？',
-        type: 'icon',
+        type: 'link',
         props: {
-          type: 'appstore',
-        },
-        action: [
-          {
-            type: 'request',
-            url: 'https://www.mocky.io/v2/5185415ba171ea3a00704eed',
-            method: 'POST',
-            params: {
-              id: '#{record.id}',
-            },
-            successMessage: '删除成功',
-          },
-          'refreshTable',
-        ],
-      },
-      {
-        confirm: '是否删除？',
-        type: 'icon',
-        props: {
-          type: 'appstore',
-        },
-        action: [
-          {
-            type: 'request',
-            url: 'https://www.mocky.io/v2/5185415ba171ea3a00704eed',
-            method: 'POST',
-            params: {
-              id: '#{record.id}',
-            },
-            successMessage: '删除成功',
-          },
-          'refreshTable',
-        ],
-      },
-      {
-        confirm: '是否删除？',
-        type: 'icon',
-        props: {
-          type: 'appstore',
+          children: '测试1111'
         },
         action: [
           {
