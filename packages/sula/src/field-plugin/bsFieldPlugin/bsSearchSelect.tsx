@@ -263,7 +263,6 @@ export default class BitSunSearchSelect extends React.Component<any> {
         filterOption={(input, option) => {
           return option.children && option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0;
         }}
-        getPopupContainer={triggerNode => triggerNode.parentElement}
         {...restProps}
       >
         {source.map((item) => {
