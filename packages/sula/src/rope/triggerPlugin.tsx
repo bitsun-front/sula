@@ -22,6 +22,7 @@ import { toArray } from '../_util/common';
 import Rope from '.';
 import RopeContainer from './RopeContainer';
 import { MoreOutlined } from '@ant-design/icons';
+import './style/trigger-plugin.less';
 
 export const getLazyCtx = (ctx: LazyPluginCtx) => {
   if (!ctx) {
@@ -174,7 +175,9 @@ export const triggerTableRowRenderPlugin = (
 
 export const ButtonListWrapper = ({children}: {children: Element | any}) => {
   if (children.length <= 4) {
-    return children;
+    return (<div className="table-operate-wrapper">
+      {children}
+    </div>);
   }
   let childCopy = [...children]
   const moreOperate = childCopy.splice(3);
@@ -190,9 +193,9 @@ export const ButtonListWrapper = ({children}: {children: Element | any}) => {
     </Menu>
   );
   //按钮操作4个显示更多
-  return (<div>
+  return (<div className="table-operate-wrapper">
     {childCopy}
-    <Dropdown overlay={menu} >
+    <Dropdown style={{padding: '0px'}} overlay={menu} >
       <Button type='link'>
         <MoreOutlined />
         <span style={{margin: '0px'}}>更多</span>

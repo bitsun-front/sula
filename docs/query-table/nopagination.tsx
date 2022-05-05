@@ -1,5 +1,6 @@
 import React from 'react';
 import { QueryTable } from 'sula';
+import { UserOutlined } from '@ant-design/icons';
 
 const queryFields: QueryTableProps['fields'] = [
   {
@@ -148,12 +149,29 @@ export const columns = [
   {
     title: '操作',
     key: 'operation',
+    width: 300,
     render: [
       {
         confirm: '是否删除？',
         type: 'link',
         props: {
-           children: '测试1111'         
+           children: '测试',
+           icon: <UserOutlined />,    
+        },
+      },
+      {
+        confirm: '是否删除？',
+        type: 'link',
+        props: {
+          children: '测试',
+          icon: <UserOutlined />, 
+        },
+      },
+      {
+        confirm: '是否删除？',
+        type: 'link',
+        props: {
+          children: '测试'
         },
         action: [
           {
@@ -172,7 +190,7 @@ export const columns = [
         confirm: '是否删除？',
         type: 'link',
         props: {
-          children: '测试1111'
+          children: '测试'
         },
         action: [
           {
@@ -191,45 +209,7 @@ export const columns = [
         confirm: '是否删除？',
         type: 'link',
         props: {
-          type: 'appstore',
-        },
-        action: [
-          {
-            type: 'request',
-            url: 'https://www.mocky.io/v2/5185415ba171ea3a00704eed',
-            method: 'POST',
-            params: {
-              id: '#{record.id}',
-            },
-            successMessage: '删除成功',
-          },
-          'refreshTable',
-        ],
-      },
-      {
-        confirm: '是否删除？',
-        type: 'link',
-        props: {
-          children: '测试1111'
-        },
-        action: [
-          {
-            type: 'request',
-            url: 'https://www.mocky.io/v2/5185415ba171ea3a00704eed',
-            method: 'POST',
-            params: {
-              id: '#{record.id}',
-            },
-            successMessage: '删除成功',
-          },
-          'refreshTable',
-        ],
-      },
-      {
-        confirm: '是否删除？',
-        type: 'link',
-        props: {
-          children: '测试1111'
+          children: '测试'
         },
         action: [
           {
