@@ -28,6 +28,8 @@ export interface QueryTableProps
   formProps?: Omit<FormProps, FormPropsPicks>;
   tableProps?: Omit<TableProps, TablePropsPicks>;
   autoInit?: boolean;
+  tagColor?: string;
+  tableWrapperStyle?: any;
 }
 
 const defaultProps = {
@@ -141,6 +143,7 @@ export default class BasicQueryTable extends React.Component<Props> {
       remoteDataSource,
       rowSelection,
       rowKey,
+      tableWrapperStyle,
     } = this.props;
 
     if (!remoteDataSource) {
@@ -150,7 +153,7 @@ export default class BasicQueryTable extends React.Component<Props> {
     this.remoteDataSource = assign(remoteDataSource, { init: false });
 
     return (
-      <div style={{ padding: '0 16px', background: '#ffffff' }}>
+      <div style={tableWrapperStyle ? tableWrapperStyle : {padding: '0 16px', background: '#ffffff'}}>
         <Table
           {...tableProps}
           className={cx(tableProps.className, `${prefixCls}`)}

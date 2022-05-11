@@ -245,12 +245,12 @@ const RefTable: React.FunctionComponent<TableProps> = (props, ref) => {
   };
 
   tableProps.columns = getColumns(tableProps.columns as ColumnProps[]);
-  // let filterValues = tableProps?.getCurrentFormValue?.() || {};
-  // const filterFields = Object.keys(filterValues).filter(item => !judgeIsEmpty(filterValues[item]));
+  let filterValues = tableProps?.getCurrentFormValue?.() || {};
+  const filterFields = Object.keys(filterValues).filter(item => !judgeIsEmpty(filterValues[item]));
   return (
     <React.Fragment>
       <div style={{paddingTop: tableProps.title ? 0 : '16px', paddingBottom: tableProps?.pagination ? 0 : '16px'}}>
-        {/* {
+        {
           !!filterFields.length && (
             <div key={filterFields.length}  style={{padding: '10px'}}>
               {
@@ -264,7 +264,7 @@ const RefTable: React.FunctionComponent<TableProps> = (props, ref) => {
               }
             </div>
           )
-        } */}
+        }
         <ATable {...tableProps} />
       </div>
       <ModalForm type="drawer" ref={drawerFormRef} />
