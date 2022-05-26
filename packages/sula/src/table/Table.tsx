@@ -177,7 +177,7 @@ const RefTable: React.FunctionComponent<TableProps> = (props, ref) => {
     };
   }
 
-  if (props.actionsRender || props.leftActionsRender) {
+  if (!tableProps.title && (props.actionsRender || props.leftActionsRender)) {
     tableProps.title = (currentPageData) => {
       const ctx = getCtx({ dataSource: currentPageData, history: configContext.history });
       return (

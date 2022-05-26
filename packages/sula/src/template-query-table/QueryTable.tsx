@@ -73,7 +73,39 @@ export default class QueryTable extends React.Component<Props> {
 
   renderForm = (locale) => {
     const { formProps, layout, itemLayout, fields, initialValues, visibleFieldsCount } = this.props;
-
+    const formActionsRender = formProps?.actionsRender ?? [
+      {
+        type: 'button',
+        props: {
+          type: 'primary',
+          children: locale.queryText,
+        },
+        action: [
+          { type: 'validateQueryFields', resultPropName: '$queryFieldsValue' },
+          {
+            type: 'refreshTable',
+            args: [{ current: 1 }, '#{result}'],
+          },
+        ],
+      },
+      {
+        type: 'button',
+        props: {
+          children: locale.resetText,
+        },
+        action: [
+          'resetFields',
+          {
+            type: 'resetTable',
+            args: [false],
+          },
+          {
+            type: 'refreshTable',
+            args: [{ current: 1 }, '#{form.getFieldsValue(true)}'],
+          },
+        ],
+      },
+    ];
     return (
       <QueryForm
         {...formProps}
@@ -89,39 +121,7 @@ export default class QueryTable extends React.Component<Props> {
         fields={fields}
         initialValues={initialValues}
         visibleFieldsCount={visibleFieldsCount}
-        actionsRender={[
-          {
-            type: 'button',
-            props: {
-              type: 'primary',
-              children: locale.queryText,
-            },
-            action: [
-              { type: 'validateQueryFields', resultPropName: '$queryFieldsValue' },
-              {
-                type: 'refreshTable',
-                args: [{ current: 1 }, '#{result}'],
-              },
-            ],
-          },
-          {
-            type: 'button',
-            props: {
-              children: locale.resetText,
-            },
-            action: [
-              'resetFields',
-              {
-                type: 'resetTable',
-                args: [false],
-              },
-              {
-                type: 'refreshTable',
-                args: [{ current: 1 }, '#{form.getFieldsValue(true)}'],
-              },
-            ],
-          },
-        ]}
+        actionsRender={formActionsRender}
       />
     );
   };
