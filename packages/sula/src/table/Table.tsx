@@ -245,6 +245,7 @@ const RefTable: React.FunctionComponent<TableProps> = (props, ref) => {
   };
 
   tableProps.columns = getColumns(tableProps.columns as ColumnProps[]);
+  // 1.x版本屏蔽该功能
   // let filterValues = tableProps?.getCurrentFormValue?.() || {};
   // const filterFields = Object.keys(filterValues).filter(item => !judgeIsEmpty(filterValues[item]));
   return (
