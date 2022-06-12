@@ -174,7 +174,7 @@ export const triggerTableRowRenderPlugin = (
 };
 
 export const ButtonListWrapper = ({children}: {children: Element | any}) => {
-  if (children.length <= 4) {
+  if (children.length <= 3) {
     return (<div className="table-operate-wrapper">
       {children}
     </div>);
