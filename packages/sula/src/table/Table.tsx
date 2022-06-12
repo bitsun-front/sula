@@ -177,15 +177,42 @@ const RefTable: React.FunctionComponent<TableProps> = (props, ref) => {
     };
   }
 
+  // 1.x版本屏蔽该功能
+  const judgeIsEmpty = (value: any) => {
+    if (value == null || value == undefined || String(value).trim() == '') {
+      return true;
+    }
+    return false;
+  };
+  let filterValues = tableProps?.getCurrentFormValue?.() || {};
+  const filterFields = Object.keys(filterValues).filter(item => !judgeIsEmpty(filterValues[item]));
+
   if (!tableProps.title && (props.actionsRender || props.leftActionsRender)) {
     tableProps.title = (currentPageData) => {
       const ctx = getCtx({ dataSource: currentPageData, history: configContext.history });
       return (
-        <TableAction
-          leftActionsRender={props.leftActionsRender}
-          actionsRender={props.actionsRender}
-          ctx={ctx}
-        />
+        <>
+          <TableAction
+            leftActionsRender={props.leftActionsRender}
+            actionsRender={props.actionsRender}
+            ctx={ctx}
+          />
+          {
+            !!filterFields.length && (
+              <div key={filterFields.length}  style={{padding: '10px 0 0'}}>
+                {
+                  filterFields
+                  .map(item => (
+                    <Tag style={{padding: '5px 10px', marginBottom: '10px'}} color={tableProps?.tagColor || "#297eff"} closable onClose={() => {tableProps?.onCloseTag?.(item)}}>
+                        {`${tableProps?.getFilterKeyLabel?.(item)}: ${tableProps?.getFilterValueLabel?.(item, filterValues[item])}`}
+                        &nbsp;&nbsp;
+                    </Tag>
+                  ))
+                }
+              </div>
+            )
+          }
+        </>
       );
     };
   }
@@ -237,35 +264,10 @@ const RefTable: React.FunctionComponent<TableProps> = (props, ref) => {
     });
   };
 
-  const judgeIsEmpty = (value: any) => {
-    if (value == null || value == undefined || String(value).trim() == '') {
-      return true;
-    }
-    return false;
-  };
-
   tableProps.columns = getColumns(tableProps.columns as ColumnProps[]);
-  // 1.x版本屏蔽该功能
-  // let filterValues = tableProps?.getCurrentFormValue?.() || {};
-  // const filterFields = Object.keys(filterValues).filter(item => !judgeIsEmpty(filterValues[item]));
   return (
     <React.Fragment>
       <div style={{paddingTop: tableProps.title ? 0 : '16px', paddingBottom: tableProps?.pagination ? 0 : '16px'}}>
-        {/* {
-          !!filterFields.length && (
-            <div key={filterFields.length}  style={{padding: '10px'}}>
-              {
-                filterFields
-                .map(item => (
-                  <Tag style={{padding: '5px 10px', marginBottom: '10px'}} color={tableProps?.tagColor || "#297eff"} closable onClose={() => {tableProps?.onCloseTag?.(item)}}>
-                      {`${tableProps?.getFilterKeyLabel?.(item)}: ${tableProps?.getFilterValueLabel?.(item, filterValues[item])}`}
-                      &nbsp;&nbsp;
-                  </Tag>
-                ))
-              }
-            </div>
-          )
-        } */}
         <ATable {...tableProps} />
       </div>
       <ModalForm type="drawer" ref={drawerFormRef} />

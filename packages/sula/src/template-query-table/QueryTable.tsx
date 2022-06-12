@@ -142,7 +142,7 @@ export default class QueryTable extends React.Component<Props> {
   getColumnSearchProps = (item: ColumnProps) => ({
     filterDropdown: ({ selectedKeys }) => (
       <div>
-        <div style={{ padding: 8, borderBottom: '1px solid #f0f0f0' }}>
+        <div style={{ borderBottom: '1px solid #f0f0f0' }}>
           <Space>
             {
               this.renderDropFilter(item)
@@ -162,26 +162,28 @@ export default class QueryTable extends React.Component<Props> {
     if (column.customerFilterOptions) {
       if (column.customerFilterType === 'checkbox') {
         return (
-          <div style={{width: '200px'}}>
+          <div className='header-filter-radio'>
             <Checkbox.Group options={column.customerFilterOptions} onChange={(value) => {this.handleFieldsValueChange(value, column)}} />
           </div>
         )
       }
       return (
-        <div style={{width: '200px'}}>
+        <div className='header-filter-radio'>
             <Radio.Group options={column.customerFilterOptions} onChange={(e) => {this.handleFieldsValueChange(e.target.value, column)}} />
         </div>
       )
     }
     return (
-      <Input
-        prefix={<SearchOutlined />}
-        placeholder={`请输入 按Enter确认`}
-        // value={selectedKeys[0]}
-        // onChange={this.handleInputChange}
-        onPressEnter={(e) => {this.handleFieldsValueChange(e.target.value, column)}}
-        style={{ marginBottom: 8, display: 'flex' }}
-      />
+      <div style={{width: '260px', boxSizing: 'border-box', padding: '8px'}}>
+        <Input
+          prefix={<SearchOutlined />}
+          placeholder={`请输入 按Enter确认`}
+          // value={selectedKeys[0]}
+          // onChange={this.handleInputChange}
+          onPressEnter={(e) => {this.handleFieldsValueChange(e.target.value, column)}}
+          style={{ marginBottom: 8, display: 'flex' }}
+        />
+      </div>
     )
   }
 
