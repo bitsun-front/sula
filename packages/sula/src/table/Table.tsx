@@ -13,6 +13,8 @@ import ModalForm from '../modalform';
 import { SulaConfigContext } from '../config-provider/context';
 import { RenderPlugin, FilterPlugin } from '../types/plugin';
 import { RequestConfig } from '../types/request';
+import styles from './style/bs_table.less'
+import cx from 'classnames';
 
 type RowRecord = Record<string, any>;
 type DataSource = RowRecord[];
@@ -203,7 +205,7 @@ const RefTable: React.FunctionComponent<TableProps> = (props, ref) => {
                 {
                   filterFields
                   .map(item => (
-                    <Tag style={{padding: '5px 10px', marginBottom: '10px'}} color={tableProps?.tagColor || "#297eff"} closable onClose={() => {tableProps?.onCloseTag?.(item)}}>
+                    <Tag style={{padding: '3px 5px', marginBottom: '10px', backgroundColor:'#F7F8FB', border: '1px solid #CFCFD0', color: '#000000'}} closable onClose={() => {tableProps?.onCloseTag?.(item)}}>
                         {`${tableProps?.getFilterKeyLabel?.(item)}: ${tableProps?.getFilterValueLabel?.(item, filterValues[item])}`}
                         &nbsp;&nbsp;
                     </Tag>
@@ -267,7 +269,8 @@ const RefTable: React.FunctionComponent<TableProps> = (props, ref) => {
   tableProps.columns = getColumns(tableProps.columns as ColumnProps[]);
   return (
     <React.Fragment>
-      <div style={{paddingTop: tableProps.title ? 0 : '16px', paddingBottom: tableProps?.pagination ? 0 : '16px'}}>
+      <div className={styles.bs_table_styl} style={{paddingTop: tableProps.title ? 0 : '16px', paddingBottom: tableProps?.pagination ? 0 : '16px'}}>
+        {/* <img src={bgImg} /> */}
         <ATable {...tableProps} />
       </div>
       <ModalForm type="drawer" ref={drawerFormRef} />
