@@ -59,6 +59,11 @@ const queryFields: QueryTableProps['fields'] = [
     label: '年龄',
     field: 'input',
   },
+  {
+    name: 'age1',
+    label: '年龄',
+    field: 'input',
+  },
 ];
 
 export const remoteDataSource = {
@@ -280,6 +285,7 @@ export default class BasicDemo extends React.Component {
       <div style={{ background: 'rgb(241, 242, 246)', padding: 16, marginTop: 16 }}>
         <QueryTable
           layout="horizontal"
+          visibleFieldsCount={3}
           columns={columns}
           remoteDataSource={remoteDataSource}
           fields={queryFields}

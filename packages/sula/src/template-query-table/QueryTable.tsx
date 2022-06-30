@@ -122,6 +122,8 @@ export default class QueryTable extends React.Component<Props> {
         initialValues={initialValues}
         visibleFieldsCount={visibleFieldsCount}
         actionsRender={formActionsRender}
+        getFilterKeyLabel={this.getFilterKeyLabel}
+        getFilterValueLabel={this.getFilterValueLabel}
       />
     );
   };
@@ -203,7 +205,7 @@ export default class QueryTable extends React.Component<Props> {
     const { columns, fields } = this.props;
     let fieldSource;
     if (fields.find(item => item.name === key)) {
-      fieldSource = getFieldSource(key);
+      fieldSource = getFieldSource?.(key);
     }
     //获取筛选条件数据源只考虑source为数组情况
     let source;
@@ -236,6 +238,7 @@ export default class QueryTable extends React.Component<Props> {
     if (columns.find(column => column.tableHeadFilterKey === filterKey)) {
       return columns.find(column => column.tableHeadFilterKey === filterKey)?.title || filterKey; 
     }
+    debugger
     return filterKey;
   }
 

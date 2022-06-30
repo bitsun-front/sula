@@ -17,10 +17,11 @@ const QueryForm: React.ForwardRefRenderFunction<FormInstance, QueryFormProps> = 
     visibleFieldsCount,
     actionsRender,
     hasBottomBorder,
+    getFilterKeyLabel,
+    getFilterValueLabel,
     ...restProps
   } = props;
   const [form] = Form.useForm(restProps.form);
-
   React.useImperativeHandle(ref, () => form);
 
   return (
@@ -33,10 +34,14 @@ const QueryForm: React.ForwardRefRenderFunction<FormInstance, QueryFormProps> = 
     >
       <QueryFields
         fields={fields}
+        ctxGetter={restProps.ctxGetter}
+        getFilterKeyLabel={getFilterKeyLabel}
+        getFilterValueLabel={getFilterValueLabel}
         visibleFieldsCount={visibleFieldsCount}
         getFormInstance={() => form}
         hasBottomBorder={hasBottomBorder}
         actionsRender={actionsRender}
+        
       />
     </Form>
   );

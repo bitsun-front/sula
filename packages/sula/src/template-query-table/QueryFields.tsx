@@ -1,5 +1,7 @@
 import React from 'react';
 import DownOutlined from '@ant-design/icons/DownOutlined';
+import SettingOutlined from '@ant-design/icons/SettingOutlined';
+import { Button, Modal, Form, Row, Col, Input, Dropdown, Tooltip } from 'antd';
 import cx from 'classnames';
 import { getItemSpan } from '../form/utils/layoutUtil';
 import FieldGroupContext from '../form/FieldGroupContext';
@@ -7,6 +9,8 @@ import { FieldGroup, Field, FormAction, FieldProps, FormInstance, FormProps } fr
 import './style/query-fields.less';
 import LocaleReceiver from '../localereceiver';
 import { toArray } from '../_util/common';
+import { history } from 'umi';
+import ConditionList from './conditionList';
 
 export interface QueryFieldsProps {
   fields: FieldProps[];
@@ -25,8 +29,18 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
     fields: [],
   };
 
+  formRef = React.createRef<FormInstance>();
+
   state = {
     collapsed: true,
+    modalInfo: {
+      modalVisible: false,
+      type: 'create',
+      title: '',
+      callBack: null,
+    },
+    currentUserName: localStorage.getItem('currentName') ? `${localStorage.getItem('currentName')}-condition` : 'noUser-condition',
+    currentPage: history?.location?.pathname || '',
   };
 
   getVisibleFieldsCount = (): number => {
@@ -83,9 +97,24 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
     });
   }
 
+  saveCondition = (ctx: any, name: string) => {
+    const { currentPage, currentUserName } = this.state;
+    const fieldsValue = ctx.form.getFieldsValue();
+    let totalCondition = JSON.parse(localStorage.getItem(currentUserName) || '{}');
+    if (totalCondition[currentPage]) {
+      totalCondition[currentPage][name] = fieldsValue;
+    } else {
+      totalCondition[currentPage] = {
+        [name]: fieldsValue
+      }
+    }
+    localStorage.setItem(currentUserName, JSON.stringify(totalCondition))
+  }
+
   renderFormAction = (locale) => {
     const { layout } = this.context;
-    const { collapsed } = this.state;
+    const { collapsed, currentPage, currentUserName } = this.state;
+    const { ctxGetter, getFilterKeyLabel, getFilterValueLabel } = this.props;
     const actionsRender = [
       ...(toArray(this.props.actionsRender)),
       ...(this.hasMoreQueryFields()
@@ -115,23 +144,74 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
             },
           ]
         : []),
+        {
+          type: 'button',
+          props: {
+            type: 'default',
+            children: '保存为条件',
+          },
+          action: (ctx: any) => {
+            const { modalInfo } = this.state;
+            this.setState({
+              modalInfo: {
+                ...modalInfo,
+                modalVisible: true,
+                callBack: (name: string) => {
+                  this.saveCondition(ctx, name);
+                  this.setState({
+                    modalInfo: {
+                      ...modalInfo, 
+                      modalVisible: false
+                    }
+                  })
+                }
+              }
+            })
+          }
+        },
+        {
+          type: (ctx: any) => (
+            <ConditionList 
+              formRef={ctx} 
+              tableRef={ctxGetter} 
+              currentPage={currentPage} 
+              currentUserName={currentUserName}
+              getFilterValueLabel={getFilterValueLabel}
+              getFilterKeyLabel={getFilterKeyLabel}
+            />
+            ),
+          // props: {
+          //   children: (<Button>sss</Button>)
+          //   // children: (ctx: any) => (<ConditionList  currentPage={currentPage} currentUserName={currentUserName} />),
+          // },
+        },
+        {
+          type: 'button',
+          props: {
+            type: 'default',
+            children: '排序',
+          },
+          action: (ctx: any) => {
+            console.log(history)
+          }
+        },
     ];
 
     const finalSpan = this.state.collapsed ? this.collapseSpan : this.expandSpan;
     const layoutProps = {} as any;
 
-    if (finalSpan === 24) {
-      layoutProps.actionsPosition = 'right';
-      layoutProps.style = {
-        marginBottom: 24,
-      };
-    } else {
-      layoutProps.style = {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        ...(layout === 'vertical' ? { marginTop: 30 } : {}),
-      };
-    }
+    layoutProps.actionsPosition = 'right';
+    layoutProps.style = {
+      marginBottom: 24,
+    };
+    // if (finalSpan === 24) {
+    // } else {
+    //   layoutProps.style = {
+    //     display: 'flex',
+    //     justifyContent: 'flex-end',
+    //     ...(layout === 'vertical' ? { marginTop: 30 } : {}),
+    //   };
+    // }
 
     return (
       <FormAction
@@ -144,28 +224,73 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
     );
   };
 
+  handleSubmit = () => {
+
+    const {
+      modalInfo: { callBack },
+    } = this.state;
+    this.formRef?.current?.validateFields()
+      .then(values => {
+        callBack && callBack(values.name);
+      });
+
+  }
+
+  handleModalClose = () => {
+    this.setState({
+      modalInfo: {
+        modalVisible: false
+      }
+    })
+  }
+
   render() {
     const { hasBottomBorder } = this.props;
+    const { modalInfo } = this.state;
     return (
-      <LocaleReceiver>
-        {(locale) => {
-          return (
-            <FieldGroup
-              container={{
-                type: 'div',
-                props: {
-                  className: cx(`sula-template-query-table-fields-wrapper`, {
-                    [`sula-template-query-table-fields-divider`]: hasBottomBorder,
-                  }),
-                },
-              }}
-            >
-              {this.renderFields()}
-              {this.renderFormAction(locale)}
-            </FieldGroup>
-          );
-        }}
-      </LocaleReceiver>
+      <>
+        <LocaleReceiver>
+          {(locale) => {
+            return (
+              
+              <FieldGroup
+                container={{
+                  type: 'div',
+                  props: {
+                    className: cx(`sula-template-query-table-fields-wrapper`, {
+                      [`sula-template-query-table-fields-divider`]: hasBottomBorder,
+                    }),
+                  },
+                }}
+              >
+                {this.renderFields()}
+                {this.renderFormAction(locale)}
+              </FieldGroup>
+            );
+          }}
+          
+        
+        </LocaleReceiver>
+        <Modal
+          width={600}
+          bodyStyle={{ paddingTop: '32px', backgroundColor: '#F7F7F7' }}
+          destroyOnClose
+          title={modalInfo.title || ''}
+          visible={modalInfo.modalVisible}
+          onOk={this.handleSubmit}
+          onCancel={this.handleModalClose}
+        >
+          <Form ref={this.formRef}>
+            <Row>
+              <Col span={24}>
+                <Form.Item name='name' label="名称">
+                  <Input style={{ width: '200px' }} />
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        </Modal>
+      </>
     );
   }
 }

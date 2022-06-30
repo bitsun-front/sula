@@ -187,6 +187,7 @@ const RefTable: React.FunctionComponent<TableProps> = (props, ref) => {
     return false;
   };
   let filterValues = tableProps?.getCurrentFormValue?.() || {};
+  console.log(filterValues)
   const filterFields = Object.keys(filterValues).filter(item => !judgeIsEmpty(filterValues[item]));
 
   if (!tableProps.title && (props.actionsRender || props.leftActionsRender)) {
