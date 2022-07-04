@@ -201,7 +201,8 @@ export default class FieldGroup extends React.Component<FieldGroupProps> {
   private renderChildren = (ctx, props, extraConf) => {
     const { itemLayout } = extraConf;
     const { fields } = props;
-    const { span, gutter } = itemLayout || {};
+    const { span, gutter } = itemLayout || { gutter: 0 };
+    itemLayout.gutter = itemLayout.gutter || 0; // 处理默认gutter值
 
     const children = fields ? this.transFieldToElems(ctx, fields) : props.children;
 

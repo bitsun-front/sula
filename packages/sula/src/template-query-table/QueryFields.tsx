@@ -5,12 +5,15 @@ import { Button, Modal, Form, Row, Col, Input, Dropdown, Tooltip } from 'antd';
 import cx from 'classnames';
 import { getItemSpan } from '../form/utils/layoutUtil';
 import FieldGroupContext from '../form/FieldGroupContext';
+import { MenuFoldOutlined } from '@ant-design/icons'
+<MenuFoldOutlined />
 import { FieldGroup, Field, FormAction, FieldProps, FormInstance, FormProps } from '../form';
 import './style/query-fields.less';
 import LocaleReceiver from '../localereceiver';
 import { toArray } from '../_util/common';
 import { history } from 'umi';
 import ConditionList from './conditionList';
+import LayoutContext from './LayoutContext';
 
 export interface QueryFieldsProps {
   fields: FieldProps[];
@@ -114,41 +117,23 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
   renderFormAction = (locale) => {
     const { layout } = this.context;
     const { collapsed, currentPage, currentUserName } = this.state;
-    const { ctxGetter, getFilterKeyLabel, getFilterValueLabel } = this.props;
-    const actionsRender = [
-      ...(toArray(this.props.actionsRender)),
-      ...(this.hasMoreQueryFields()
-        ? [
-            {
-              type: () => (
-                <a>
-                  <span>{collapsed ? locale.expandText : locale.collapseText}</span>
-                  <DownOutlined
-                    style={{
-                      transition: '0.3s all',
-                      transform: `rotate(${collapsed ? 0 : 0.5}turn)`,
-                    }}
-                  />
-                </a>
-              ),
-              action: () => {
-                this.setState(
-                  {
-                    collapsed: !collapsed,
-                  },
-                  () => {
-                    this.updateVisibleFields();
-                  },
-                );
-              },
-            },
-          ]
-        : []),
+    const { ctxGetter, getFilterKeyLabel, getFilterValueLabel, isHorizontally } = this.props;
+    let actionsRender = []
+
+    if (!isHorizontally) {
+      
+      actionsRender = [
         {
           type: 'button',
           props: {
             type: 'default',
             children: '保存为条件',
+            style: {
+              width: '94px',
+              border: '1px solid #005CFF',
+              color: '#005CFF',
+              marginRight: '10px'
+            }
           },
           action: (ctx: any) => {
             const { modalInfo } = this.state;
@@ -169,9 +154,21 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
             })
           }
         },
+        ...(toArray(this.props.actionsRender).concat([]).reverse()),
         {
           type: (ctx: any) => (
-            <ConditionList 
+            <span>
+              <LayoutContext.Consumer>
+              {({isHorizontally, updateLayout}: any) => <MenuFoldOutlined style={{marginTop: '10px'}} onClick={() => {
+                updateLayout(!isHorizontally)
+              }}></MenuFoldOutlined>}
+            </LayoutContext.Consumer>
+            </span>
+          )
+        },
+        {
+          type: (ctx: any) => (
+            <ConditionList
               formRef={ctx} 
               tableRef={ctxGetter} 
               currentPage={currentPage} 
@@ -185,17 +182,72 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
           //   // children: (ctx: any) => (<ConditionList  currentPage={currentPage} currentUserName={currentUserName} />),
           // },
         },
-        {
-          type: 'button',
-          props: {
-            type: 'default',
-            children: '排序',
+      ]
+    } else {
+      actionsRender = [
+        ...(toArray(this.props.actionsRender)),
+          {
+            type: 'button',
+            props: {
+              type: 'default',
+              children: '保存为条件',
+              style: {
+                width: '94px',
+                border: '1px solid #005CFF',
+                color: '#005CFF',
+                marginRight: '24px'
+              }
+            },
+            action: (ctx: any) => {
+              const { modalInfo } = this.state;
+              this.setState({
+                modalInfo: {
+                  ...modalInfo,
+                  modalVisible: true,
+                  callBack: (name: string) => {
+                    this.saveCondition(ctx, name);
+                    this.setState({
+                      modalInfo: {
+                        ...modalInfo, 
+                        modalVisible: false
+                      }
+                    })
+                  }
+                }
+              })
+            }
           },
-          action: (ctx: any) => {
-            console.log(history)
+          {
+            type: (ctx: any) => (
+              <ConditionList 
+                formRef={ctx} 
+                tableRef={ctxGetter} 
+                currentPage={currentPage} 
+                currentUserName={currentUserName}
+                getFilterValueLabel={getFilterValueLabel}
+                getFilterKeyLabel={getFilterKeyLabel}
+              />
+              ),
+            // props: {
+            //   children: (<Button>sss</Button>)
+            //   // children: (ctx: any) => (<ConditionList  currentPage={currentPage} currentUserName={currentUserName} />),
+            // },
+          },
+          {
+            type: (ctx: any) => (
+              <span>
+                <LayoutContext.Consumer>
+                {({isHorizontally, updateLayout}: any) => <MenuFoldOutlined onClick={() => {
+                  updateLayout(!isHorizontally)
+                }}></MenuFoldOutlined>}
+              </LayoutContext.Consumer>
+              </span>
+            )
           }
-        },
-    ];
+          
+      ];
+    }
+
 
     const finalSpan = this.state.collapsed ? this.collapseSpan : this.expandSpan;
     const layoutProps = {} as any;
@@ -214,13 +266,19 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
     // }
 
     return (
-      <FormAction
-        itemLayout={{
-          span: finalSpan,
-        }}
-        {...layoutProps}
-        actionsRender={actionsRender}
-      />
+      <LayoutContext.Consumer>
+        {({isHorizontally, updateLayout}: any) => (
+            <FormAction
+            itemLayout={{
+              span: finalSpan,
+            }}
+            {...layoutProps}
+            actionsRender={actionsRender}
+            landscape={!isHorizontally}
+          />
+        )}
+      </LayoutContext.Consumer>
+      
     );
   };
 
@@ -245,27 +303,51 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
   }
 
   render() {
-    const { hasBottomBorder } = this.props;
-    const { modalInfo } = this.state;
+    const { hasBottomBorder, isHorizontally } = this.props;
+    console.log(isHorizontally)
+    const { modalInfo, collapsed } = this.state;
     return (
       <>
         <LocaleReceiver>
           {(locale) => {
             return (
-              
-              <FieldGroup
+              <>
+                <FieldGroup
                 container={{
                   type: 'div',
                   props: {
-                    className: cx(`sula-template-query-table-fields-wrapper`, {
-                      [`sula-template-query-table-fields-divider`]: hasBottomBorder,
-                    }),
+                    className: cx(!isHorizontally ? 'sula-template-query-table-fields-wrapper isHorizontally' : `sula-template-query-table-fields-wrapper`),
                   },
                 }}
               >
                 {this.renderFields()}
                 {this.renderFormAction(locale)}
               </FieldGroup>
+              {this.hasMoreQueryFields()
+                ? <div className='sula-template-query-table-collapsed sula-template-query-table-fields-divider'>
+                    <a onClick={() => {
+                      this.setState(
+                        {
+                          collapsed: !collapsed,
+                        },
+                        () => {
+                          this.updateVisibleFields();
+                        },
+                      );
+                    }}>
+                        <span>{collapsed ? locale.expandText : locale.collapseText}</span>
+                        &nbsp;<DownOutlined
+                          style={{
+                            fontSize: '10px',
+                            transition: '0.3s all',
+                            transform: `rotate(${collapsed ? 0 : 0.5}turn)`,
+                          }}
+                        />
+                      </a>
+                  </div> 
+                : <></>
+              }
+              </>
             );
           }}
           

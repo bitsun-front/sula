@@ -4,6 +4,14 @@
   &-right {
     .formActionPosition(flex-end);
   }
+
+  &-landscape {
+    order: 1;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+  }
+
   &-center {
     .formActionPosition(center);
   }
@@ -33,7 +41,6 @@
   //   }
   // }
 }
-
 
 .formActionPosition(@position) {
   display: flex;

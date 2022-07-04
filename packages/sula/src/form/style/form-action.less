@@ -2,7 +2,25 @@
 
 .sula-form-action {
   &-right {
+    position: absolute;
+    right: 20px;
+    width: 373px;
+    flex-basis: 373px;
+    flex-shrink: 0;
     .formActionPosition(flex-end);
+  }
+  &-landscape {
+    width: 268px;
+    order: 1;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+
+    .ant-space {
+      display: flex;
+      flex-wrap: wrap;
+      line-height: 28px;
+    }
   }
   &-center {
     .formActionPosition(center);

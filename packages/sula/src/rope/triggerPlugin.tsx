@@ -134,7 +134,7 @@ export const triggerRenderPlugin = (
   }
 
   return (
-    <Space>
+    <Space size="10">
       {arrayConf.map((conf, index) => {
         const actionNode = triggerSingleRenderPlugin(lazyCtx, conf);
         return React.cloneElement(actionNode, { key: index });

@@ -1,6 +1,14 @@
+/*
+ * @Description: 
+ * @Author: rodchen
+ * @Date: 2022-07-01 11:39:28
+ * @LastEditTime: 2022-07-04 00:50:06
+ * @LastEditors: rodchen
+ */
 import React from 'react';
 import { Button, Modal, Form, Row, Col, Input, Dropdown, Tooltip, Menu, Popover } from 'antd';
 import SettingOutlined from '@ant-design/icons/SettingOutlined';
+import TableBg from '../../assets/condition.png'
 import styles from './index.less';
 
 
@@ -70,8 +78,8 @@ export default class ConditionList extends React.Component {
             className="ant-dropdown-link"
             onClick={(e) => e.preventDefault()}
           >
-            <SettingOutlined />
-            {/* <img width={32} src={shezhi} /> */}
+            {/* <TableBg /> */}
+            <img width={24} src={TableBg} />
           </a>
       </Dropdown>
     )

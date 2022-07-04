@@ -1,20 +1,93 @@
 @import (reference) '~antd/lib/style/themes/index';
+@labelwidth: 106px;
+@colwidth: 240px;
+
 
 .sula-template-query-table-fields {
   &-wrapper {
+    position: relative;
     border-radius: 2px 2px 0 0;
     padding: 24px 24px 0 24px;
+    padding-right: 386px;
     background-color: @card-background;
     overflow: hidden;
     display: flex;
     align-items: baseline;
+
     .ant-row {
       flex-grow: 1;
-      margin-right: 20px;
+      // margin-right: 20px;
+      .ant-col-8 {
+        flex: none;
+        max-width: 386px;
+        order: 2;
+      }
+
+      .ant-form-item {
+        margin-right: 20px;
+        margin-bottom: 16px;
+      }
+
+      .ant-form-item-label {
+        width: @labelwidth;
+        max-width: @labelwidth;
+        flex-basis: @labelwidth;
+        flex: none;
+        order: 1;
+      }
+    
+      .ant-form-item-control {
+        width: @colwidth;
+        max-width: @colwidth;
+        flex-basis: @colwidth;
+        flex: none;
+        order: 2;
+    
+      }
     }
   }
 
   &-divider {
     border-bottom: 1px solid @border-color-split;
+  }
+}
+
+.isHorizontally {
+  padding: 20px;
+  margin-right:10px;
+  width: 308px;
+
+  .ant-row {
+    .ant-form-item-control {
+      width: 268px;
+      max-width: 268px;
+      flex-basis: 268px;
+      flex: none;
+      order: 2;
+  
+    }
+  }
+}
+
+.sula-template-query-table-collapsed {
+  position: relative;
+  top: -12px;
+  margin-bottom: 10px;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 12px;
+
+  width:92px;
+  height: 0;            
+  border-top: 20px solid #FFFFFF;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-radius: 100px;
+
+  a {
+    position: absolute;
+    width: 80px;
+    top: -20px;
+    left: 0px;
   }
 }

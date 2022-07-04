@@ -10,6 +10,7 @@ import {
   MinusCircleOutlined,
 } from '@ant-design/icons';
 import { Button, Space, Select } from 'antd';
+import './index.less'
 
 // umi-plugin-sula 承载
 // registerFieldPlugins();

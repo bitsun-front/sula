@@ -5,7 +5,7 @@ import { UserOutlined } from '@ant-design/icons';
 const queryFields: QueryTableProps['fields'] = [
   {
     name: 'nat',
-    label: '国家',
+    label: '国家国家国家国家',
     initialSource: [
       {
         text: '国家A',
@@ -28,7 +28,7 @@ const queryFields: QueryTableProps['fields'] = [
   },
   {
     name: 'name',
-    label: '名字',
+    label: '国家国家国家国家',
     initialSource: [
       {
         text: 'name1',
@@ -61,6 +61,31 @@ const queryFields: QueryTableProps['fields'] = [
   },
   {
     name: 'age1',
+    label: '年龄',
+    field: 'input',
+  },
+  {
+    name: 'age2',
+    label: '年龄',
+    field: 'input',
+  },
+  {
+    name: 'age3',
+    label: '年龄',
+    field: 'input',
+  },
+  {
+    name: 'age4',
+    label: '年龄',
+    field: 'input',
+  },
+  {
+    name: 'age15',
+    label: '年龄',
+    field: 'input',
+  },
+  {
+    name: 'age6',
     label: '年龄',
     field: 'input',
   },

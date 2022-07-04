@@ -10,6 +10,7 @@ import warning from '../_util/warning';
 import './style/query-table.less';
 import QueryForm from './QueryForm';
 import LocaleReceiver from '../localereceiver';
+import LayourContext from './LayoutContext';
 import { Input, Space, Button, Radio, Checkbox } from 'antd';
 import { MoreOutlined, SearchOutlined, CaretDownOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
@@ -54,6 +55,20 @@ export default class QueryTable extends React.Component<Props> {
   private formRef = React.createRef<FormInstance>();
   private tableRef = React.createRef<TableInstance>();
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      isHorizontally: true
+    }
+  }
+
+  updateLayout = () => {
+    const { isHorizontally } = this.state;
+    this.setState({
+      isHorizontally: !isHorizontally
+    })
+  }
+
   componentDidMount() {
     const { autoInit, initialValues } = this.props;
     if (autoInit && this.remoteDataSource) {
@@ -71,7 +86,7 @@ export default class QueryTable extends React.Component<Props> {
     );
   };
 
-  renderForm = (locale) => {
+  renderForm = (locale, isHorizontally) => {
     const { formProps, layout, itemLayout, fields, initialValues, visibleFieldsCount } = this.props;
     const formActionsRender = formProps?.actionsRender ?? [
       {
@@ -79,6 +94,10 @@ export default class QueryTable extends React.Component<Props> {
         props: {
           type: 'primary',
           children: locale.queryText,
+          style: {
+            width: '68px',
+            marginRight: '10px'
+          }
         },
         action: [
           { type: 'validateQueryFields', resultPropName: '$queryFieldsValue' },
@@ -92,6 +111,10 @@ export default class QueryTable extends React.Component<Props> {
         type: 'button',
         props: {
           children: locale.resetText,
+          style: {
+            width: '68px',
+            marginRight: '10px'
+          }
         },
         action: [
           'resetFields',
@@ -124,6 +147,7 @@ export default class QueryTable extends React.Component<Props> {
         actionsRender={formActionsRender}
         getFilterKeyLabel={this.getFilterKeyLabel}
         getFilterValueLabel={this.getFilterValueLabel}
+        isHorizontally={isHorizontally}
       />
     );
   };
@@ -238,7 +262,6 @@ export default class QueryTable extends React.Component<Props> {
     if (columns.find(column => column.tableHeadFilterKey === filterKey)) {
       return columns.find(column => column.tableHeadFilterKey === filterKey)?.title || filterKey; 
     }
-    debugger
     return filterKey;
   }
 
@@ -302,13 +325,22 @@ export default class QueryTable extends React.Component<Props> {
   };
 
   render() {
+    const { isHorizontally } = this.state;
+
     return (
       <LocaleReceiver>
         {(locale) => {
           return (
             <React.Fragment>
-              {this.props.fields && this.props.fields.length ? this.renderForm(locale) : null}
-              {this.renderTable()}
+              <LayourContext.Provider value={{
+                isHorizontally: isHorizontally,
+                updateLayout: this.updateLayout
+              }}>
+                <div style={{display:  isHorizontally ? 'block' : 'flex'}}>
+                  {this.props.fields && this.props.fields.length ? this.renderForm(locale, isHorizontally) : null}
+                  {this.renderTable()}
+                </div>
+              </LayourContext.Provider>
             </React.Fragment>
           );
         }}
