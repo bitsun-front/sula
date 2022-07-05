@@ -5,7 +5,7 @@ import { UserOutlined } from '@ant-design/icons';
 const queryFields: QueryTableProps['fields'] = [
   {
     name: 'nat',
-    label: '国家国家国家国家',
+    label: '国家国家国',
     initialSource: [
       {
         text: '国家A',
@@ -28,7 +28,7 @@ const queryFields: QueryTableProps['fields'] = [
   },
   {
     name: 'name',
-    label: '国家国家国家国家',
+    label: '国家国家国',
     initialSource: [
       {
         text: 'name1',
@@ -309,6 +309,28 @@ export default class BasicDemo extends React.Component {
     return (
       <div style={{ background: 'rgb(241, 242, 246)', padding: 16, marginTop: 16 }}>
         <QueryTable
+          statusMapping={[
+            {
+              label: '全部',
+              key: 'status',
+              value: undefined
+            },
+            {
+              label: '状态1',
+              key: 'status',
+              value: 1
+            },
+            {
+              label: '状态2',
+              key: 'status',
+              value: 2
+            },
+            {
+              label: '状态3',
+              key: 'status',
+              value: 3
+            }
+          ]}
           layout="horizontal"
           visibleFieldsCount={3}
           columns={columns}

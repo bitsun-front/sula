@@ -47,15 +47,35 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
   };
 
   getVisibleFieldsCount = (): number => {
-    if (this.props.visibleFieldsCount === true) {
+    let count = this.props.visibleFieldsCount;
+    if (count === true) {
       return this.props.fields.length;
     }
 
-    return this.props.visibleFieldsCount!;
+    const clientWicth = document.documentElement.clientWidth;
+
+    if(clientWicth > 1600) {
+      count++;
+      return count;
+    }
+
+
+    return count!;
   };
 
+  componentWillReceiveProps(nextProps) {
+    if(!this.props.isHorizontally && nextProps.isHorizontally) {
+      this.setState(
+        {
+          collapsed: false
+        }
+      )
+      return 
+    }
+  }
+
   renderFields = () => {
-    const { fields } = this.props;
+    const { fields, isHorizontally, getFormInstance } = this.props;
 
     const { matchedPoint, itemLayout } = this.context;
 
@@ -64,7 +84,8 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
     let allSpan = 0;
     let visibleAllSpan = 0;
 
-    const visibleFieldsCount = this.getVisibleFieldsCount();
+    let visibleFieldsCount = this.getVisibleFieldsCount();
+
 
     const finalFields = fields.map((field, index) => {
       fieldsNameList.push(field.name);
@@ -78,6 +99,15 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
     });
     this.expandSpan = 24 - (allSpan % 24);
     this.collapseSpan = 24 - (visibleAllSpan % 24);
+
+    if(!isHorizontally) {
+      const formInstance = getFormInstance();
+      fields.forEach((field, index) => {
+        if (index >= visibleFieldsCount) {
+          formInstance.setFieldVisible(field.name, true);
+        }
+      });
+    }
 
     return finalFields;
   };
@@ -323,7 +353,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                 {this.renderFields()}
                 {this.renderFormAction(locale)}
               </FieldGroup>
-              {this.hasMoreQueryFields()
+              {this.hasMoreQueryFields() && isHorizontally
                 ? <div className='sula-template-query-table-collapsed sula-template-query-table-fields-divider'>
                     <a onClick={() => {
                       this.setState(
