@@ -11,7 +11,7 @@ import './style/query-table.less';
 import QueryForm from './QueryForm';
 import LocaleReceiver from '../localereceiver';
 import LayourContext from './LayoutContext';
-import { Input, Space, Button, Radio, Checkbox } from 'antd';
+import { Input, Space, Button, Radio, Checkbox, Tabs } from 'antd';
 import { MoreOutlined, SearchOutlined, CaretDownOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 
 type FormPropsPicks = 'fields' | 'initialValues' | 'layout' | 'itemLayout';
@@ -58,7 +58,8 @@ export default class QueryTable extends React.Component<Props> {
   constructor(props) {
     super(props);
     this.state = {
-      isHorizontally: true
+      isHorizontally: true,
+      status: {}
     }
   }
 
@@ -67,6 +68,7 @@ export default class QueryTable extends React.Component<Props> {
     this.setState({
       isHorizontally: !isHorizontally
     })
+
   }
 
   componentDidMount() {
@@ -130,25 +132,27 @@ export default class QueryTable extends React.Component<Props> {
       },
     ];
     return (
-      <QueryForm
-        {...formProps}
-        ctxGetter={() => {
-          return {
-            table: this.tableRef.current,
-          };
-        }}
-        ref={this.formRef}
-        hasBottomBorder={this.hasActionsRender()}
-        layout={layout}
-        itemLayout={itemLayout}
-        fields={fields}
-        initialValues={initialValues}
-        visibleFieldsCount={visibleFieldsCount}
-        actionsRender={formActionsRender}
-        getFilterKeyLabel={this.getFilterKeyLabel}
-        getFilterValueLabel={this.getFilterValueLabel}
-        isHorizontally={isHorizontally}
-      />
+      <div style={!isHorizontally ? {background: '#ffffff', borderTop: '1px #E1E2E3 solid'} : {}}>
+        <QueryForm
+          {...formProps}
+          ctxGetter={() => {
+            return {
+              table: this.tableRef.current,
+            };
+          }}
+          ref={this.formRef}
+          hasBottomBorder={this.hasActionsRender()}
+          layout={layout}
+          itemLayout={itemLayout}
+          fields={fields}
+          initialValues={initialValues}
+          visibleFieldsCount={visibleFieldsCount}
+          actionsRender={formActionsRender}
+          getFilterKeyLabel={this.getFilterKeyLabel}
+          getFilterValueLabel={this.getFilterValueLabel}
+          isHorizontally={isHorizontally}
+        />
+      </div>
     );
   };
 
@@ -273,7 +277,19 @@ export default class QueryTable extends React.Component<Props> {
     return null;
   }
 
+  onChange = (item: any) => {
+    if(item.value === this.state.status.value) return;
+    this.setState({
+      status: item
+    })
+    const { getFieldsValue, setFieldsValue } = this.formRef.current || {};
+    let currentFieldsValue = getFieldsValue(true);
+    this.tableRef?.current?.setFilters({[item.key]: item.value})
+    this.tableRef?.current?.refreshTable(null, currentFieldsValue, null, true);
+  };
+
   renderTable = () => {
+    const { status, isHorizontally } = this.state;
     const {
       tableProps,
       columns,
@@ -284,6 +300,7 @@ export default class QueryTable extends React.Component<Props> {
       rowKey,
       tagColor,
       tableWrapperStyle,
+      statusMapping
     } = this.props;
 
     if (!remoteDataSource) {
@@ -302,24 +319,37 @@ export default class QueryTable extends React.Component<Props> {
       }
     })
 
+    const suitStyle = {
+      position: 'relative',
+    }
+
     return (
-        <div style={tableWrapperStyle ? tableWrapperStyle : {padding: '0 16px', background: '#ffffff'}}>
-          <Table
-            {...tableProps}
-            className={cx(tableProps.className, `${prefixCls}`)}
-            rowSelection={rowSelection}
-            columns={finalColumns}
-            actionsRender={actionsRender}
-            leftActionsRender={rowSelection ? ['rowselection'] : leftActionsRender}
-            remoteDataSource={this.remoteDataSource}
-            rowKey={rowKey}
-            ref={this.tableRef}
-            onCloseTag={this.onCloseTag}
-            getCurrentFormValue={this.getCurrentFormValue}
-            getFilterValueLabel={this.getFilterValueLabel}
-            getFilterKeyLabel={this.getFilterKeyLabel}
-            tagColor={tagColor}
-          />
+        <div className={!isHorizontally ? 'suitClass' : ''} style={tableWrapperStyle ? {...suitStyle, ...tableWrapperStyle} : {...suitStyle, padding: '0 16px', background: '#ffffff'}}>
+          {!isHorizontally && statusMapping && <div className="sula-table-status">
+            {statusMapping && statusMapping.map(item => <span className={status.value === item.value ? 'span-active' : ''} onClick={() => {this.onChange(item)}}>
+              {item.label}
+            </span>)}
+            <div></div>
+          </div>}
+          
+          <div>
+            <Table
+              {...tableProps}
+              className={cx(tableProps.className, `${prefixCls}`)}
+              rowSelection={rowSelection}
+              columns={finalColumns}
+              actionsRender={actionsRender}
+              leftActionsRender={rowSelection ? ['rowselection'] : leftActionsRender}
+              remoteDataSource={this.remoteDataSource}
+              rowKey={rowKey}
+              ref={this.tableRef}
+              onCloseTag={this.onCloseTag}
+              getCurrentFormValue={this.getCurrentFormValue}
+              getFilterValueLabel={this.getFilterValueLabel}
+              getFilterKeyLabel={this.getFilterKeyLabel}
+              tagColor={tagColor}
+            />
+          </div>
         </div>
     );
   };
@@ -336,7 +366,7 @@ export default class QueryTable extends React.Component<Props> {
                 isHorizontally: isHorizontally,
                 updateLayout: this.updateLayout
               }}>
-                <div style={{display:  isHorizontally ? 'block' : 'flex'}}>
+                <div style={(!isHorizontally) ? {display: 'flex', background: 'rgb(243, 243, 243)' } : {}}>
                   {this.props.fields && this.props.fields.length ? this.renderForm(locale, isHorizontally) : null}
                   {this.renderTable()}
                 </div>

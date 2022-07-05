@@ -161,7 +161,6 @@ const RefTable: React.FunctionComponent<TableProps> = (props, ref) => {
   // =============== Table 级别 ===============
 
   const controls = getControls();
-
   tableProps.dataSource = controls.dataSource;
   tableProps.pagination = controls.pagination;
 
