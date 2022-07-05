@@ -13,8 +13,8 @@ import { toArray } from '../_util/common';
 import { history } from 'umi';
 import ConditionList from './conditionList';
 import LayoutContext from './LayoutContext';
-import position_left from '../../src/assets/position_left.svg';
-import position_top from '../../src/assets/position_top.svg';
+import position_left from '../assets/position_left.svg';
+import position_top from '../assets/position_top.svg';
 
 export interface QueryFieldsProps {
   fields: FieldProps[];
