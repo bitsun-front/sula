@@ -57,6 +57,7 @@ export default class ConditionList extends React.Component {
     })
   }
 
+  //render条件菜单
   getMenu = () => {
     const { currentUserName, currentPage, tableRef, formRef } = this.props;
     const { currentPageCondition, currentChecked } = this.state;
