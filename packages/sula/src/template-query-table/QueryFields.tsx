@@ -6,7 +6,6 @@ import cx from 'classnames';
 import { getItemSpan } from '../form/utils/layoutUtil';
 import FieldGroupContext from '../form/FieldGroupContext';
 import { MenuFoldOutlined } from '@ant-design/icons'
-<MenuFoldOutlined />
 import { FieldGroup, Field, FormAction, FieldProps, FormInstance, FormProps } from '../form';
 import './style/query-fields.less';
 import LocaleReceiver from '../localereceiver';
@@ -14,6 +13,8 @@ import { toArray } from '../_util/common';
 import { history } from 'umi';
 import ConditionList from './conditionList';
 import LayoutContext from './LayoutContext';
+import position_left from '../../src/assets/position_left.svg';
+import position_top from '../../src/assets/position_top.svg';
 
 export interface QueryFieldsProps {
   fields: FieldProps[];
@@ -159,9 +160,27 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
           type: (ctx: any) => (
             <span>
               <LayoutContext.Consumer>
-              {({isHorizontally, updateLayout}: any) => <MenuFoldOutlined style={{marginTop: '10px'}} onClick={() => {
-                updateLayout(!isHorizontally)
-              }}></MenuFoldOutlined>}
+                {({ isHorizontally, updateLayout }: any) => <span
+                  style={{
+                    display: 'flex',
+                    alignItems:'center',
+                    justifyContent: 'center',
+                    width: '32px',
+                    height: '32px',
+                    border: '0.89px solid #D9D9D9',
+                    boxSizing: 'border-box',
+                    borderRadius: '5px',
+                    marginRight: '10px',
+                    marginTop: '10px'
+                  }}
+                >
+                  <img
+                    src={position_left}
+                    width={24}
+                    onClick={() => {
+                      updateLayout(!isHorizontally)
+                    }} />
+                </span>}
             </LayoutContext.Consumer>
             </span>
           )
@@ -169,7 +188,8 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
         {
           type: (ctx: any) => (
             <ConditionList
-              formRef={ctx} 
+              formRef={ctx}
+              isHorizontally={isHorizontally}
               tableRef={ctxGetter} 
               currentPage={currentPage} 
               currentUserName={currentUserName}
@@ -213,19 +233,21 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                       }
                     })
                   }
-                }
+                },
               })
             }
           },
           {
             type: (ctx: any) => (
-              <ConditionList 
-                formRef={ctx} 
+              <ConditionList
+                formRef={ctx}
+                isHorizontally={isHorizontally}
                 tableRef={ctxGetter} 
                 currentPage={currentPage} 
                 currentUserName={currentUserName}
                 getFilterValueLabel={getFilterValueLabel}
                 getFilterKeyLabel={getFilterKeyLabel}
+                
               />
               ),
             // props: {
@@ -237,9 +259,25 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
             type: (ctx: any) => (
               <span>
                 <LayoutContext.Consumer>
-                {({isHorizontally, updateLayout}: any) => <MenuFoldOutlined onClick={() => {
-                  updateLayout(!isHorizontally)
-                }}></MenuFoldOutlined>}
+                  {({ isHorizontally, updateLayout }: any) => <span
+                    style={{
+                      display: 'flex',
+                      alignItems:'center',
+                      justifyContent: 'center',
+                      width: '32px',
+                      height: '32px',
+                      border: '0.89px solid #D9D9D9',
+                      boxSizing: 'border-box',
+                      borderRadius: '5px',
+                    }}
+                  >
+                    <img
+                      src={position_top}
+                      width={24}
+                      onClick={() => {
+                        updateLayout(!isHorizontally)
+                      }} />
+                  </span>}
               </LayoutContext.Consumer>
               </span>
             )

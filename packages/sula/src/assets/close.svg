@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="24px" height="24px" viewBox="0 0 24 24" version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink">
+    <title>帮助</title>
+    <defs>
+        <rect id="path-1" x="0" y="0" width="24" height="24"></rect>
+    </defs>
+    <g id="列表搜索区功能特性设计：" stroke="none" stroke-width="1" fill="none" fill-rule="evenodd">
+        <g id="列表搜索区-竖排" transform="translate(-1809.000000, -389.000000)">
+            <g id="编组-13" transform="translate(1060.000000, 369.000000)">
+                <g id="帮助" transform="translate(749.000000, 20.000000)">
+                    <mask id="mask-2" fill="white">
+                        <use xlink:href="#path-1"></use>
+                    </mask>
+                    <use id="close" fill="#D8D8D8" opacity="0" xlink:href="#path-1"></use>
+                    <g id="close" mask="url(#mask-2)" fill="#000000" fill-rule="nonzero">
+                        <g transform="translate(3.000000, 3.000000)" id="路径">
+                            <polygon points="1.37549231 0.0113623772 0.00491564845 1.376137 7.62947368 9.03550743 0.00491564845 16.6948779 1.37549231 18.0596525 8.99360362 10.4060841 16.6117149 18.0596525 17.9822916 16.6948779 10.3583782 9.03615209 17.9822916 1.376137 16.6117149 0.0113623772 8.99360362 7.66428607 1.37549231 0.012007041"></polygon>
+                        </g>
+                    </g>
+                </g>
+            </g>
+        </g>
+    </g>
+</svg>
