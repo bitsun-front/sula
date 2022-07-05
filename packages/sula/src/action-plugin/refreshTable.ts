@@ -1,5 +1,4 @@
 export const refreshTable = (ctx, config) => {
-  debugger
   return ctx.table.refreshTable.apply(ctx.table, config.args);
 };
 

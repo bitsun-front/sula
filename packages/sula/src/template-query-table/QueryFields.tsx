@@ -201,7 +201,8 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                     boxSizing: 'border-box',
                     borderRadius: '5px',
                     marginRight: '10px',
-                    marginTop: '10px'
+                    marginTop: '10px',
+                    cursor: 'pointer'
                   }}
                 >
                   <img
@@ -299,6 +300,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                       border: '0.89px solid #D9D9D9',
                       boxSizing: 'border-box',
                       borderRadius: '5px',
+                      cursor: 'pointer'
                     }}
                   >
                     <img
