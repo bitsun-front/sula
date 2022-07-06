@@ -47,19 +47,25 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
     currentPage: history?.location?.pathname || '',
   };
 
+  componentDidMount(props) {
+    window.onresize = () => {
+
+    }
+  }
+
   getVisibleFieldsCount = (): number => {
     let count = this.props.visibleFieldsCount;
     if (count === true) {
       return this.props.fields.length;
     }
-
     const clientWicth = document.documentElement.clientWidth;
 
-    if(clientWicth > 1600) {
-      count++;
-      return count;
-    }
+    // let queryFieldsWidth = clientWicth - 520;
 
+    // if(queryFieldsWidth > 1224) {
+    //   count++;
+    //   return count;
+    // }
 
     return count!;
   };
@@ -336,18 +342,18 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
     // }
 
     return (
-      <LayoutContext.Consumer>
-        {({isHorizontally, updateLayout}: any) => (
-            <FormAction
-            itemLayout={{
-              span: finalSpan,
-            }}
-            {...layoutProps}
-            actionsRender={actionsRender}
-            landscape={!isHorizontally}
-          />
-        )}
-      </LayoutContext.Consumer>
+        <FormAction
+        itemLayout={{
+          span: finalSpan,
+        }}
+        {...layoutProps}
+        actionsRender={actionsRender}
+        landscape={!isHorizontally}
+      />
+      // <LayoutContext.Consumer>
+      //   {({isHorizontally, updateLayout}: any) => (
+      //   )}
+      // </LayoutContext.Consumer>
       
     );
   };
@@ -383,6 +389,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
             return (
               <>
                 <FieldGroup
+                isHorizontally={isHorizontally}
                 container={{
                   type: 'div',
                   props: {

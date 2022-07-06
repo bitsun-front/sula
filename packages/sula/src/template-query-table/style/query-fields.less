@@ -8,7 +8,7 @@
     position: relative;
     border-radius: 2px 2px 0 0;
     padding: 24px 24px 0 24px;
-    padding-right: 386px;
+    // padding-right: 386px;
     background-color: @card-background;
     overflow: hidden;
     display: flex;
@@ -16,10 +16,12 @@
 
     .ant-row {
       flex-grow: 1;
+      flex-shrink: 1;
+      // max-width: 1554px;
       // margin-right: 20px;
       .ant-col-8 {
-        flex: none;
-        max-width: 386px;
+        // flex: none;
+        // max-width: 386px;
         order: 2;
       }
 
@@ -37,13 +39,18 @@
       }
     
       .ant-form-item-control {
-        width: @colwidth;
-        max-width: @colwidth;
+        min-width: @colwidth;
+        // max-width: @colwidth;
         flex-basis: @colwidth;
         flex: none;
         order: 2;
+        width: 100%;
     
       }
+    }
+    .sula-form-action-right {
+      flex-grow: 0;
+      flex-shrink: 0;
     }
   }
 
@@ -55,8 +62,13 @@
 .isHorizontally {
   padding: 20px 10px;
   width: 268px;
+  display: inherit; //左右布局时取消form fields和action的flex布局
 
   .ant-row {
+    display: inherit;
+    .ant-form-item {
+      margin-bottom: 5px !important;
+    }
     .ant-form-item-control {
       width: 248px;
       max-width: 248px;
@@ -64,6 +76,9 @@
       flex: none;
       order: 2;
   
+    }
+    .ant-form-item-label {
+      padding: 0 0 5px !important;
     }
   }
 }

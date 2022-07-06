@@ -59,7 +59,8 @@ export default class QueryTable extends React.Component<Props> {
     super(props);
     this.state = {
       isHorizontally: true,
-      status: {}
+      status: {},
+      sliderFormHeight: 500
     }
   }
 
@@ -76,6 +77,18 @@ export default class QueryTable extends React.Component<Props> {
     if (autoInit && this.remoteDataSource) {
       this.tableRef.current.refreshTable(null, initialValues, null, true);
     }
+    this.setSliderFormHeight();
+    window.onresize = () => {
+      this.setSliderFormHeight();
+    }
+  }
+
+  setSliderFormHeight = () => {
+    const clientHeight = document.documentElement.clientHeight;
+    let newHeight = clientHeight - 136;
+    this.setState({
+      sliderFormHeight: newHeight
+    })
   }
 
   hasActionsRender = () => {
@@ -132,7 +145,7 @@ export default class QueryTable extends React.Component<Props> {
       },
     ];
     return (
-      <div style={!isHorizontally ? {background: '#ffffff', borderTop: '1px #E1E2E3 solid'} : {}}>
+      <div style={!isHorizontally ? {background: '#ffffff', borderTop: '1px #E1E2E3 solid', height: `${this.state.sliderFormHeight}px`, overflowY: 'scroll', overflowX: 'hidden'} : {}}>
         <QueryForm
           {...formProps}
           ctxGetter={() => {

@@ -2,12 +2,27 @@
 
 .sula-form-action {
   &-right {
-    position: absolute;
+    // position: absolute;
     right: 20px;
-    width: 373px;
-    flex-basis: 373px;
+    // width: 373px;
+    // flex-basis: 373px;
+    // min-width: 373px;
+    width: 400px;
     flex-shrink: 0;
+    flex-grow: 1;
+    display: inherit;
     .formActionPosition(flex-end);
+    .ant-space-horizontal {
+      width: 100%;
+      display: block;
+      .ant-space-item {
+        display: inline-block;
+      }
+      .ant-space-item:nth-last-child(-n+2) {
+        float: right;
+        margin-left: 10px;
+      }
+    }
   }
   &-landscape {
     width: 268px;

@@ -200,7 +200,7 @@ export default class FieldGroup extends React.Component<FieldGroupProps> {
 
   private renderChildren = (ctx, props, extraConf) => {
     const { itemLayout } = extraConf;
-    const { fields } = props;
+    const { fields, isHorizontally } = props;
     const { span, gutter } = itemLayout || { gutter: 0 };
     itemLayout.gutter = itemLayout.gutter || 0; // 处理默认gutter值
 
@@ -280,12 +280,21 @@ export default class FieldGroup extends React.Component<FieldGroupProps> {
           </Row>,
         );
       } else {
-        finalChildren.push(
-          <Row gutter={gutter} key={rowKey}>
-            {groupFieldsElem}
-          </Row>,
-        );
-        finalChildren.push(actionsElem);
+        if (isHorizontally) {
+          finalChildren.push(
+            <Row gutter={gutter} key={rowKey}>
+              {groupFieldsElem}
+            </Row>,
+          );
+          finalChildren.push(actionsElem);
+        } else {
+          finalChildren.push(actionsElem);
+          finalChildren.push(
+            <Row gutter={gutter} key={rowKey}>
+              {groupFieldsElem}
+            </Row>,
+          );
+        }
       }
     }
 
