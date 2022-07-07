@@ -16,6 +16,7 @@ import viewIcon from '../../assets/conditon_detail.svg';
 import editIcon1 from '../../assets/edit1.svg';
 import deleteIcon1 from '../../assets/delete1.svg';
 import viewIcon1 from '../../assets/condition_detail1.svg';
+import condition_bg from '../../assets/condition_bg.svg';
 import styles from './index.less';
 
 
@@ -159,6 +160,19 @@ export default class ConditionList extends React.Component {
                 )
               })
             }
+            <div 
+            style={{
+              position: 'absolute', 
+              top: '50%', 
+              left: '50%', 
+              margin: '-69px 0 0 -59px', 
+              width: '118px', 
+              textAlign: 'center',
+              display: Object.keys(currentPageCondition).length === 0 ? 'block' : 'none'
+            }}>
+              <img  width={118} src={condition_bg} />
+              <span style={{color: '#BFBFBF', lineHeight: '20px'}}>暂无数据</span>
+            </div>
           </div>
           <div className={styles.condition_bottom}>
             <span style={{fontSize: '14px', color: '#BFBFBF'}}>共{Object.keys(currentPageCondition).length}个筛选条件</span>
@@ -305,10 +319,10 @@ export default class ConditionList extends React.Component {
          {this.renderConditionDetail()}
         </Modal>
         <Modal
-          width={600}
-          bodyStyle={{ paddingTop: '32px', backgroundColor: '#F7F7F7' }}
+          width={485}
+          bodyStyle={{ paddingLeft: '48px'}}
           destroyOnClose
-          title={'编辑名称'}
+          title={<span style={{fontSize: '18px', color: '#000000', fontWeight: '500'}}>编辑条件名称</span>}
           visible={editNameModal.modalVisible}
           onOk={this.handleSubmit}
           onCancel={this.handleModalClose}
@@ -317,7 +331,7 @@ export default class ConditionList extends React.Component {
             <Row>
               <Col span={24}>
                 <Form.Item name='name' label="名称">
-                  <Input style={{ width: '200px' }} />
+                  <Input style={{ width: '339px', marginLeft: '5px' }} />
                 </Form.Item>
               </Col>
             </Row>

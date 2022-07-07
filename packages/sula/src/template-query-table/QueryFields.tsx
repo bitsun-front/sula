@@ -1,7 +1,7 @@
 import React from 'react';
 import DownOutlined from '@ant-design/icons/DownOutlined';
 import SettingOutlined from '@ant-design/icons/SettingOutlined';
-import { Button, Modal, Form, Row, Col, Input, Dropdown, Tooltip } from 'antd';
+import { Button, Modal, Form, Row, Col, Input, Dropdown, Tooltip, message } from 'antd';
 import cx from 'classnames';
 import { getItemSpan } from '../form/utils/layoutUtil';
 import FieldGroupContext from '../form/FieldGroupContext';
@@ -170,7 +170,9 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
               border: '1px solid #005CFF',
               color: '#005CFF',
               marginRight: '10px'
-            }
+            },
+          },
+          funcProps: {
           },
           action: (ctx: any) => {
             const { modalInfo } = this.state;
@@ -254,6 +256,8 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                 color: '#005CFF',
                 marginRight: '24px'
               }
+            },
+            funcProps: {
             },
             action: (ctx: any) => {
               const { modalInfo } = this.state;
@@ -431,10 +435,10 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
         
         </LocaleReceiver>
         <Modal
-          width={600}
-          bodyStyle={{ paddingTop: '32px', backgroundColor: '#F7F7F7' }}
+          width={485}
+          bodyStyle={{ paddingLeft: '48px'}}
           destroyOnClose
-          title={modalInfo.title || ''}
+          title={modalInfo.title || <span style={{fontSize: '18px', color: '#000000', fontWeight: '500'}}>新增条件</span>}
           visible={modalInfo.modalVisible}
           onOk={this.handleSubmit}
           onCancel={this.handleModalClose}
@@ -443,7 +447,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
             <Row>
               <Col span={24}>
                 <Form.Item name='name' label="名称">
-                  <Input style={{ width: '200px' }} />
+                  <Input style={{ width: '339px',marginLeft: '5px' }} />
                 </Form.Item>
               </Col>
             </Row>
