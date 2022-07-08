@@ -180,6 +180,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                 modalVisible: true,
                 callBack: (name: string) => {
                   this.saveCondition(ctx, name);
+                  message.success('保存成功。');
                   this.setState({
                     modalInfo: {
                       ...modalInfo, 
@@ -265,6 +266,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                   modalVisible: true,
                   callBack: (name: string) => {
                     this.saveCondition(ctx, name);
+                    message.success('保存成功。');
                     this.setState({
                       modalInfo: {
                         ...modalInfo, 
