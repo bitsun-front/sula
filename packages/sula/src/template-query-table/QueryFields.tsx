@@ -48,9 +48,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
   };
 
   componentDidMount(props) {
-    window.onresize = () => {
-
-    }
+    console.log(this.props.formRef)
   }
 
   getVisibleFieldsCount = (): number => {
@@ -154,7 +152,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
   renderFormAction = (locale) => {
     const { layout } = this.context;
     const { collapsed, currentPage, currentUserName } = this.state;
-    const { ctxGetter, getFilterKeyLabel, getFilterValueLabel, isHorizontally } = this.props;
+    const { ctxGetter, getFilterKeyLabel, getFilterValueLabel, isHorizontally, hasFieldsValue } = this.props;
     let actionsRender = []
 
     if (!isHorizontally) {
@@ -167,13 +165,13 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
             children: '保存为条件',
             style: {
               width: '94px',
-              border: '1px solid #005CFF',
-              color: '#005CFF',
+              border: !hasFieldsValue ? '1px solid #d9d9d9' : '1px solid #005CFF',
+              color: !hasFieldsValue ? 'rgba(0, 0, 0, 0.25)' : '#005CFF',
+              padding: '0 12px',
               marginRight: '10px'
             },
           },
-          funcProps: {
-          },
+          disabled: !hasFieldsValue,
           action: (ctx: any) => {
             const { modalInfo } = this.state;
             this.setState({
@@ -252,13 +250,13 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
               children: '保存为条件',
               style: {
                 width: '94px',
-                border: '1px solid #005CFF',
-                color: '#005CFF',
-                marginRight: '24px'
-              }
+                border: !hasFieldsValue ? '1px solid #d9d9d9' : '1px solid #005CFF',
+                color: !hasFieldsValue ? 'rgba(0, 0, 0, 0.25)' : '#005CFF',
+                padding: '0 12px',
+                marginRight: '10px'
+              },
             },
-            funcProps: {
-            },
+            disabled: !hasFieldsValue,
             action: (ctx: any) => {
               const { modalInfo } = this.state;
               this.setState({

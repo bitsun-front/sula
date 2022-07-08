@@ -70,6 +70,7 @@ const Form: React.FunctionComponent<FormProps> = (props, ref) => {
     actionsPosition,
     onRemoteValuesStart,
     onRemoteValuesEnd,
+    checkFieldsValue,
   } = props;
 
   React.useEffect(() => {
@@ -122,6 +123,7 @@ const Form: React.FunctionComponent<FormProps> = (props, ref) => {
 
   formProps.onValuesChange = (changedValue, allValues) => {
     function onValuesChange() {
+      checkFieldsValue(allValues);
       cascade(changedValue, {
         cascadeTrigger: 'setFieldsValue',
         cascadeStore: changedValue,

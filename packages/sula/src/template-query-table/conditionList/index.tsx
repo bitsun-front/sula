@@ -6,7 +6,7 @@
  * @LastEditors: rodchen
  */
 import React from 'react';
-import { Button, Modal, Form, Row, Col, Input, Dropdown, Tooltip, Menu, Popover, message, } from 'antd';
+import { Button, Modal, Form, Row, Col, Input, Dropdown, Tooltip, Menu, Popconfirm, message, } from 'antd';
 import SettingOutlined from '@ant-design/icons/SettingOutlined';
 import { EditOutlined, OrderedListOutlined, DeleteOutlined } from '@ant-design/icons';
 import TableBg from '../../assets/condition.svg';
@@ -142,9 +142,11 @@ export default class ConditionList extends React.Component {
                             })
                           }}
                         />
-                        <img 
-                          src={currentChecked === key ? deleteIcon1 : deleteIcon}
-                          onClick={(e) => {
+                        <Popconfirm 
+                          title="确认删除吗?" 
+                          okText="确认" 
+                          cancelText="取消"
+                          onConfirm={(e) => {
                             e.stopPropagation();
                             let totalCondition = JSON.parse(localStorage.getItem(currentUserName) || '{}');
                             delete totalCondition[currentPage][key];
@@ -154,7 +156,13 @@ export default class ConditionList extends React.Component {
                               currentChecked: currentChecked === key ? '' : currentChecked,
                             })
                           }}
-                        />
+                          onCancel={(e) => {e?.stopPropagation()}}
+                        >
+                          <img 
+                            src={currentChecked === key ? deleteIcon1 : deleteIcon}
+                            onClick={(e) => {e.stopPropagation()}}
+                          />
+                        </Popconfirm>
                       </span>
                     </div>
                 )

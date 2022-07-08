@@ -5,7 +5,7 @@
  * @LastEditTime: 2022-07-04 01:08:08
  * @LastEditors: rodchen
  */
-import React from 'react';
+import React, { useState } from 'react';
 import { Form, FormInstance, FormProps } from '../form';
 import QueryFields, { QueryFieldsProps } from './QueryFields';
 
@@ -30,12 +30,31 @@ const QueryForm: React.ForwardRefRenderFunction<FormInstance, QueryFormProps> = 
     ...restProps
   } = props;
   const [form] = Form.useForm(restProps.form);
+  const [hasFieldsValue, setHasFieldValue] = useState(false);
+
+  const judgeIsEmpty = (value: any) => {
+    if (value == null || value == undefined || String(value).trim() == '') {
+      return true;
+    }
+    return false;
+  };
+
+  const checkFieldsValue = (allValues) => {
+    let hasFieldValue = true;
+    if (!allValues || Object.keys(allValues).length === 0 || Object.keys(allValues).every(item => judgeIsEmpty(allValues[item]))) {
+      hasFieldValue = false;
+    }
+    setHasFieldValue(hasFieldValue);
+  }
+
+
   React.useImperativeHandle(ref, () => form);
 
   const innerlayout = layout || {}
   return (
     <Form
       {...restProps}
+      checkFieldsValue={checkFieldsValue}
       form={form}
       initialValues={initialValues}
       itemLayout={itemLayout}
@@ -43,6 +62,7 @@ const QueryForm: React.ForwardRefRenderFunction<FormInstance, QueryFormProps> = 
     >
       <QueryFields
         fields={fields}
+        hasFieldsValue={hasFieldsValue}
         ctxGetter={restProps.ctxGetter}
         getFilterKeyLabel={getFilterKeyLabel}
         getFilterValueLabel={getFilterValueLabel}
