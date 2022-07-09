@@ -338,7 +338,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
 
     layoutProps.actionsPosition = 'right';
     layoutProps.style = {
-      marginBottom: 24,
+      // marginBottom: 24,
     };
     // if (finalSpan === 24) {
     // } else {
