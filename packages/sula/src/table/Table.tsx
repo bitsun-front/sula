@@ -201,11 +201,11 @@ const RefTable: React.FunctionComponent<TableProps> = (props, ref) => {
           />
           {
             !!filterFields.length && (
-              <div key={filterFields.length}  style={{padding: '10px 0 0'}}>
+              <div key={filterFields.length}  style={{marginTop:'-8px', height: '40px', display: 'flex', alignItems: 'center', overflow: 'hidden'}}>
                 {
                   filterFields
                   .map(item => (
-                    <Tag style={{padding: '3px 5px', marginBottom: '10px', backgroundColor:'#F7F8FB', border: '1px solid #CFCFD0', color: '#000000'}} closable onClose={() => {tableProps?.onCloseTag?.(item)}}>
+                    <Tag style={{padding: '3px 5px', backgroundColor:'#F7F8FB', border: '1px solid #CFCFD0', color: '#000000', height: '24px', lineHeight: '18px'}} closable onClose={() => {tableProps?.onCloseTag?.(item)}}>
                         {`${tableProps?.getFilterKeyLabel?.(item)}: ${tableProps?.getFilterValueLabel?.(item, filterValues[item])}`}
                         &nbsp;&nbsp;
                     </Tag>
