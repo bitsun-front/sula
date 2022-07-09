@@ -145,7 +145,7 @@ export default class QueryTable extends React.Component<Props> {
       },
     ];
     return (
-      <div style={!isHorizontally ? {background: '#ffffff', borderTop: '1px #E1E2E3 solid', height: `${this.state.sliderFormHeight}px`, overflowY: 'scroll', overflowX: 'hidden'} : {}}>
+      <div className='queryFormContainer' style={!isHorizontally ? {background: '#ffffff', borderTop: '1px #E1E2E3 solid', height: `${this.state.sliderFormHeight}px`, overflowY: 'scroll', overflowX: 'hidden'} : {}}>
         <QueryForm
           {...formProps}
           ctxGetter={() => {

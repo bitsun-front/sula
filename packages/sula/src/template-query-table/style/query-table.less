@@ -23,6 +23,39 @@
   }
 }
 
+// 滚动条
+/* 滚动槽（轨道）宽高 */
+.queryFormContainer::-webkit-scrollbar {
+  width: 5px; /*对垂直流动条有效*/
+  height: 5px; /*对水平流动条有效*/
+  // background-color:red
+}
+/* 滚动槽（轨道）样式 */
+.queryFormContainer::-webkit-scrollbar-track {
+  background-color: #ffffff;
+  border-radius: 8px;
+}
+
+/*定义滑块颜色、内阴影及圆角*/
+.queryFormContainer::-webkit-scrollbar-thumb {
+  border-radius: 7px;
+  background-color: #CECECE;
+}
+
+/*定义两端按钮的样式*/
+.queryFormContainer::-webkit-scrollbar-button {
+  display: none;
+}
+
+.queryFormContainer::-webkit-scrollbar-thumb:window-inactive {
+  background: #fff;
+}
+
+.ant-popover {
+  z-index: 1055 !important;
+}
+
+
 .suitClass {
   width: calc(100% - 268px);
 }

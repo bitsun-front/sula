@@ -180,7 +180,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                 modalVisible: true,
                 callBack: (name: string) => {
                   this.saveCondition(ctx, name);
-                  message.success('保存成功。');
+                  message.success('条件已保存至“条件库”');
                   this.setState({
                     modalInfo: {
                       ...modalInfo, 
@@ -193,6 +193,23 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
           }
         },
         ...(toArray(this.props.actionsRender).concat([]).reverse()),
+        {
+          type: (ctx: any) => (
+              <ConditionList
+                formRef={ctx}
+                isHorizontally={isHorizontally}
+                tableRef={ctxGetter} 
+                currentPage={currentPage} 
+                currentUserName={currentUserName}
+                getFilterValueLabel={getFilterValueLabel}
+                getFilterKeyLabel={getFilterKeyLabel}
+              />
+            ),
+          // props: {
+          //   children: (<Button>sss</Button>)
+          //   // children: (ctx: any) => (<ConditionList  currentPage={currentPage} currentUserName={currentUserName} />),
+          // },
+        },
         {
           type: (ctx: any) => (
             <span>
@@ -209,36 +226,22 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                     borderRadius: '5px',
                     marginRight: '10px',
                     marginTop: '10px',
+                    marginLeft: '10px',
                     cursor: 'pointer'
                   }}
                 >
-                  <img
-                    src={position_left}
-                    width={24}
-                    onClick={() => {
-                      updateLayout(!isHorizontally)
-                    }} />
+                  <Tooltip placement="top" title={'横排'}>
+                    <img
+                      src={position_left}
+                      width={24}
+                      onClick={() => {
+                        updateLayout(!isHorizontally)
+                      }} />
+                  </Tooltip>
                 </span>}
             </LayoutContext.Consumer>
             </span>
           )
-        },
-        {
-          type: (ctx: any) => (
-            <ConditionList
-              formRef={ctx}
-              isHorizontally={isHorizontally}
-              tableRef={ctxGetter} 
-              currentPage={currentPage} 
-              currentUserName={currentUserName}
-              getFilterValueLabel={getFilterValueLabel}
-              getFilterKeyLabel={getFilterKeyLabel}
-            />
-            ),
-          // props: {
-          //   children: (<Button>sss</Button>)
-          //   // children: (ctx: any) => (<ConditionList  currentPage={currentPage} currentUserName={currentUserName} />),
-          // },
         },
       ]
     } else {
@@ -266,7 +269,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                   modalVisible: true,
                   callBack: (name: string) => {
                     this.saveCondition(ctx, name);
-                    message.success('保存成功。');
+                    message.success('条件已保存至“条件库”');
                     this.setState({
                       modalInfo: {
                         ...modalInfo, 
@@ -277,24 +280,6 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                 },
               })
             }
-          },
-          {
-            type: (ctx: any) => (
-              <ConditionList
-                formRef={ctx}
-                isHorizontally={isHorizontally}
-                tableRef={ctxGetter} 
-                currentPage={currentPage} 
-                currentUserName={currentUserName}
-                getFilterValueLabel={getFilterValueLabel}
-                getFilterKeyLabel={getFilterKeyLabel}
-                
-              />
-              ),
-            // props: {
-            //   children: (<Button>sss</Button>)
-            //   // children: (ctx: any) => (<ConditionList  currentPage={currentPage} currentUserName={currentUserName} />),
-            // },
           },
           {
             type: (ctx: any) => (
@@ -310,21 +295,40 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                       border: '0.89px solid #D9D9D9',
                       boxSizing: 'border-box',
                       borderRadius: '5px',
+                      marginRight: '10px',
                       cursor: 'pointer'
                     }}
                   >
-                    <img
-                      src={position_top}
-                      width={24}
-                      onClick={() => {
-                        updateLayout(!isHorizontally)
-                      }} />
+                    <Tooltip placement="top" title={'竖排'}>
+                      <img
+                        src={position_top}
+                        width={24}
+                        onClick={() => {
+                          updateLayout(!isHorizontally)
+                        }} />
+                    </Tooltip>
                   </span>}
               </LayoutContext.Consumer>
               </span>
             )
-          }
-          
+          },
+          {
+            type: (ctx: any) => (
+                <ConditionList
+                  formRef={ctx}
+                  isHorizontally={isHorizontally}
+                  tableRef={ctxGetter} 
+                  currentPage={currentPage} 
+                  currentUserName={currentUserName}
+                  getFilterValueLabel={getFilterValueLabel}
+                  getFilterKeyLabel={getFilterKeyLabel}
+                />
+              ),
+            // props: {
+            //   children: (<Button>sss</Button>)
+            //   // children: (ctx: any) => (<ConditionList  currentPage={currentPage} currentUserName={currentUserName} />),
+            // },
+          },
       ];
     }
 
@@ -438,7 +442,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
           width={485}
           bodyStyle={{ paddingLeft: '48px'}}
           destroyOnClose
-          title={modalInfo.title || <span style={{fontSize: '18px', color: '#000000', fontWeight: '500'}}>新增条件</span>}
+          title={modalInfo.title || <span style={{fontSize: '18px', color: '#000000', fontWeight: '500'}}>条件命名</span>}
           visible={modalInfo.modalVisible}
           onOk={this.handleSubmit}
           onCancel={this.handleModalClose}

@@ -95,6 +95,10 @@ export default class ConditionList extends React.Component {
                       this.setState({
                         currentChecked: key
                       })
+                      if (tableRef && formRef) {
+                        formRef?.form.setFieldsValue(currentPageCondition[key]);
+                        tableRef()?.table?.refreshTable(null, currentPageCondition[key], null, true)
+                      }
                     }}
                     className={styles.conditon_item}
                     >
@@ -129,7 +133,7 @@ export default class ConditionList extends React.Component {
                             })
                           }}
                         />
-                        <img 
+                        {/* <img 
                           src={currentChecked === key ? viewIcon1 : viewIcon}
                           onClick={(e) => {
                             e.stopPropagation()
@@ -141,7 +145,7 @@ export default class ConditionList extends React.Component {
                               }
                             })
                           }}
-                        />
+                        /> */}
                         <Popconfirm 
                           title="确认删除吗?" 
                           okText="确认" 
@@ -179,12 +183,12 @@ export default class ConditionList extends React.Component {
               display: Object.keys(currentPageCondition).length === 0 ? 'block' : 'none'
             }}>
               <img  width={118} src={condition_bg} />
-              <span style={{color: '#BFBFBF', lineHeight: '20px'}}>暂无数据</span>
+              <span style={{color: '#BFBFBF', lineHeight: '20px'}}>暂无条件</span>
             </div>
           </div>
           <div className={styles.condition_bottom}>
             <span style={{fontSize: '14px', color: '#BFBFBF'}}>共{Object.keys(currentPageCondition).length}个筛选条件</span>
-            <Button 
+            {/* <Button 
               type='primary'
               disabled={!currentChecked}
               onClick={() => {
@@ -195,7 +199,7 @@ export default class ConditionList extends React.Component {
               }}
             >
               查询
-            </Button>
+            </Button> */}
           </div>
         </div>
       </Menu>
@@ -297,11 +301,12 @@ export default class ConditionList extends React.Component {
                   border: '0.89px solid #D9D9D9',
                   boxSizing: 'border-box',
                   borderRadius: '5px',
-                  marginRight: '10px',
                   marginTop: this.props.isHorizontally ? '0px' : '10px'
                 }}
               >
-                <img width={28} src={TableBg} />
+                <Tooltip placement="top" title={'条件库'}>
+                  <img width={28} src={TableBg} />
+                </Tooltip>
               </span>
             </a>
         </Dropdown>

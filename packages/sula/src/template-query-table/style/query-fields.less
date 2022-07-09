@@ -7,12 +7,13 @@
   &-wrapper {
     position: relative;
     border-radius: 2px 2px 0 0;
-    padding: 24px 24px 0 24px;
+    padding: 16px 8px 0;
     // padding-right: 386px;
     background-color: @card-background;
     overflow: hidden;
     display: flex;
     align-items: baseline;
+    margin-bottom: -15px;
 
     .ant-row {
       flex-grow: 1;
@@ -60,8 +61,8 @@
 }
 
 .isHorizontally {
-  padding: 20px 10px;
-  width: 268px;
+  padding: 10px 20px;
+  width: 288px;
   display: inherit; //左右布局时取消form fields和action的flex布局
 
   .ant-row {
@@ -75,10 +76,10 @@
       flex-basis: 248px;
       flex: none;
       order: 2;
-      margin-bottom: 9px;
+      margin-bottom: 6px;
     }
     .ant-form-item-label {
-      padding: 0 0 2px !important;
+      padding: 0px !important;
     }
   }
 }

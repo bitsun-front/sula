@@ -44,7 +44,7 @@ const QueryForm: React.ForwardRefRenderFunction<FormInstance, QueryFormProps> = 
     if (!allValues || Object.keys(allValues).length === 0 || Object.keys(allValues).every(item => judgeIsEmpty(allValues[item]))) {
       hasFieldValue = false;
     }
-    setHasFieldValue(hasFieldValue);
+    setHasFieldValue(hasFieldValue)
   }
 
 
