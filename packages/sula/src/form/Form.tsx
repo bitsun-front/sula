@@ -123,7 +123,7 @@ const Form: React.FunctionComponent<FormProps> = (props, ref) => {
 
   formProps.onValuesChange = (changedValue, allValues) => {
     function onValuesChange() {
-      checkFieldsValue(allValues);
+      checkFieldsValue && checkFieldsValue(allValues);
       cascade(changedValue, {
         cascadeTrigger: 'setFieldsValue',
         cascadeStore: changedValue,
