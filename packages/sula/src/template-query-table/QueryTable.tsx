@@ -219,7 +219,7 @@ export default class QueryTable extends React.Component<Props> {
   })
 
   // 表头查询规则:
-  // 1. 如果开发自定义customerDropFilterProps属性，则根据customerDropFilterProps渲染
+  // 1. 如果开发自定义customerDropFilterProps属性则根据customerDropFilterProps渲染
   // 2. 如果没有customerDropFilterProps属性，则默认根据tableHeadFilterKey属性查询对应查询表单的渲染规则来渲染表头查询项，
   // 3. 如果根据tableHeadFilterKey没有找到对应formField项，则默认渲染Input查询
   renderDropFilter = (column: ColumnProps) => {
