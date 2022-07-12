@@ -45,6 +45,7 @@ export interface ColumnProps extends Omit<AColumnProps<any>, 'render'> {
   tableHeadFilterKey?: string;
   customerFilterOptions?: filterOption[];
   customerFilterType?: string;
+  customerDropFilterProps?: any;
 }
 
 export interface filterOption {

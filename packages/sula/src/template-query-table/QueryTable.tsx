@@ -13,6 +13,7 @@ import LocaleReceiver from '../localereceiver';
 import LayourContext from './LayoutContext';
 import { Input, Space, Button, Radio, Checkbox, Tabs } from 'antd';
 import { MoreOutlined, SearchOutlined, CaretDownOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
+import DropFilterSelect from './dropFilterComponent/dropFilterSelect';
 
 type FormPropsPicks = 'fields' | 'initialValues' | 'layout' | 'itemLayout';
 type TablePropsPicks =
@@ -72,6 +73,16 @@ export default class QueryTable extends React.Component<Props> {
 
   }
 
+  //监测是否按下esc键
+  checkFull = () => {
+    var isFull =
+      document.fullscreenElement ||
+      document.mozFullScreenElement ||
+      document.webkitFullscreenElement;
+    if (isFull == undefined) isFull = false;
+    return isFull;
+  }
+
   componentDidMount() {
     const { autoInit, initialValues } = this.props;
     if (autoInit && this.remoteDataSource) {
@@ -85,7 +96,13 @@ export default class QueryTable extends React.Component<Props> {
 
   setSliderFormHeight = () => {
     const clientHeight = document.documentElement.clientHeight;
-    let newHeight = clientHeight - 136;
+    const outerHeight = window.outerHeight;
+    let newHeight = 500;
+    if (this.checkFull()) {
+      newHeight = outerHeight - 126;
+    } else {
+      newHeight = clientHeight - 126;
+    }
     this.setState({
       sliderFormHeight: newHeight
     })
@@ -201,21 +218,49 @@ export default class QueryTable extends React.Component<Props> {
     filterIcon: filtered => <CaretDownOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
   })
 
+  // 表头查询规则:
+  // 1. 如果开发自定义customerDropFilterProps属性，则根据customerDropFilterProps渲染
+  // 2. 如果没有customerDropFilterProps属性，则默认根据tableHeadFilterKey属性查询对应查询表单的渲染规则来渲染表头查询项，
+  // 3. 如果根据tableHeadFilterKey没有找到对应formField项，则默认渲染Input查询
   renderDropFilter = (column: ColumnProps) => {
-    if (column.customerFilterOptions) {
-      if (column.customerFilterType === 'checkbox') {
+    const { customerDropFilterProps } = column;
+    if (customerDropFilterProps) {
+      const { type='input' } = customerDropFilterProps;
+
+      if (type === 'checkbox') {
         return (
           <div className='header-filter-radio'>
-            <Checkbox.Group options={column.customerFilterOptions} onChange={(value) => {this.handleFieldsValueChange(value, column)}} />
+            <Checkbox.Group options={customerDropFilterProps.customerFilterOptions || []} onChange={(value) => {this.handleFieldsValueChange(value, column)}} />
           </div>
         )
       }
-      return (
-        <div className='header-filter-radio'>
-            <Radio.Group options={column.customerFilterOptions} onChange={(e) => {this.handleFieldsValueChange(e.target.value, column)}} />
-        </div>
-      )
+
+      if (type === 'radio') {
+          <div className='header-filter-radio'>
+              <Radio.Group options={customerDropFilterProps.customerFilterOptions || []} onChange={(e) => {this.handleFieldsValueChange(e.target.value, column)}} />
+          </div>
+      }
+      
+    } else {
+      const formFields = this.props.fields || [];
+      let fieldInfo = formFields.find(item => item.name === column.tableHeadFilterKey) || {};
+      let fieldType = fieldInfo?.field?.type || 'input';
+      if (fieldType === 'select' || fieldType === 'bs-searchSelect') {
+        let requestConfig = fieldInfo?.field?.props?.requestConfig || undefined;
+        let config = {
+          isFormField: true,
+          tableHeadFilterKey: column.tableHeadFilterKey,
+          ...requestConfig,
+        }
+        return (<DropFilterSelect
+                  column={column}
+                  config={config}
+                  currentFormRef={this.formRef.current}
+                  handleFieldsValueChange={this.handleFieldsValueChange}
+                />)
+      }      
     }
+
     return (
       <div style={{width: '260px', boxSizing: 'border-box', padding: '8px'}}>
         <Input
@@ -254,7 +299,7 @@ export default class QueryTable extends React.Component<Props> {
       source = [...fieldSource]
     }
     
-    let customerFilterOptions = columns.find(item => item.tableHeadFilterKey === key)?.customerFilterOptions;
+    let customerFilterOptions = columns.find(item => item.tableHeadFilterKey === key)?.customerDropFilterProps?.customerFilterOptions;
     if (customerFilterOptions) {
       source = JSON.parse(JSON.stringify(customerFilterOptions));
     }
@@ -297,7 +342,8 @@ export default class QueryTable extends React.Component<Props> {
     })
     const { getFieldsValue, setFieldsValue } = this.formRef.current || {};
     let currentFieldsValue = getFieldsValue(true);
-    this.tableRef?.current?.setFilters({[item.key]: item.value})
+    this.tableRef?.current?.setFilters({[item.key]: item.value});
+    this.tableRef?.current?.clearRowSelection();
     this.tableRef?.current?.refreshTable(null, currentFieldsValue, null, true);
   };
 

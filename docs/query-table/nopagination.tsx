@@ -55,6 +55,48 @@ const queryFields: QueryTableProps['fields'] = [
     },
   },
   {
+    name: 'qp-createUserName-eq',
+    label: '制单人',
+    field:{
+      type: 'bs-searchSelect',
+      props: {
+        requestConfig: {
+          url: `http://bitsun.cb21419868b8b483f9e04b769406afe73.cn-shanghai.alicontainer.com/drp-ops/employee`,
+          filter: 'qp-name-like',
+          otherParams:{
+            enable:10
+          },
+          mappingTextField: 'name',
+          mappingValueField: 'name',
+        },
+      },
+    },
+  },
+  {
+    name: 'qp-settlementCompanyCode-eq',
+    label: '销售组织',
+    field: {
+      type: 'select',
+      props: {
+        allowClear: true,
+        showSearch: true,
+        filterOption: (input: any, option: any) =>
+          option.children.toLowerCase().indexOf(input.toLowerCase()) >= 0,
+      },
+    },
+    remoteSource: {
+      url: 'http://bitsun.cb21419868b8b483f9e04b769406afe73.cn-shanghai.alicontainer.com/drp-ops/orgViewNode/listNoPage?qp-orgViewCode-eq=sales-organizational-view',
+      headers: {
+        'sso-sessionid': '987315074787315712_1_1_1',
+       },
+      converter: ({ data }: any) =>
+        data.map((i: any) => ({
+          text: i.name,
+          value: i.code,
+        })),
+    },
+  },
+  {
     name: 'age',
     label: '年龄',
     field: 'input',
@@ -122,24 +164,27 @@ export const columns = [
     title: '国家',
     key: 'nat',
     tableHeadFilterKey: 'nat',
-    customerFilterOptions: [
-      {
-        label: '选项一',
-        value: 1
-      },
-      {
-        label: '选项二',
-        value: 2
-      },
-      {
-        label: '选项三',
-        value: 3
-      },
-      {
-        label: '选项四',
-        value: 4
-      },
-    ]
+    customerDropFilterProps: {
+      type: 'radio',
+      customerFilterOptions: [
+        {
+          label: '选项一',
+          value: 1
+        },
+        {
+          label: '选项二',
+          value: 2
+        },
+        {
+          label: '选项三',
+          value: 3
+        },
+        {
+          label: '选项四',
+          value: 4
+        },
+      ]
+    }
   },
   {
     title: '名字',
@@ -147,34 +192,49 @@ export const columns = [
     copyable: true,
     ellipsis: true,
     tableHeadFilterKey: 'name',
-    customerFilterOptions: [
-      {
-        label: 'name1',
-        value: '0001'
-      },
-      {
-        label: 'name2',
-        value: '0002'
-      },
-      {
-        label: 'name3',
-        value: '0003'
-      },
-      {
-        label: 'name4',
-        value: '0004'
-      },
-    ],
-    customerFilterType: 'checkbox',
+    customerDropFilterProps: {
+      customerFilterOptions: [
+        {
+          label: 'name1',
+          value: '0001'
+        },
+        {
+          label: 'name2',
+          value: '0002'
+        },
+        {
+          label: 'name3',
+          value: '0003'
+        },
+        {
+          label: 'name4',
+          value: '0004'
+        },
+      ],
+      type: 'checkbox',
+    },
     width: 200,
   },
   {
     title: '年龄',
     key: 'age',
     tableHeadFilterKey: 'age',
+    customerDropFilterProps: {
+      type: 'input'
+    },
     render: (ctx) => {
       return <span>{ctx.record.registered.age}</span>;
     },
+  },
+  {
+    title: '制单人',
+    key: 'user',
+    tableHeadFilterKey: 'qp-createUserName-eq'
+  },
+  {
+    title: '销售组织',
+    key: 'tesaaaa',
+    tableHeadFilterKey: 'qp-settlementCompanyCode-eq'
   },
   {
     title: '操作',
