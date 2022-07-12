@@ -55,7 +55,7 @@ export default class DropFilterSelect extends React.Component<any> {
   };
 
   getSelectSource = (config: any, value: string) => {
-     // 需要默认传的参数
+     // 默认传递参数
      const { otherParams } = config;
      request({
        url: config.url,
