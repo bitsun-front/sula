@@ -60,9 +60,9 @@ export default class DropFilterSelect extends React.Component<any> {
      request({
        url: config.url,
        method: 'get',
-       headers: {
-        'sso-sessionid': '987315074787315712_1_1_1',
-       },
+      //  headers: {
+      //   'sso-sessionid': '987315074787315712_1_1_1',
+      //  },
        convertParams: ({ params }: any) => {
          let reqParams = {};
          if (config.filter) {
