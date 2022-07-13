@@ -75,7 +75,7 @@ export default class QueryTable extends React.Component<Props> {
 
   }
 
-  //监测是否按下esc键
+  //监测是否按 下esc键
   checkFull = () => {
     var isFull =
       document.fullscreenElement ||
