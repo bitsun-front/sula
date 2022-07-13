@@ -30,6 +30,8 @@ export interface QueryTableProps
   autoInit?: boolean;
   tagColor?: string;
   tableWrapperStyle?: any;
+  statusMapping?: any;
+  setVisibleColumn?: any;
 }
 
 const defaultProps = {

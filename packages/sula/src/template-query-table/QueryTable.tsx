@@ -34,6 +34,8 @@ export interface QueryTableProps
   autoInit?: boolean;
   tagColor?: string;
   tableWrapperStyle?: any;
+  statusMapping?: any;
+  setVisibleColumn?: any;
 }
 
 const defaultProps = {
@@ -199,8 +201,8 @@ export default class QueryTable extends React.Component<Props> {
 
   
 
-  getColumnSearchProps = (item: ColumnProps) => ({
-    filterDropdown: ({ selectedKeys }) => (
+  getColumnSearchProps = (item: ColumnProps, setVisibleColumn: any) => ({
+    filterDropdown: ({ selectedKeys, confirm }) => (
       <div>
         <div style={{ borderBottom: '1px solid #f0f0f0' }}>
           <Space>
@@ -209,10 +211,16 @@ export default class QueryTable extends React.Component<Props> {
             }
           </Space>
         </div>
-        {/* <div style={{borderTop: '1px solid #f0f0f0', height: '36px', lineHeight: '36px', paddingLeft: '8px', cursor:'pointer'}}>
+        <div 
+          style={{height: '36px', lineHeight: '36px', paddingLeft: '8px', cursor:'pointer'}}
+          onClick={() => {
+            setVisibleColumn && setVisibleColumn(item.title);
+            confirm();
+          }}
+        >
           <EyeInvisibleOutlined /> &nbsp;&nbsp;
           隐藏该字段
-        </div> */}
+        </div>
       </div>
     ),
     filterIcon: filtered => <CaretDownOutlined style={{ color: filtered ? '#1890ff' : undefined }} />,
@@ -236,9 +244,11 @@ export default class QueryTable extends React.Component<Props> {
       }
 
       if (type === 'radio') {
+        return (
           <div className='header-filter-radio'>
               <Radio.Group options={customerDropFilterProps.customerFilterOptions || []} onChange={(e) => {this.handleFieldsValueChange(e.target.value, column)}} />
           </div>
+        )
       }
       
     } else {
@@ -269,7 +279,7 @@ export default class QueryTable extends React.Component<Props> {
           // value={selectedKeys[0]}
           // onChange={this.handleInputChange}
           onPressEnter={(e) => {this.handleFieldsValueChange(e.target.value, column)}}
-          style={{ marginBottom: 8, display: 'flex' }}
+          style={{ display: 'flex' }}
         />
       </div>
     )
@@ -359,7 +369,8 @@ export default class QueryTable extends React.Component<Props> {
       rowKey,
       tagColor,
       tableWrapperStyle,
-      statusMapping
+      statusMapping,
+      setVisibleColumn,
     } = this.props;
 
     if (!remoteDataSource) {
@@ -373,7 +384,7 @@ export default class QueryTable extends React.Component<Props> {
       if (item.tableHeadFilterKey) {
         finalColumns[index] = {
           ...item,
-          ...this.getColumnSearchProps(item),
+          ...this.getColumnSearchProps(item, setVisibleColumn),
         }
       }
     })
