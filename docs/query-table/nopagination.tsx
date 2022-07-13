@@ -369,6 +369,7 @@ export default class BasicDemo extends React.Component {
     return (
       <div style={{ background: 'rgb(241, 242, 246)', padding: 16, marginTop: 16 }}>
         <QueryTable
+          isHorizontally={false}
           statusMapping={[
             {
               label: '全部',

@@ -80,7 +80,7 @@
     height: 12px;
   }
 
-  span {
+  div {
     display: inline-block;
     padding-left: 10px;
     width: 84px;
@@ -102,7 +102,10 @@
   }
 
   .span-active {
-    color: #005CFF;
+    & > span {
+      color: #005CFF;
+    }
+    
   }
 }
 
