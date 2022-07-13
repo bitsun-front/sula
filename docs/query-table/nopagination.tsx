@@ -27,6 +27,20 @@ const queryFields: QueryTableProps['fields'] = [
     field: 'select',
   },
   {
+    name: 'qp-billTime-ge*fullDate*qp-billTime-le',
+    label: '单据日期',
+    field: {
+      type: 'rangepicker',
+      props: {
+        style: {
+          width: '100%',
+        },
+        placeholder: ['开始时间', '结束时间'],
+        format: 'YYYY-MM-DD',
+      },
+    },
+  },
+  {
     name: 'name',
     label: '国家国家国',
     initialSource: [

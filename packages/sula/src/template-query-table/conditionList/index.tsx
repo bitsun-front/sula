@@ -96,6 +96,7 @@ export default class ConditionList extends React.Component {
                         currentChecked: key
                       })
                       if (tableRef && formRef) {
+                        formRef?.form.resetFields();
                         formRef?.form.setFieldsValue(currentPageCondition[key]);
                         tableRef()?.table?.refreshTable(null, currentPageCondition[key], null, true)
                       }

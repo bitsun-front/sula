@@ -407,6 +407,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                   type: 'div',
                   props: {
                     className: cx(!isHorizontally ? 'sula-template-query-table-fields-wrapper isHorizontally' : `sula-template-query-table-fields-wrapper`),
+                    style: {'margin-bottom': this.hasMoreQueryFields() ? '-15px' : '0px'}
                   },
                 }}
               >

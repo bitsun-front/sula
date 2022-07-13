@@ -14,6 +14,7 @@ import LayourContext from './LayoutContext';
 import { Input, Space, Button, Radio, Checkbox, Tabs, Badge  } from 'antd';
 import { MoreOutlined, SearchOutlined, CaretDownOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import DropFilterSelect from './dropFilterComponent/dropFilterSelect';
+import moment from 'moment';
 
 type FormPropsPicks = 'fields' | 'initialValues' | 'layout' | 'itemLayout';
 type TablePropsPicks =
@@ -323,7 +324,15 @@ export default class QueryTable extends React.Component<Props> {
           source.find(sourceItem => sourceItem.value == itemValue)?.text || source.find(sourceItem => sourceItem.value == itemValue)?.label || itemValue)
       }
     }
-    return value;
+    
+    //没有数据源的情况下判断是否为日期格式
+    if (Array.isArray(value)) {
+      return value.map(item => {
+        return moment(item).isValid() ? moment(item).format('YYYY-MM-DD') : item
+      })
+    } 
+
+    return moment(value).isValid() ? moment(value).format('YYYY-MM-DD') : value;
   }
 
   getFilterKeyLabel = (filterKey) => {
