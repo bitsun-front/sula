@@ -11,7 +11,7 @@ import './style/query-table.less';
 import QueryForm from './QueryForm';
 import LocaleReceiver from '../localereceiver';
 import LayourContext from './LayoutContext';
-import { Input, Space, Button, Radio, Checkbox, Tabs } from 'antd';
+import { Input, Space, Button, Radio, Checkbox, Tabs, Badge  } from 'antd';
 import { MoreOutlined, SearchOutlined, CaretDownOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import DropFilterSelect from './dropFilterComponent/dropFilterSelect';
 
@@ -60,8 +60,9 @@ export default class QueryTable extends React.Component<Props> {
 
   constructor(props) {
     super(props);
+    debugger
     this.state = {
-      isHorizontally: true,
+      isHorizontally: props.isHorizontally === undefined ? true : props.isHorizontally,
       status: {},
       sliderFormHeight: 500
     }
@@ -396,9 +397,9 @@ export default class QueryTable extends React.Component<Props> {
     return (
         <div className={!isHorizontally ? 'suitClass' : ''} style={tableWrapperStyle ? {...suitStyle, ...tableWrapperStyle} : {...suitStyle, padding: '0 16px', background: '#ffffff'}}>
           {!isHorizontally && statusMapping && <div className="sula-table-status">
-            {statusMapping && statusMapping.map(item => <span className={status.value === item.value ? 'span-active' : ''} onClick={() => {this.onChange(item)}}>
-              {item.label}
-            </span>)}
+            {statusMapping && statusMapping.map(item => <div className={status.value === item.value ? 'span-active' : ''} onClick={() => {this.onChange(item)}}>
+              <Badge count={item.count} size="small" offset={[5, -5]}> {item.label}</Badge>
+            </div>)}
             <div></div>
           </div>}
           

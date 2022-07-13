@@ -25,6 +25,8 @@ export interface QueryFieldsProps {
   getFormInstance: () => FormInstance;
 }
 
+let firstRender = 0;
+
 export default class QueryFields extends React.Component<QueryFieldsProps> {
   static contextType = FieldGroupContext;
 
@@ -97,15 +99,16 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
       const isVisible = index < visibleFieldsCount;
       const itemSpan = getItemSpan(itemLayout, matchedPoint, field.itemLayout);
       allSpan += itemSpan;
-      if (isVisible) {
+      if (isVisible || !isHorizontally) {
         visibleAllSpan += itemSpan;
       }
-      return <Field {...field} initialVisible={isVisible} key={field.name} />;
+      return <Field {...field} initialVisible={isVisible || !isHorizontally} key={field.name} />;
     });
+
     this.expandSpan = 24 - (allSpan % 24);
     this.collapseSpan = 24 - (visibleAllSpan % 24);
 
-    if(!isHorizontally) {
+    if(!isHorizontally && firstRender) {
       const formInstance = getFormInstance();
       fields.forEach((field, index) => {
         if (index >= visibleFieldsCount) {
@@ -113,6 +116,8 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
         }
       });
     }
+
+    firstRender = 1;
 
     return finalFields;
   };
