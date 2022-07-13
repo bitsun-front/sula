@@ -60,7 +60,6 @@ export default class QueryTable extends React.Component<Props> {
 
   constructor(props) {
     super(props);
-    debugger
     this.state = {
       isHorizontally: props.isHorizontally === undefined ? true : props.isHorizontally,
       status: {},
