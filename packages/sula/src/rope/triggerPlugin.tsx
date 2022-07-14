@@ -185,7 +185,7 @@ export const ButtonListWrapper = ({children}: {children: Element | any}) => {
     <Menu>
       {
         moreOperate.map((item: any,index:number) => (
-          <Menu.Item key={index}>
+          <Menu.Item className='more-btn-action' key={index}>
             {item}
           </Menu.Item>
         ))
