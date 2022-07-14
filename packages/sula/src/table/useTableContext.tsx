@@ -309,7 +309,7 @@ class ContextStore {
   private requestDataSource() {
     const { pagination, filters, sorter } = this.getControls();
     const finalSorter = omit(sorter, ['column', 'field']);
-    const params = pagination
+    let params = pagination
       ? {
           pageSize: pagination.pageSize,
           current: pagination.current,
@@ -320,6 +320,17 @@ class ContextStore {
           filters,
           sorter: finalSorter,
         };
+
+    if (typeof this.tableProps.triggerQueryData === 'function') {
+      const result = this.tableProps.triggerQueryData(filters);
+      params = {
+        ...params,
+        filters: {
+          ...filters,
+          ...(result || {})
+        }
+      }
+    }
 
     return triggerActionPlugin(
       this.getCtx(),

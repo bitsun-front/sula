@@ -122,7 +122,7 @@ export default class QueryTable extends React.Component<Props> {
   };
 
   renderForm = (locale, isHorizontally) => {
-    const { formProps, layout, itemLayout, fields, initialValues, visibleFieldsCount } = this.props;
+    const { formProps, layout, itemLayout, fields, initialValues, visibleFieldsCount, triggerResetData } = this.props;
     const formActionsRender = formProps?.actionsRender ?? [
       {
         type: 'button',
@@ -159,7 +159,7 @@ export default class QueryTable extends React.Component<Props> {
           },
           {
             type: 'refreshTable',
-            args: [{ current: 1 }, '#{form.getFieldsValue(true)}'],
+            args: [{ current: 1 }, triggerResetData ? {} :'#{form.getFieldsValue(true)}'],
           },
         ],
       },
@@ -380,6 +380,9 @@ export default class QueryTable extends React.Component<Props> {
       tableWrapperStyle,
       statusMapping,
       setVisibleColumn,
+      triggerQueryData,
+      triggerResetData,
+      summary
     } = this.props;
 
     if (!remoteDataSource) {
@@ -411,7 +414,7 @@ export default class QueryTable extends React.Component<Props> {
             <div></div>
           </div>}
           
-          <div>
+          <div style={{position: 'relative'}}>
             <Table
               {...tableProps}
               className={cx(tableProps.className, `${prefixCls}`)}
@@ -427,7 +430,17 @@ export default class QueryTable extends React.Component<Props> {
               getFilterValueLabel={this.getFilterValueLabel}
               getFilterKeyLabel={this.getFilterKeyLabel}
               tagColor={tagColor}
+              triggerQueryData={triggerQueryData}
+              triggerResetData={triggerResetData}
             />
+             {summary && 
+              <div className='table-bssula-summary'>
+                {summary.map(item => (
+                  <span>
+                    {item.label}: <span className='table-bssula-summary-count'>{item.count}</span>
+                  </span>
+                ))}
+              </div>}
           </div>
         </div>
     );

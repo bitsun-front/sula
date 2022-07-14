@@ -1,5 +1,5 @@
 import React from 'react';
-import { QueryTable } from 'sula';
+import { QueryTable, request } from 'sula';
 import { UserOutlined } from '@ant-design/icons';
 
 const queryFields: QueryTableProps['fields'] = [
@@ -41,7 +41,7 @@ const queryFields: QueryTableProps['fields'] = [
     },
   },
   {
-    name: 'name',
+    name: 'name343',
     label: '国家国家国',
     initialSource: [
       {
@@ -157,14 +157,16 @@ export const remoteDataSource = {
     };
   },
   converter({ data }) {
-    return data.results.map((item, index) => {
-      return {
-        ...item,
-        id: `${index}`,
-        name: `${item.name.first} ${item.name.last}`,
-        index,
-      };
-    });
+    return {
+      list: data.results.map((item, index) => {
+        return {
+          ...item,
+          id: `${index}`,
+          name: `${item.name.first} ${item.name.last}`,
+        };
+      }),
+      total: 100,
+    };
   },
 };
 
@@ -377,33 +379,77 @@ const actions = [
 ];
 
 export default class BasicDemo extends React.Component {
-  componentDidMount() {}
+  constructor(props) {
+    super(props);
+    this.state = {
+      summaryTotal: [0,0,0,0]
+    }
+  }
+  ref = React.createRef();
+  componentDidMount() {
+  }
+
+  updateData = (filters) => {
+    request({
+      url: 'https://jsonplaceholder.typicode.com/todos/1',
+      converter: ({ data }) => {
+        console.log(filters)
+        return {
+          ...data,
+          name: 'sula',
+        };
+      },
+    }).then(data => {
+      this.setState({
+        summaryTotal: [Math.random().toFixed(2),Math.random().toFixed(2),Math.random().toFixed(2),Math.random().toFixed(2)]
+      })
+    });
+
+    // return {
+    //   asdf: 3423423
+    // }
+  }
 
   render() {
+    const { summaryTotal } = this.state;
     return (
       <div style={{ background: 'rgb(241, 242, 246)', padding: 16, marginTop: 16 }}>
         <QueryTable
+          triggerQueryData={(filters) => {
+            this.updateData(filters)
+          }}
+          triggerResetData={true}
+          initialValues={{
+            name567567567:'rod'
+          }}
+          ref={this.ref}
           isHorizontally={false}
           statusMapping={[
             {
               label: '全部',
               key: 'status',
-              value: undefined
+              value: undefined,
+              count: summaryTotal[0]
             },
             {
               label: '状态1',
               key: 'status',
-              value: 1
+              value: 1,
+              count: summaryTotal[1]
             },
             {
               label: '状态2',
               key: 'status',
-              value: 2
+              value: 2,
+              count: summaryTotal[2]
+
             },
             {
               label: '状态3',
               key: 'status',
-              value: 3
+              value: 3,
+              count: summaryTotal[3]
+
             }
           ]}
           layout="horizontal"
@@ -413,11 +459,34 @@ export default class BasicDemo extends React.Component {
           fields={queryFields}
           rowKey="id"
           actionsRender={actions}
-          tableProps={{
-            initialPaging: {
-              pagination: false,
+          summary={[
+            {
+              label: '全部',
+              key: 'status',
+              value: undefined,
+              count: summaryTotal[0]
             },
-          }}
+            {
+              label: '状态1',
+              key: 'status',
+              value: 1,
+              count: summaryTotal[1]
+            },
+            {
+              label: '状态2',
+              key: 'status',
+              value: 2,
+              count: summaryTotal[2]
+
+            },
+            {
+              label: '状态3',
+              key: 'status',
+              value: 3,
+              count: summaryTotal[3]
+
+            }
+          ]}
         />
       </div>
     );
