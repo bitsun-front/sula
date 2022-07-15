@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Form as AForm } from 'antd';
 import omit from 'lodash/omit';
 import { FormProps as AFormProps, FormInstance as AFormInstance } from 'antd/lib/form';
@@ -13,6 +13,10 @@ import { triggerActionPlugin } from '../rope/triggerPlugin';
 import MediaQueries from './MediaQueries';
 import { RequestConfig } from '../types/request';
 import { FieldNamePath, Mode } from '../types/form';
+import dragImg from '../assets/drag.svg';
+import position_top from '../assets/position_top.svg';
+import { InsertRowLeftOutlined } from '@ant-design/icons';
+import './style/field.less';
 
 export interface FormProps
   extends Omit<AFormProps, 'children' | 'fields' | 'form'>,
@@ -150,6 +154,17 @@ const Form: React.FunctionComponent<FormProps> = (props, ref) => {
     }
   };
 
+  let cardGroups: any[] = [];
+  debugger
+  fields?.forEach(field => {
+    if (field?.container?.type === 'card') {
+      cardGroups.push({
+        name: field?.container?.props?.title || '未命名',
+        id: field?.container?.props?.id || ''
+      })
+    }
+  })
+
   return (
     <MediaQueries>
       {(matchedPoint) => {
@@ -174,13 +189,47 @@ const Form: React.FunctionComponent<FormProps> = (props, ref) => {
         );
 
         return (
-          <AForm
-            {...formProps}
-            wrapperCol={normalizedItemLayout.wrapperCol}
-            labelCol={normalizedItemLayout.labelCol}
-            children={wrapperChildren}
-            form={getAFormInstance()}
-          />
+          <>
+            <AForm
+              {...formProps}
+              wrapperCol={normalizedItemLayout.wrapperCol}
+              labelCol={normalizedItemLayout.labelCol}
+              children={wrapperChildren}
+              form={getAFormInstance()}
+            />
+            {
+              !!cardGroups.length && (
+                <div
+                  className='form-guide'
+                >
+                  <div className='form-guide-top'>
+                    <img src={dragImg} />
+                  </div>
+                  <div className='form-guide-center'>
+                    {
+                      cardGroups.map(item => {
+                        return (
+                          <span
+                            className='form-guide-item'
+                            onClick={() => {
+                              let currentDom = document.getElementById(item.id);
+                              currentDom && currentDom.scrollIntoView();
+                            }}
+                          >
+                            {item.name}
+                          </span>
+                        )
+                      })
+                    }
+                  </div>
+                  <div className='form-guide-bottom'>
+                    {/* <img src={position_top} /> */}
+                    <InsertRowLeftOutlined width={28} />
+                  </div>
+                </div>
+              )
+            }
+          </>
         );
       }}
     </MediaQueries>

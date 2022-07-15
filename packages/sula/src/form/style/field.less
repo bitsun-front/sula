@@ -47,3 +47,130 @@
   align-items: center;
   justify-content: @position;
 }
+
+.create-or-edit.bitsun-form-class {
+  .ant-card-body {
+    padding: 10px 0 0;
+    background-color: #F3F3F3;
+
+  }
+}
+
+.bitsun-form-class {
+  .ant-card-head {
+    border: 0px;
+    padding: 0px;
+  }
+
+  .ant-form-item {
+    margin-bottom: 0px;
+    padding-bottom: 24px;
+  }
+
+  .ant-card-body {
+    padding: 10px 0 0;
+  }
+
+  .ant-card-head-title {
+    display: flex;
+    align-items: center;
+    font-size: 18px;
+    color: #000000;
+    font-weight: 500;
+    font-family: PingFangSC;
+    background-color: #FFFFFF;
+    .title-left-line {
+      display: inline-block;
+      width: 4px;
+      height: 100%;
+      background-color: #005CFF;
+      height: 20px;
+      margin-right: 16px;
+    }
+  }
+
+
+}
+
+.bitsun-form-class.ant-card-bordered {
+  border: 0px;
+}
+
+.field-group-hidden {
+  .ant-card-body {
+    display: none;
+  }
+}
+
+.container-button {
+  min-width: 88px;
+  padding: 0 5px;
+  height: 24px;
+  border: 1px solid #E1E2E3;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  font-size: 12px;
+  color: #000000;
+  line-height: 24px;
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.form-guide {
+  cursor: pointer;
+  position: fixed;
+  right: 5px;
+  bottom: 20px;
+  color: #B1BAD4;
+  padding: 5px 0;
+  width: 48px;
+  background-color: #141620;
+  .form-guide-top {
+    padding: 0px 10px;
+    display: flex;
+    justify-content: center;
+  }
+  border-radius: 5px;
+  .form-guide-center {
+    border-top: 1px solid #6E7588;
+    border-bottom: 1px solid #6E7588;
+    padding: 0px 10px;
+  }
+  .form-guide-item {
+    width: 28px;
+    padding: 5px 0;
+    display: block;
+    word-break: break-all;
+    color: #B1BAD4;
+    font-size: 14px;
+    line-height: 16px;
+    position: relative;
+  }
+  .form-guide-item::after {
+    content: '';
+    display: block;
+    width: 15px;
+    height: 1px;
+    background-color: #6E7588;
+    position: absolute;
+    bottom: 0px;
+    left: 7px;
+  }
+
+  .form-guide-bottom {
+    padding: 5px 10px;
+    display: flex;
+    justify-content: center;
+  }
+  .form-guide-item:last-child::after {
+    content: '';
+    display: none;
+    width: 15px;
+    height: 1px;
+    background-color: #6E7588;
+    position: absolute;
+    bottom: 0px;
+    left: 7px;
+  }
+}

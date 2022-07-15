@@ -84,7 +84,6 @@ export const triggerPlugin = (
       transedConfig.props = assign({}, transedConfig.props, funcProps);
     }
   }
-
   // TODO
   return sula[name](transedConfig.type, ctx, transedConfig);
 };
