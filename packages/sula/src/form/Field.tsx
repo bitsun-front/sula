@@ -376,7 +376,6 @@ export default class Field extends React.Component<FieldProps> {
     };
 
     const fieldNode = this.renderField(ctx, fieldProps, extraConfig);
-
     const subFormContext = {
       formContext,
       parentGroupName,
