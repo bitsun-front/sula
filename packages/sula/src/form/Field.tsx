@@ -259,6 +259,7 @@ export default class Field extends React.Component<FieldProps> {
   };
 
   private renderField(ctx, fieldConfig: FieldPlugin, extraConf) {
+    const { dictionaryCode } = this.props;
     const { itemLayout, visible, childrenContainer, formItemProps, isList } = extraConf;
 
     const { children, valuePropName = 'value', noStyle } = formItemProps;
@@ -290,6 +291,7 @@ export default class Field extends React.Component<FieldProps> {
         // labelCol={isList ? labelCol || { span: 0 } : labelCol}
         // wrapperCol={isList ? wrapperCol || { span: 24 } : wrapperCol}
         {...formItemProps}
+        dictionaryCode={dictionaryCode}
       >
         {fieldElem}
       </FormItem>
@@ -325,6 +327,7 @@ export default class Field extends React.Component<FieldProps> {
       remoteSource,
       itemLayout, // 无cols
       childrenContainer,
+      dictionaryCode,
       ...restProps
     } = this.props;
 
