@@ -1,6 +1,6 @@
 {
   "name": "umi-plugin-bssula",
-  "version": "2.1.0-alpha.1",
+  "version": "2.1.0",
   "main": "lib/index.js",
   "peerDependencies": {
     "@umijs/plugin-locale": "^0.10.8",
