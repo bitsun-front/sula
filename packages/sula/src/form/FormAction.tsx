@@ -52,7 +52,7 @@ export default class FormAction extends React.Component<FormActinProps> {
             </div>
           );
 
-          // 默认位置 
+          // 默认位置
           if (actionsPosition === 'default' && layout !== 'inline') {
             const wrapperCol =
               layout === 'horizontal'
