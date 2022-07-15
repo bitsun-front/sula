@@ -1,6 +1,6 @@
 {
   "name": "bssula",
-  "version": "2.1.0-alpha.1",
+  "version": "2.1.0-alpha.2",
   "module": "./es/index.js",
   "main": "./es/index.js",
   "types": "./es/index.d.ts",
