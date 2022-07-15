@@ -1,0 +1,88 @@
+# Copyright (c) 1993-2009 Microsoft Corp.
+#
+# This is a sample HOSTS file used by Microsoft TCP/IP for Windows.
+#
+# This file contains the mappings of IP addresses to host names. Each
+# entry should be kept on an individual line. The IP address should
+# be placed in the first column followed by the corresponding host name.
+# The IP address and the host name should be separated by at least one
+# space.
+#
+# Additionally, comments (such as these) may be inserted on individual
+# lines or following the machine name denoted by a '#' symbol.
+#
+# For example:
+#
+#      102.54.94.97     rhino.acme.com          # source server
+#       38.25.63.10     x.acme.com              # x client host
+
+# localhost name resolution is handled within DNS itself.
+#	127.0.0.1       localhost
+#	::1             localhost
+20.205.243.166 github.com
+47.103.142.32  bitsun.product.app.channel-manage.v1-dev
+47.103.142.32  bitsun.product.app.srm-ops.v1-dev
+47.103.142.32  bitsun.product.app.wms-ops.v1-dev
+47.103.142.32  bitsun.product.app.drp-ops.v1-dev
+47.103.142.32  bitsun.product.app.pos-ops.v1-dev
+47.103.142.32  bitsun.product.app.fms-ops.v1-dev
+47.103.142.32  bitsun.product.app.pos-retail-ops.v1-dev
+47.103.142.32  bitsun.product.app.common-caculate.v1-dev
+47.103.142.32  bitsun.product.app.oms-ops.v1-dev
+47.103.142.32  bitsun.product.app.phospherus-ops.v1-dev
+47.103.142.32  bitsun.product.app.items-manage.v1-dev
+47.103.142.32  bitsun.product.app.user-manage.v1-dev
+47.103.142.32  bitsun.product.app.stock-manage.v1-dev
+47.103.142.32  bitsun.product.app.basic-data-manage.v1-dev
+47.103.142.32  bitsun.product.app.member-manage.v1-dev
+47.103.142.32  bitsun.product.app.pay.v1-dev
+47.103.142.32  bitsun.product.app.settle-front.v1-dev
+47.103.142.32  bitsun.product.app.business-operation-platform.v1-dev
+47.103.142.32  bitsun.product.app.dcop-bs.v1-dev
+47.103.142.32  bitsun.product.app.seek-service.v1-dev
+47.103.142.32  bitsun.product.app.common-fms.v1-dev
+47.103.142.32  bitsun.product.app.bopaf-cs-sso.v1-dev
+47.103.142.32  bitsun.product.app.bopaf-cs-auth.v1-dev
+47.103.142.32  bitsun.product.app.dcop-is.v1-dev
+47.103.142.32  bitsun.product.app.common-waybill.v1-dev
+47.103.142.32  bitsun.product.app.scene-srv.v1-dev
+47.103.142.32  bitsun.product.app.docking-systems.v1-dev
+47.103.142.32  bitsun.product.app.promotion-manage.v1-dev
+47.103.142.32  bitsun.product.app.common-flow.v1-dev
+47.103.142.32  bitsun.product.center.stock-center.v1-dev
+47.103.142.32  bitsun.product.center.trade-center.v1-dev
+47.103.142.32  bitsun.product.center.items-center.v1-dev
+47.103.142.32  bitsun.product.center.payment-center.v1-dev
+47.103.142.32  bitsun.product.center.member-center.v1-dev
+47.103.142.32  bitsun.product.center.member-srv.v1-dev
+47.103.142.32  bitsun.product.center.channel-center.v1-dev
+47.103.142.32  bitsun.product.center.user-center.v1-dev
+47.103.142.32  bitsun.product.center.base-center.v1-dev
+47.103.142.32  bitsun.product.center.promotion-center.v1-dev
+47.103.142.32  bitsun.product.center.rule-center.v1-dev
+47.103.142.32  bitsun.product.center.settlement-center.v1-dev
+47.103.142.32  bitsun.product.center.log-center.v1-dev
+47.103.142.32  bitsun.product.center.data-center.v1-dev
+47.103.142.32  bitsun.product.center.process-center.v1-dev
+47.103.142.32  bitsun.product.center.message-center.v1-dev
+47.103.142.32  bitsun.product.center.shared-center.v1-dev
+47.103.142.32  bitsun.product.center.srm-center.v1-dev
+
+47.103.142.32  stargate.dev.bitsun-inc.com
+47.103.142.32  stargate.http.dev.bitsun-inc.com
+
+47.103.142.32  omni.bitsun-inc.com
+
+
+47.103.142.32  xxl.dev.bitsun-inc.com
+47.103.142.32  apollo.dev.bitsun-inc.com
+47.103.142.32  eureka.product.dev.bitsun-inc.com
+47.103.142.32  eureka.omni.dev.bitsun-inc.com
+47.103.142.32  gateway.product.dev.bitsun-inc.com
+47.103.142.32  gateway.omni.dev.bitsun-inc.com
+47.103.142.32  skwalking.dev.bitsun-inc.com
+47.103.142.32  zipkin.dev.bitsun-inc.com
+47.103.142.32  elk.dev.bitsun-inc.com
+47.103.142.32  admin.product.dev.bitsun-inc.com
+47.103.142.32  admin.omni.dev.bitsun-inc.com
+47.103.142.32  rancher.product.bitsun-inc.com

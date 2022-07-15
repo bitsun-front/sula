@@ -43,6 +43,7 @@ const queryFields: QueryTableProps['fields'] = [
   {
     name: 'name343',
     label: '国家国家国',
+    dictionaryCode: "234234",
     initialSource: [
       {
         text: 'name1',
