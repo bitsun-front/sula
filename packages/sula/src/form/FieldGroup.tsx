@@ -156,7 +156,7 @@ export default class FieldGroup extends React.Component<FieldGroupProps> {
       const fieldKey = fieldConfig.name || `${this.groupName}-field-${index}`;
       let fieldElem;
       if (fieldConfig.container || fieldConfig.fields) {
-        fieldElem = <FieldGroup {...fieldConfig} key={fieldKey} />;
+        fieldElem = <FieldGroup isFormPage={this.props.isFormPage} {...fieldConfig} key={fieldKey} />;
       } else if (fieldConfig.render) {
         // 认为是render
         const renderPlugin = fieldConfig.render;
@@ -207,7 +207,7 @@ export default class FieldGroup extends React.Component<FieldGroupProps> {
 
   private renderChildren = (ctx, props, extraConf) => {
     const { itemLayout } = extraConf;
-    const { fields, isHorizontally, container } = props;
+    const { fields, isHorizontally, container, isFormPage } = props;
     const { span, gutter } = itemLayout || { gutter: 0 };
     itemLayout.gutter = itemLayout.gutter || 0; // 处理默认gutter值
 
@@ -236,7 +236,7 @@ export default class FieldGroup extends React.Component<FieldGroupProps> {
             </div>
             {actionsElem}
             {
-              container?.props?.level === 2 ? 
+              container?.props?.level === 2 && isFormPage ? 
               <div style={{background: '#ffffff', textAlign: 'center'}}>
                   <span 
                     className='container-button'
@@ -266,7 +266,7 @@ export default class FieldGroup extends React.Component<FieldGroupProps> {
               {children}
             </div>
             {
-              container?.props?.level === 2 ? 
+              container?.props?.level === 2 && isFormPage ? 
               <div style={{background: '#ffffff', textAlign: 'center'}}>
                 <span 
                     className='container-button'
@@ -361,12 +361,13 @@ export default class FieldGroup extends React.Component<FieldGroupProps> {
   };
 
   private renderFieldGroup = (ctx, props, extraConf) => {
-    const { container, isList } = props;
-    let finalContainer = container ? container.type === 'card' ? {
+    const { container, isList, isFormPage } = props;
+    let defaultLevel = container?.props?.level || 1;
+    let finalContainer = container ? container.type === 'card' && isFormPage ? {
       ...container,
       props: {
         ...container?.props,
-        title: container?.props?.level === 1 ? (<>
+        title: defaultLevel === 1 ? (<>
           <span className='title-left-line'></span>
           <span style={{marginRight: '5px'}}>
             {container?.props?.title}
@@ -387,8 +388,8 @@ export default class FieldGroup extends React.Component<FieldGroupProps> {
           />
         </>) : '',
         className: `
-          bitsun-form-class 
-          ${!this.state.fieldGroupVisible && container?.props?.level === 1 ? 'field-group-hidden' : ''} 
+          bitsun-form-card-class 
+          ${!this.state.fieldGroupVisible && defaultLevel === 1 ? 'field-group-hidden' : ''} 
           ${ ctx.mode === 'create' || ctx.mode === 'edit' ? 'create-or-edit' : ''}
           `,
       }

@@ -75,6 +75,7 @@ const Form: React.FunctionComponent<FormProps> = (props, ref) => {
     onRemoteValuesStart,
     onRemoteValuesEnd,
     checkFieldsValue,
+    isFormPage,
   } = props;
 
   React.useEffect(() => {
@@ -99,6 +100,7 @@ const Form: React.FunctionComponent<FormProps> = (props, ref) => {
   const finalChildren = fields ? (
     <FieldGroup
       fields={fields}
+      isFormPage={isFormPage}
       container={container}
       actionsRender={actionsRender}
       actionsPosition={actionsPosition}
@@ -155,7 +157,6 @@ const Form: React.FunctionComponent<FormProps> = (props, ref) => {
   };
 
   let cardGroups: any[] = [];
-  debugger
   fields?.forEach(field => {
     if (field?.container?.type === 'card') {
       cardGroups.push({
@@ -192,13 +193,14 @@ const Form: React.FunctionComponent<FormProps> = (props, ref) => {
           <>
             <AForm
               {...formProps}
+              className={cardGroups.length && isFormPage ? 'bitsun-form-class' : ''}
               wrapperCol={normalizedItemLayout.wrapperCol}
               labelCol={normalizedItemLayout.labelCol}
               children={wrapperChildren}
               form={getAFormInstance()}
             />
             {
-              !!cardGroups.length && (
+              !!cardGroups.length && isFormPage && (
                 <div
                   className='form-guide'
                 >
@@ -213,7 +215,7 @@ const Form: React.FunctionComponent<FormProps> = (props, ref) => {
                             className='form-guide-item'
                             onClick={() => {
                               let currentDom = document.getElementById(item.id);
-                              currentDom && currentDom.scrollIntoView();
+                              currentDom && currentDom.scrollIntoView({block: 'center', behavior: 'smooth'});
                             }}
                           >
                             {item.name}
