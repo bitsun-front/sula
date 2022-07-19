@@ -288,8 +288,8 @@ export default class Field extends React.Component<FieldProps> {
 
     const fieldItemElem = (
       <FormItem
-        // labelCol={isList ? labelCol || { span: 0 } : labelCol}
-        // wrapperCol={isList ? wrapperCol || { span: 24 } : wrapperCol}
+        labelCol={isList ? labelCol || { span: 0 } : labelCol}
+        wrapperCol={isList ? wrapperCol || { span: 24 } : wrapperCol}
         {...formItemProps}
         dictionaryCode={dictionaryCode}
       >
