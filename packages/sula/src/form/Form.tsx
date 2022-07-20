@@ -11,12 +11,13 @@ import useFormContext from './useFormContext';
 import FormDependency from './dependency';
 import { triggerActionPlugin } from '../rope/triggerPlugin';
 import MediaQueries from './MediaQueries';
+import label_icon_bottom from '../assets/label_icon_bottom.svg';
 import { RequestConfig } from '../types/request';
 import { FieldNamePath, Mode } from '../types/form';
 import dragImg from '../assets/drag.svg';
 import position_top from '../assets/position_top.svg';
 import { InsertRowLeftOutlined } from '@ant-design/icons';
-import './style/field.less';
+import './style/field.less'; 
 
 export interface FormProps
   extends Omit<AFormProps, 'children' | 'fields' | 'form'>,
@@ -76,26 +77,54 @@ const Form: React.FunctionComponent<FormProps> = (props, ref) => {
     onRemoteValuesEnd,
     checkFieldsValue,
     isFormPage,
+    formStatusMapping,
   } = props;
+
+  const [currentStatusIndex, setCurrentStatusIndex] = React.useState('');
+  const [operater, setOperater] = React.useState('');
+  const [modifyTime, setModifyTime] = React.useState('');
 
   React.useEffect(() => {
     const ctx = getCtx();
     if (initialValues) {
       ctx.form.setFieldsValue(initialValues);
     }
-
+    
     if (mode !== 'create' && remoteValues && remoteValues.init !== false) {
       onRemoteValuesStart && onRemoteValuesStart();
       triggerActionPlugin(ctx, remoteValues)
-        .then((fieldsValue: any) => {
-          ctx.form.setFieldsValue(fieldsValue);
-          onRemoteValuesEnd && onRemoteValuesEnd();
-        })
-        .catch(() => {
-          onRemoteValuesEnd && onRemoteValuesEnd();
-        });
+      .then((fieldsValue: any) => {
+        ctx.form.setFieldsValue(fieldsValue);
+        onRemoteValuesEnd && onRemoteValuesEnd();
+        // if (formStatusMapping) {
+        //   const { operaterKey='modifyUserName', modifyTimeKey='modifyTime' } = formStatusMapping;
+        //   getCurrentStatusValue(ctx);
+        //   setOperater(ctx.form.getFieldValue(operaterKey) || '');
+        //   setModifyTime(ctx.form.getFieldValue(modifyTimeKey) || '');
+        // }
+      })
+      .catch(() => {
+        onRemoteValuesEnd && onRemoteValuesEnd();
+      });
     }
   }, []);
+
+  // const getCurrentStatusValue = (ctx) => {
+  //   const { statusEnum=[], fieldName } = formStatusMapping;
+  //   if ( !statusEnum || !statusEnum.length || !fieldName) return;
+  //   let statusFieldValue = ctx?.form?.getFieldValue(fieldName) || '';
+  //   if (!judgeIsEmpty(statusFieldValue)) {
+  //     let currentIndex = statusEnum.findIndex(statusItem => statusItem.value == statusFieldValue) || '';
+  //     setCurrentStatusIndex(currentIndex);
+  //   }
+  // }
+
+  // const judgeIsEmpty = React.useCallback((value: any) => {
+  //   if (value == null || value == undefined || String(value).trim() == '') {
+  //     return true;
+  //   }
+  //   return false;
+  // }, [])
 
   const finalChildren = fields ? (
     <FieldGroup
@@ -166,6 +195,8 @@ const Form: React.FunctionComponent<FormProps> = (props, ref) => {
     }
   })
 
+  // let statusEnums = formStatusMapping?.statusEnum;
+  
   return (
     <MediaQueries>
       {(matchedPoint) => {
@@ -190,7 +221,32 @@ const Form: React.FunctionComponent<FormProps> = (props, ref) => {
         );
 
         return (
-          <>
+          <div>
+            {
+              mode !=='create' && formStatusMapping && !!formStatusMapping.length && (
+                <div style={{display: 'flex', padding: '10px 60px 0px', background: '#FFFFFF'}}>
+                  {
+                    formStatusMapping.map((item, index) => {
+                      return (
+                        <div style={{width: `${(100/formStatusMapping.length).toFixed(2)}%`}} className={`form-status-label ${item.isDone ? 'choosed-status-label' : ''} ${formStatusMapping.length === 1 ? 'only-one-child' : ''}`}>
+                          <div className='status-label-key'>
+                            <span className='status-label-index'>{index+1}</span>
+                          </div>
+                          <div className='status-label-operate'>
+                            <div>{item.text}</div>
+                            {
+                              item.isDone ? (
+                                <div title={`${item.modifyUserName || '--'} ${item.modifyTime || '--'}`}>{`${item.modifyUserName || '--'} ${item.modifyTime || '--'}`}</div>
+                              ) : null
+                            }
+                          </div>
+                        </div>
+                      )
+                    })
+                  }
+                </div>
+              )
+            }
             <AForm
               {...formProps}
               className={cardGroups.length && isFormPage ? 'bitsun-form-class' : ''}
@@ -225,13 +281,13 @@ const Form: React.FunctionComponent<FormProps> = (props, ref) => {
                     }
                   </div>
                   <div className='form-guide-bottom'>
-                    {/* <img src={position_top} /> */}
-                    <InsertRowLeftOutlined width={28} />
+                    <img width={24} src={label_icon_bottom} />
+                    {/* <InsertRowLeftOutlined width={28} /> */}
                   </div>
                 </div>
               )
             }
-          </>
+          </div>
         );
       }}
     </MediaQueries>

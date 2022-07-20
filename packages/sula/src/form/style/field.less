@@ -49,13 +49,29 @@
 }
 
 .bitsun-form-class {
-  padding: 5px 60px !important;
+  padding: 10px 60px 26px !important;
   background-color: #FFFFFF;
+  .sula-form-action-bottom {
+    height: 48px;
+    box-shadow: 0 -4px 8px 0 rgba(215,215,215,0.50);
+    .ant-space {
+      gap: 20px;
+    }
+    button {
+      height: 28px;
+    }
+  }
 }
 
 .create-or-edit.bitsun-form-card-class {
   .ant-card-body {
     background-color: #F3F3F3;
+  }
+}
+
+.bitsun-form-card-class[level="1"] {
+  &>.ant-card-body {
+    margin-bottom: 10px;
   }
 }
 
@@ -67,21 +83,24 @@
 
   .ant-form-item {
     margin-bottom: 0px;
-    padding-bottom: 24px;
+    padding-bottom: 12px;
   }
 
   .ant-card-body {
-    padding: 24px 0 0;
+    padding: 12px 0 0;
+    margin-top: -4px;
   }
 
   .ant-card-head-title {
     display: flex;
     align-items: center;
-    font-size: 18px;
+    font-size: 16px;
     color: #000000;
     font-weight: 500;
     font-family: PingFangSC;
     background-color: #FFFFFF;
+    padding: 8px 0;
+    margin: 0px;
     .title-left-line {
       display: inline-block;
       width: 4px;
@@ -101,7 +120,7 @@
 
 .field-group-hidden {
   .ant-card-body {
-    display: none;
+    display: none !important;
   }
 }
 
@@ -124,11 +143,12 @@
   cursor: pointer;
   position: fixed;
   right: 5px;
-  bottom: 20px;
   color: #B1BAD4;
   padding: 5px 0;
   width: 48px;
   z-index: 10;
+  top: 50%;
+  transform: translateY(-50%);
   background-color: #141620;
   .form-guide-top {
     padding: 0px 10px;
@@ -177,4 +197,120 @@
     bottom: 0px;
     left: 7px;
   }
+}
+
+.form-status-label {
+  height: 48px;
+  margin-right: 12px;
+  flex-grow: 1;
+  flex-shrink: 1;
+  display: flex;
+  position: relative;
+  background-color: #B0B4B7;
+  align-items: center;
+}
+.choosed-status-label.form-status-label {
+  background-color: #005CFF;
+}
+
+.form-status-label:last-child {
+  margin-right: 0px;
+}
+
+.form-status-label:first-child::after {
+  position: absolute;
+  display: block;
+  content: '';
+  right: -48px;
+  top: 0;
+  width: 48px;
+  height: 48px;
+  border: 24px solid;
+  border-color: transparent transparent transparent transparent;
+  border-left: 12px solid #B0B4B7;
+}
+
+.choosed-status-label.form-status-label::after {
+  border-left: 12px solid #005CFF;
+}
+
+.choosed-status-label.form-status-label:not(:first-child):not(:last-child)::after {
+  border-left: 12px solid #005CFF;
+}
+
+.form-status-label:last-child::after {
+  position: absolute;
+  display: block;
+  content: '';
+  left: 0;
+  top: 0;
+  width: 48px;
+  height: 48px;
+  border: 24px solid;
+  border-color: transparent transparent transparent transparent;
+  border-left: 12px solid #ffffff;
+}
+
+.form-status-label:not(:first-child):not(:last-child)::before {
+  position: absolute;
+  display: block;
+  content: '';
+  left: 0;
+  top: 0;
+  width: 48px;
+  height: 48px;
+  border: 24px solid;
+  border-color: transparent transparent transparent transparent;
+  border-left: 12px solid #ffffff;
+}
+
+.form-status-label:not(:first-child):not(:last-child)::after {
+  position: absolute;
+  display: block;
+  content: '';
+  right: -48px;
+  top: 0;
+  width: 48px;
+  height: 48px;
+  border: 24px solid;
+  border-color: transparent transparent transparent transparent;
+  border-left: 12px solid #B0B4B7;
+}
+
+.status-label-index {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 1px solid #FFFFFF;
+  color: #FFFFFF;
+  border-radius: 50%;
+  font-family: Montserrat;
+  font-size: 14px;line-height: 24px;
+  text-align: center;
+  margin: 0 12px 0 20px;
+}
+
+.status-label-key {
+  flex-grow: 0;
+  flex-shrink: 0;
+}
+
+.status-label-operate {
+  flex-grow: 1;
+  flex-shrink: 1;
+  &>div {
+    height: 20px;
+    line-height: 20px;
+    color: #FFFFFF;
+    font-size: 14px;
+    font-family: PingFangSC;
+    width: 95%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
+
+.only-one-child.form-status-label::after,.only-one-child.form-status-label::before {
+  border-left: 0px;
 }

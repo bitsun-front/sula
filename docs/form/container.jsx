@@ -6,6 +6,25 @@ export default class FieldContainer extends React.Component {
     return (
       <Form
         isFormPage={true}
+        formStatusMapping={[
+          {
+            text: '状态1',
+            value: 1
+          },
+          {
+            text: '状态2',
+            value: 2
+          },
+          {
+            text: '状态3',
+            value: 3
+          },
+          {
+            text: '状态4',
+            value: 4
+          },
+          
+        ]}
         fields={[
           {
             container: {
