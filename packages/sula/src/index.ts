@@ -17,7 +17,6 @@ export * from './template-step-form';
 export * from './template-query-table';
 export * from './template-step-query-table';
 export * from './basic-query-table';
-
 export * from './render-plugin';
 export * from './field-plugin';
 export * from './action-plugin';
