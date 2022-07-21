@@ -263,7 +263,7 @@ export const columns = [
         type: 'link',
         props: {
            children: '测试',
-           icon: <UserOutlined />,    
+           icon: <UserOutlined />,
         },
       },
       {
@@ -271,7 +271,7 @@ export const columns = [
         type: 'link',
         props: {
           children: '测试',
-          icon: <UserOutlined />, 
+          icon: <UserOutlined />,
         },
       },
       {
@@ -383,7 +383,8 @@ export default class BasicDemo extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      summaryTotal: [0,0,0,0]
+      summaryTotal: [0,0,0,0],
+      statusNum: 1
     }
   }
   ref = React.createRef();
@@ -412,9 +413,10 @@ export default class BasicDemo extends React.Component {
   }
 
   render() {
-    const { summaryTotal } = this.state;
+    const { summaryTotal, statusNum } = this.state;
     return (
       <div style={{ background: 'rgb(241, 242, 246)', padding: 16, marginTop: 16 }}>
+        <span>我是现在的状态{statusNum}</span>
         <QueryTable
           triggerQueryData={(filters) => {
             this.updateData(filters)
@@ -453,6 +455,12 @@ export default class BasicDemo extends React.Component {
 
             }
           ]}
+          queryActionCallback={(params: any) => {
+            this.setState(({
+              statusNum: statusNum+1
+            }))
+            console.log(params, 'queryParams')
+          }}
           layout="horizontal"
           visibleFieldsCount={3}
           columns={columns}
