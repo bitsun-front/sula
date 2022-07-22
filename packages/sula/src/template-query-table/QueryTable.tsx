@@ -138,15 +138,15 @@ export default class QueryTable extends React.Component<Props> {
         },
         action: [
           { type: 'validateQueryFields', resultPropName: '$queryFieldsValue' },
+          {
+            type: 'refreshTable',
+            args: [{ current: 1 }, '#{result}'],
+          },
           (ctx: any) => {
             if(queryActionCallback) {
               const querySearchParams = ctx?.result;
               queryActionCallback(querySearchParams)
             }
-          },
-          {
-            type: 'refreshTable',
-            args: [{ current: 1 }, '#{result}'],
           },
         ],
       },
@@ -165,14 +165,14 @@ export default class QueryTable extends React.Component<Props> {
             type: 'resetTable',
             args: [false],
           },
+          {
+            type: 'refreshTable',
+            args: [{ current: 1 }, triggerResetData ? {} :'#{form.getFieldsValue(true)}'],
+          },
           () => {
             if(resetActionCallback) {
               resetActionCallback()
             }
-          },
-          {
-            type: 'refreshTable',
-            args: [{ current: 1 }, triggerResetData ? {} :'#{form.getFieldsValue(true)}'],
           },
         ],
       },
