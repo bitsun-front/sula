@@ -422,7 +422,7 @@ export default class QueryTable extends React.Component<Props> {
         <div className={!isHorizontally ? 'suitClass' : ''} style={tableWrapperStyle ? {...suitStyle, ...tableWrapperStyle} : {...suitStyle, padding: '0 16px', background: '#ffffff'}}>
           {!isHorizontally && statusMapping && <div className="sula-table-status">
             {statusMapping && statusMapping.map(item => <div className={status.value === item.value ? 'span-active' : ''} onClick={() => {this.onChange(item)}}>
-              <Badge count={item.count} size="small" offset={[5, -5]}> {item.label}</Badge>
+              <Badge count={item.count} size="small" offset={[5, -5]} overflowCount={Number.MAX_SAFE_INTEGER}> {item.label}</Badge>
             </div>)}
             <div></div>
           </div>}
