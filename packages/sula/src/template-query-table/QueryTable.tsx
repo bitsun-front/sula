@@ -196,6 +196,7 @@ export default class QueryTable extends React.Component<Props> {
           actionsRender={formActionsRender}
           getFilterKeyLabel={this.getFilterKeyLabel}
           getFilterValueLabel={this.getFilterValueLabel}
+          isQueryTableForm={true}
           isHorizontally={isHorizontally}
         />
       </div>
