@@ -134,7 +134,7 @@ export default class ConditionList extends React.Component {
                             })
                           }}
                         />
-                        {/* <img 
+                        {/* <img
                           src={currentChecked === key ? viewIcon1 : viewIcon}
                           onClick={(e) => {
                             e.stopPropagation()
