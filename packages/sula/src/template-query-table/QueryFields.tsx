@@ -10,6 +10,7 @@ import { FieldGroup, Field, FormAction, FieldProps, FormInstance, FormProps } fr
 import './style/query-fields.less';
 import LocaleReceiver from '../localereceiver';
 import { toArray } from '../_util/common';
+import { saveConditionToDatabase, getConditionToDatabase } from '../_util/requestConfig';
 import { history } from 'umi';
 import ConditionList from './conditionList';
 import LayoutContext from './LayoutContext';
@@ -45,7 +46,6 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
       title: '',
       callBack: null,
     },
-    currentUserName: localStorage.getItem('currentName') ? `${localStorage.getItem('currentName')}-condition` : 'noUser-condition',
     currentPage: history?.location?.pathname || '',
   };
 
@@ -77,7 +77,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
           collapsed: false
         }
       )
-      return 
+      return
     }
   }
 
@@ -140,10 +140,11 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
     });
   }
 
-  saveCondition = (ctx: any, name: string) => {
-    const { currentPage, currentUserName } = this.state;
+  saveCondition = async (ctx: any, name: string) => {
+    const { currentPage } = this.state;
+    const { ConditionRequestConfig } = this.props;
     const fieldsValue = ctx.form.getFieldsValue();
-    let totalCondition = JSON.parse(localStorage.getItem(currentUserName) || '{}');
+    let totalCondition = await getConditionToDatabase(ConditionRequestConfig);
     if (totalCondition[currentPage]) {
       totalCondition[currentPage][name] = fieldsValue;
     } else {
@@ -151,17 +152,17 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
         [name]: fieldsValue
       }
     }
-    localStorage.setItem(currentUserName, JSON.stringify(totalCondition))
+    saveConditionToDatabase(totalCondition, ConditionRequestConfig)
   }
 
   renderFormAction = (locale) => {
     const { layout } = this.context;
-    const { collapsed, currentPage, currentUserName } = this.state;
-    const { ctxGetter, getFilterKeyLabel, getFilterValueLabel, isHorizontally, hasFieldsValue } = this.props;
+    const { collapsed, currentPage } = this.state;
+    const { ctxGetter, getFilterKeyLabel, getFilterValueLabel, isHorizontally, hasFieldsValue, ConditionRequestConfig } = this.props;
     let actionsRender = []
 
     if (!isHorizontally) {
-      
+
       actionsRender = [
         {
           type: 'button',
@@ -188,7 +189,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                   message.success('条件已保存至“条件库”');
                   this.setState({
                     modalInfo: {
-                      ...modalInfo, 
+                      ...modalInfo,
                       modalVisible: false
                     }
                   })
@@ -203,17 +204,13 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
               <ConditionList
                 formRef={ctx}
                 isHorizontally={isHorizontally}
-                tableRef={ctxGetter} 
-                currentPage={currentPage} 
-                currentUserName={currentUserName}
+                tableRef={ctxGetter}
+                currentPage={currentPage}
+                ConditionRequestConfig={ConditionRequestConfig}
                 getFilterValueLabel={getFilterValueLabel}
                 getFilterKeyLabel={getFilterKeyLabel}
               />
             ),
-          // props: {
-          //   children: (<Button>sss</Button>)
-          //   // children: (ctx: any) => (<ConditionList  currentPage={currentPage} currentUserName={currentUserName} />),
-          // },
         },
         {
           type: (ctx: any) => (
@@ -277,7 +274,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                     message.success('条件已保存至“条件库”');
                     this.setState({
                       modalInfo: {
-                        ...modalInfo, 
+                        ...modalInfo,
                         modalVisible: false
                       }
                     })
@@ -322,17 +319,13 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                 <ConditionList
                   formRef={ctx}
                   isHorizontally={isHorizontally}
-                  tableRef={ctxGetter} 
-                  currentPage={currentPage} 
-                  currentUserName={currentUserName}
+                  tableRef={ctxGetter}
+                  currentPage={currentPage}
+                  ConditionRequestConfig={ConditionRequestConfig}
                   getFilterValueLabel={getFilterValueLabel}
                   getFilterKeyLabel={getFilterKeyLabel}
                 />
               ),
-            // props: {
-            //   children: (<Button>sss</Button>)
-            //   // children: (ctx: any) => (<ConditionList  currentPage={currentPage} currentUserName={currentUserName} />),
-            // },
           },
       ];
     }
@@ -367,7 +360,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
       //   {({isHorizontally, updateLayout}: any) => (
       //   )}
       // </LayoutContext.Consumer>
-      
+
     );
   };
 
@@ -435,14 +428,14 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                           }}
                         />
                       </a>
-                  </div> 
+                  </div>
                 : <></>
               }
               </>
             );
           }}
-          
-        
+
+
         </LocaleReceiver>
         <Modal
           width={485}
