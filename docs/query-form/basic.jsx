@@ -7,7 +7,7 @@ const queryFields = Array(10)
     return {
       name: `input${index}`,
       label: `Input${index}`,
-      field: 'input',
+      field: 'inputnumber',
     };
   });
 
@@ -31,6 +31,7 @@ export default class BasicDemo extends React.Component {
           <QueryForm
             key={visibleFieldsCount || 'all'}
             visibleFieldsCount={visibleFieldsCount}
+            isHorizontally={true}
             layout="vertical"
             fields={queryFields}
             actionsRender={[

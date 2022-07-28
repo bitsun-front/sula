@@ -33,14 +33,18 @@ export default class BasicDemo extends React.Component {
   render() {
     return (
       <Form
-        mode="edit"
-        remoteValues={{
-          url: 'https://www.mocky.io/v2/5ed7a8b63200001ad9274ab5',
-          method: 'post',
-          converter() {
-            return { radiogroup: 'peach' };
-          },
+        mode="create"
+        initialValues = {{
+          treeselect: 'apple',
+          cascader: ['fruits', 'peach']
         }}
+        // remoteValues={{
+        //   url: 'https://www.mocky.io/v2/5ed7a8b63200001ad9274ab5',
+        //   method: 'post',
+        //   converter() {
+        //     return { radiogroup: 'peach' };
+        //   },
+        // }}
         onRemoteValuesStart={() => {
           console.log('onRemoteValuesStart');
         }}
@@ -70,7 +74,12 @@ export default class BasicDemo extends React.Component {
           {
             name: 'password',
             label: 'password',
-            field: 'password',
+            field: {
+              type: 'password',
+              props: {
+                // viewPageEdit: true,
+              }
+            },
           },
           {
             name: 'textarea',
@@ -163,6 +172,7 @@ export default class BasicDemo extends React.Component {
               type: 'datepicker',
               props: {
                 valueFormat: 'utc',
+                format: 'YYYY-MM-DD HH:mm',
               },
             },
           },

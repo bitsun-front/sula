@@ -6,6 +6,10 @@ export default class FieldContainer extends React.Component {
     return (
       <Form
         isFormPage={true}
+        mode='create'
+        initialValues={{
+          input2: 'hyhAAAAAAAAAAAAAAAA'
+        }}
         formStatusMapping={[
           {
             text: '状态1',
@@ -48,7 +52,13 @@ export default class FieldContainer extends React.Component {
                   {
                     label: '输入框container1',
                     name: 'input1',
-                    field: 'input',
+                    field: 'select',
+                    initialSource: [
+                      {
+                        text: 'aaa',
+                        value: 'aaa'
+                      }
+                    ]
                   },
                   {
                     label: '输入框输入框container1',

@@ -1,4 +1,8 @@
 import Select from './select';
+import SulaInput from './input';
+import SulaTextArea from './textArea';
+import SulaPassword from './password';
+import SulaInputNumber from './inputNumber';
 import Upload from './upload';
 import Cascader from './cascader';
 import TreeSelect from './treeselect';
@@ -19,23 +23,23 @@ import { registerFieldPlugin } from './plugin';
 import { Switch, Checkbox, Input, InputNumber, Rate, Radio, Slider } from 'antd';
 
 function registerFieldPlugins() {
-  registerFieldPlugin('input')(Input);
-  registerFieldPlugin('textarea')(Input.TextArea);
-  registerFieldPlugin('password')(Input.Password);
-  registerFieldPlugin('inputnumber')(InputNumber);
+  registerFieldPlugin('input')(SulaInput, true, true);
+  registerFieldPlugin('textarea')(SulaTextArea, true, true);
+  registerFieldPlugin('password')(SulaPassword, true, true);
+  registerFieldPlugin('inputnumber')(SulaInputNumber, true, true);
   registerFieldPlugin('rate')(Rate);
   registerFieldPlugin('switch')(Switch);
   registerFieldPlugin('checkbox')(Checkbox);
   registerFieldPlugin('radio')(Radio);
   registerFieldPlugin('slider')(Slider);
 
-  registerFieldPlugin('cascader')(Cascader, true);
-  registerFieldPlugin('treeselect')(TreeSelect, true);
-  registerFieldPlugin('datepicker')(DatePicker);
-  registerFieldPlugin('rangepicker')(RangePicker);
-  registerFieldPlugin('timepicker')(TimePicker);
+  registerFieldPlugin('cascader')(Cascader, true, true);
+  registerFieldPlugin('treeselect')(TreeSelect, true, true);
+  registerFieldPlugin('datepicker')(DatePicker, true, true);
+  registerFieldPlugin('rangepicker')(RangePicker, true, true);
+  registerFieldPlugin('timepicker')(TimePicker, true, true);
   registerFieldPlugin('upload')(Upload, false, true);
-  registerFieldPlugin('select')(Select, true);
+  registerFieldPlugin('select')(Select, true, true);
   registerFieldPlugin('checkboxgroup')(CheckboxGroup, true);
   registerFieldPlugin('radiogroup')(RadioGroup, true);
 

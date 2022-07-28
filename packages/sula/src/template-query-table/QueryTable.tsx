@@ -37,6 +37,8 @@ export interface QueryTableProps
   tableWrapperStyle?: any;
   statusMapping?: any;
   setVisibleColumn?: any;
+  queryActionCallback?: any;
+  resetActionCallback?: any;
 }
 
 const defaultProps = {
@@ -122,7 +124,7 @@ export default class QueryTable extends React.Component<Props> {
   };
 
   renderForm = (locale, isHorizontally) => {
-    const { formProps, layout, itemLayout, fields, initialValues, visibleFieldsCount, triggerResetData } = this.props;
+    const { formProps, layout, itemLayout, fields, initialValues, visibleFieldsCount, triggerResetData, queryActionCallback, resetActionCallback } = this.props;
     const formActionsRender = formProps?.actionsRender ?? [
       {
         type: 'button',
@@ -139,6 +141,12 @@ export default class QueryTable extends React.Component<Props> {
           {
             type: 'refreshTable',
             args: [{ current: 1 }, '#{result}'],
+          },
+          (ctx: any) => {
+            if(queryActionCallback) {
+              const querySearchParams = ctx?.result;
+              queryActionCallback(querySearchParams)
+            }
           },
         ],
       },
@@ -160,6 +168,11 @@ export default class QueryTable extends React.Component<Props> {
           {
             type: 'refreshTable',
             args: [{ current: 1 }, triggerResetData ? {} :'#{form.getFieldsValue(true)}'],
+          },
+          () => {
+            if(resetActionCallback) {
+              resetActionCallback()
+            }
           },
         ],
       },
@@ -200,7 +213,7 @@ export default class QueryTable extends React.Component<Props> {
     this.tableRef?.current?.refreshTable(null, newFieldsValue, null, true);
   }
 
-  
+
 
   getColumnSearchProps = (item: ColumnProps, setVisibleColumn: any) => ({
     filterDropdown: ({ selectedKeys, confirm }) => (
@@ -212,7 +225,7 @@ export default class QueryTable extends React.Component<Props> {
             }
           </Space>
         </div>
-        <div 
+        <div
           style={{height: '36px', lineHeight: '36px', paddingLeft: '8px', cursor:'pointer'}}
           onClick={() => {
             setVisibleColumn && setVisibleColumn(item.title);
@@ -251,7 +264,7 @@ export default class QueryTable extends React.Component<Props> {
           </div>
         )
       }
-      
+
     } else {
       const formFields = this.props.fields || [];
       let fieldInfo = formFields.find(item => item.name === column.tableHeadFilterKey) || {};
@@ -269,7 +282,7 @@ export default class QueryTable extends React.Component<Props> {
                   currentFormRef={this.formRef.current}
                   handleFieldsValueChange={this.handleFieldsValueChange}
                 />)
-      }      
+      }
     }
 
     return (
@@ -306,10 +319,10 @@ export default class QueryTable extends React.Component<Props> {
     }
     //获取筛选条件数据源只考虑source为数组情况
     let source;
-    if (fieldSource && Array.isArray(fieldSource)) { 
+    if (fieldSource && Array.isArray(fieldSource)) {
       source = [...fieldSource]
     }
-    
+
     let customerFilterOptions = columns.find(item => item.tableHeadFilterKey === key)?.customerDropFilterProps?.customerFilterOptions;
     if (customerFilterOptions) {
       source = JSON.parse(JSON.stringify(customerFilterOptions));
@@ -320,17 +333,17 @@ export default class QueryTable extends React.Component<Props> {
         return source.find(item => item.value == value)?.text || source.find(item => item.value == value)?.label || value
       }
       if (Array.isArray(value)) {
-        return value.map(itemValue => 
+        return value.map(itemValue =>
           source.find(sourceItem => sourceItem.value == itemValue)?.text || source.find(sourceItem => sourceItem.value == itemValue)?.label || itemValue)
       }
     }
-    
+
     //没有数据源的情况下判断是否为日期格式
     if (Array.isArray(value)) {
       return value.map(item => {
         return moment(item).isValid() ? moment(item).format('YYYY-MM-DD') : item
       })
-    } 
+    }
 
     return moment(value).isValid() ? moment(value).format('YYYY-MM-DD') : value;
   }
@@ -338,10 +351,10 @@ export default class QueryTable extends React.Component<Props> {
   getFilterKeyLabel = (filterKey) => {
     const { fields, columns } = this.props;
     if (fields.find(field => field.name === filterKey)) {
-      return fields.find(field => field.name === filterKey)?.label || filterKey; 
+      return fields.find(field => field.name === filterKey)?.label || filterKey;
     }
     if (columns.find(column => column.tableHeadFilterKey === filterKey)) {
-      return columns.find(column => column.tableHeadFilterKey === filterKey)?.title || filterKey; 
+      return columns.find(column => column.tableHeadFilterKey === filterKey)?.title || filterKey;
     }
     return filterKey;
   }
@@ -413,7 +426,7 @@ export default class QueryTable extends React.Component<Props> {
             </div>)}
             <div></div>
           </div>}
-          
+
           <div style={{position: 'relative'}}>
             <Table
               {...tableProps}
@@ -433,7 +446,7 @@ export default class QueryTable extends React.Component<Props> {
               triggerQueryData={triggerQueryData}
               triggerResetData={triggerResetData}
             />
-             {summary && 
+             {summary &&
               <div className='table-bssula-summary'>
                 {summary.map(item => (
                   <span>

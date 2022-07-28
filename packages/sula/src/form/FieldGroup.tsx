@@ -390,7 +390,7 @@ export default class FieldGroup extends React.Component<FieldGroupProps> {
         className: `
           bitsun-form-card-class 
           ${!this.state.fieldGroupVisible && defaultLevel === 1 ? 'field-group-hidden' : ''} 
-          ${ ctx.mode === 'create' || ctx.mode === 'edit' ? 'create-or-edit' : ''}
+          ${ container?.props?.isWhiteCard ? 'white-card' : ''}
           `,
       }
     } : container : {

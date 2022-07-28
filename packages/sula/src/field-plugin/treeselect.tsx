@@ -2,6 +2,7 @@ import React from 'react';
 import { TreeSelect as ATreeSelect } from 'antd';
 import { TreeSelectProps as ATreeSelectProps } from 'antd/lib/tree-select';
 import { AntTreeNodeProps } from 'antd/lib/tree';
+import { judgeIsEmpty } from './fieldUtils';
 
 export type TreeNodeSourceItem = {
   text: any;
@@ -30,14 +31,56 @@ export default class TreeSelect extends React.Component<TreeSelectProps> {
     );
   };
 
+  getSelectValueLabel = () => {
+    const { value, source } = this.props;
+    if (judgeIsEmpty(value)) return value;
+
+    let valueLabel;
+    if (Array.isArray(value)) {
+      valueLabel = value.map(item => this.getItemLabel(source, item)).join(',')
+    } else {
+      valueLabel = this.getItemLabel(source, value);
+    }
+
+    return valueLabel;
+  }
+
+  getItemLabel = (source, itemValue) => {
+    let itemLabel = itemValue;
+
+    const loop = (source, itemValue) => {
+      source.forEach(item => {
+        if (item.value === itemValue) {
+          itemLabel = item.text;
+          return;
+        }
+        if (item.children) {
+          loop(item.children, itemValue)
+        }
+      })
+    }
+    
+    loop(source, itemValue);
+    return itemLabel;
+  }
+
   render() {
-    const { source = [], ...restProps } = this.props;
-    return (
-      <ATreeSelect {...restProps}>
-        {source.map((item) => {
-          return this.renderTreeNode(item);
-        })}
-      </ATreeSelect>
-    );
+    const { ctx, viewPageEdit=false, source = [], ...restProps } = this.props;
+    return ctx?.mode === 'view' && !viewPageEdit ? 
+      <span
+        style={{
+          fontSize: '14px',
+          color: '#000000',
+          fontFamily: 'PingFangSC'
+        }}
+      >
+        {this.getSelectValueLabel()}
+      </span> : (
+        <ATreeSelect {...restProps}>
+          {source.map((item) => {
+            return this.renderTreeNode(item);
+          })}
+        </ATreeSelect>
+      );
   }
 }

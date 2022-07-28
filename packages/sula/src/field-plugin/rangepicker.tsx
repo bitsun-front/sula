@@ -29,8 +29,13 @@ export default class SulaTimePicker extends React.Component<SulaDatePickerProps>
       onChange(finalTime, timeString);
     }
   };
+
+  getDateStr = (dateValue) => {
+    return dateValue ? dateValue.map(item => moment(item).format(this.props.format)).join('-') : dateValue;
+  }
+
   render() {
-    const { valueFormat, value, ...restProps } = this.props;
+    const { ctx, viewPageEdit=false, valueFormat, value, ...restProps } = this.props;
     let finalValue = value;
     if (value) {
       finalValue = value.map(v => {
@@ -42,7 +47,16 @@ export default class SulaTimePicker extends React.Component<SulaDatePickerProps>
         }
       });
     }
-    return (
+    return ctx?.mode === 'view' && !viewPageEdit ? 
+      <span
+        style={{
+          fontSize: '14px',
+          color: '#000000',
+          fontFamily: 'PingFangSC'
+        }}
+      >
+        {this.getDateStr(finalValue)}
+      </span> : (
       <DatePicker.RangePicker
         {...restProps}
         {...(valueFormat ? { onChange: this.onFormatChange } : {})}
