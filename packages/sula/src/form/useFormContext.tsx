@@ -109,7 +109,7 @@ class ContextStore {
   public setFieldVisible = (name: FieldNamePath, visible: boolean) => {
     const field = this.getField(name);
 
-    field.setVisible(visible);
+    field && field.setVisible(visible);
   };
 
   public setFieldDisabled = (name: FieldNamePath, disabled: boolean) => {

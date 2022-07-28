@@ -1,5 +1,5 @@
 /*
- * @Description: 
+ * @Description:
  * @Author: rodchen
  * @Date: 2022-07-01 11:39:28
  * @LastEditTime: 2022-07-04 00:50:06
@@ -9,6 +9,7 @@ import React from 'react';
 import { Button, Modal, Form, Row, Col, Input, Dropdown, Tooltip, Menu, Popconfirm, message, } from 'antd';
 import SettingOutlined from '@ant-design/icons/SettingOutlined';
 import { EditOutlined, OrderedListOutlined, DeleteOutlined } from '@ant-design/icons';
+import { saveConditionToDatabase, getConditionToDatabase } from '../../_util/requestConfig';
 import TableBg from '../../assets/condition.svg';
 import editIcon from '../../assets/edit.svg';
 import deleteIcon from '../../assets/delete.svg';
@@ -48,10 +49,10 @@ export default class ConditionList extends React.Component {
     this.setConditionData();
   }
 
-  setConditionData = () => {
-    const { currentUserName, currentPage, } = this.props;
-    let totalCondition = JSON.parse(localStorage.getItem(currentUserName) || '{}');
-    let currentPageCondition = totalCondition[currentPage] || {};
+  setConditionData = async() => {
+    const { currentPage, ConditionRequestConfig } = this.props;
+    let totalCondition = await getConditionToDatabase(currentPage, ConditionRequestConfig);
+    let currentPageCondition = Object.fromEntries(totalCondition.map((i: any) => [i.name, i.condition])) || {};
     this.setState({
       currentPageCondition,
       currentChecked: ''
@@ -60,21 +61,19 @@ export default class ConditionList extends React.Component {
 
   //render条件菜单页
   getMenu = () => {
-    const { currentUserName, currentPage, tableRef, formRef } = this.props;
+    const { currentPage, tableRef, formRef, ConditionRequestConfig } = this.props;
     const { currentPageCondition, currentChecked } = this.state;
-   
+
     return (
       <Menu>
         <div className={styles.condition_content}>
           <div className={styles.condition_title}>
             <span className={styles.condition_title_label}>我的自定义条件</span>
-            <Button 
-              style={{padding: '0px'}} 
+            <Button
+              style={{padding: '0px'}}
               type='link'
-              onClick={() => {
-                let totalCondition = JSON.parse(localStorage.getItem(currentUserName) || '{}');
-                delete totalCondition[currentPage];
-                localStorage.setItem(currentUserName, JSON.stringify(totalCondition));
+              onClick={async () => {
+                saveConditionToDatabase(currentPage, [], ConditionRequestConfig)
                 this.setState({
                   currentPageCondition: {},
                   currentChecked: ''
@@ -105,7 +104,7 @@ export default class ConditionList extends React.Component {
                     >
                       <span className={styles.item_l}>{key}</span>
                       <span className={styles.item_r}>
-                        <img 
+                        <img
                           src={currentChecked === key ? editIcon1 : editIcon}
                           onClick={(e) => {
                             e.stopPropagation();
@@ -113,15 +112,19 @@ export default class ConditionList extends React.Component {
                               editNameModal: {
                                 modalVisible: true,
                                 initVal: key,
-                                callBack: (newName) => {
+                                callBack: async (newName) => {
                                   if (newName == key) {
                                     message.warning('名称未修改.');
                                     return;
                                   }
-                                  let totalCondition = JSON.parse(localStorage.getItem(currentUserName) || '{}');
-                                  totalCondition[currentPage][newName] =  JSON.parse(JSON.stringify(totalCondition?.[currentPage]?.[key] || {}));
-                                  delete totalCondition[currentPage][key];
-                                  localStorage.setItem(currentUserName, JSON.stringify(totalCondition));
+                                  let totalCondition = await getConditionToDatabase(currentPage, ConditionRequestConfig);
+                                  totalCondition = totalCondition.map((i: any) => {
+                                    if(i.name === key) {
+                                      i.name = newName
+                                    }
+                                    return i
+                                  })
+                                  saveConditionToDatabase(currentPage, totalCondition, ConditionRequestConfig)
                                   this.setState({
                                     currentPageCondition: totalCondition[currentPage] || {},
                                     editNameModal: {
@@ -134,7 +137,7 @@ export default class ConditionList extends React.Component {
                             })
                           }}
                         />
-                        {/* <img 
+                        {/* <img
                           src={currentChecked === key ? viewIcon1 : viewIcon}
                           onClick={(e) => {
                             e.stopPropagation()
@@ -147,15 +150,15 @@ export default class ConditionList extends React.Component {
                             })
                           }}
                         /> */}
-                        <Popconfirm 
-                          title="确认删除吗?" 
-                          okText="确认" 
+                        <Popconfirm
+                          title="确认删除吗?"
+                          okText="确认"
                           cancelText="取消"
-                          onConfirm={(e) => {
+                          onConfirm={async(e) => {
                             e.stopPropagation();
-                            let totalCondition = JSON.parse(localStorage.getItem(currentUserName) || '{}');
-                            delete totalCondition[currentPage][key];
-                            localStorage.setItem(currentUserName, JSON.stringify(totalCondition));
+                            let totalCondition = await getConditionToDatabase(currentPage,ConditionRequestConfig);
+                            totalCondition = totalCondition.filter((i: any) => i?.name === key)
+                            saveConditionToDatabase(currentPage, totalCondition,ConditionRequestConfig)
                             this.setState({
                               currentPageCondition: totalCondition[currentPage] || {},
                               currentChecked: currentChecked === key ? '' : currentChecked,
@@ -163,7 +166,7 @@ export default class ConditionList extends React.Component {
                           }}
                           onCancel={(e) => {e?.stopPropagation()}}
                         >
-                          <img 
+                          <img
                             src={currentChecked === key ? deleteIcon1 : deleteIcon}
                             onClick={(e) => {e.stopPropagation()}}
                           />
@@ -173,13 +176,13 @@ export default class ConditionList extends React.Component {
                 )
               })
             }
-            <div 
+            <div
             style={{
-              position: 'absolute', 
-              top: '50%', 
-              left: '50%', 
-              margin: '-69px 0 0 -59px', 
-              width: '118px', 
+              position: 'absolute',
+              top: '50%',
+              left: '50%',
+              margin: '-69px 0 0 -59px',
+              width: '118px',
               textAlign: 'center',
               display: Object.keys(currentPageCondition).length === 0 ? 'block' : 'none'
             }}>
@@ -189,7 +192,7 @@ export default class ConditionList extends React.Component {
           </div>
           <div className={styles.condition_bottom}>
             <span style={{fontSize: '14px', color: '#BFBFBF'}}>共{Object.keys(currentPageCondition).length}个筛选条件</span>
-            {/* <Button 
+            {/* <Button
               type='primary'
               disabled={!currentChecked}
               onClick={() => {
@@ -204,15 +207,15 @@ export default class ConditionList extends React.Component {
           </div>
         </div>
       </Menu>
-    ) 
+    )
   }
 
   renderConditionDetail = () => {
-    const { 
+    const {
       modalInfo: {
         modalName,
         modalDetail={}
-      } 
+      }
     } = this.state;
     const { getFilterValueLabel, getFilterKeyLabel } = this.props;
     return (
@@ -268,9 +271,9 @@ export default class ConditionList extends React.Component {
           destroyPopupOnHide={true}
           placement={this.props.isHorizontally ? 'bottomRight': 'bottomLeft'}
           overlayClassName={'filterMenu'}
-          visible={this.state.menuVisible} 
+          visible={this.state.menuVisible}
           onVisibleChange={(flag:boolean) => {
-            const { 
+            const {
               modalInfo,
               editNameModal,
             } = this.state;
@@ -283,22 +286,22 @@ export default class ConditionList extends React.Component {
                 menuVisible: flag
               })
             }
-            
-          }} 
+
+          }}
           overlay={this.getMenu()} trigger={['click']}
-            
+
         >
             <a
               className="ant-dropdown-link"
               onClick={(e) => e.preventDefault()}
             >
-              <span 
+              <span
                 style={{
-                  display: 'flex', 
+                  display: 'flex',
                   alignItems:'center',
                   justifyContent: 'center',
-                  width: '32px', 
-                  height: '32px', 
+                  width: '32px',
+                  height: '32px',
                   border: '0.89px solid #D9D9D9',
                   boxSizing: 'border-box',
                   borderRadius: '5px',

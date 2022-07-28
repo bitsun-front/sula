@@ -10,6 +10,7 @@ import { FieldGroup, Field, FormAction, FieldProps, FormInstance, FormProps } fr
 import './style/query-fields.less';
 import LocaleReceiver from '../localereceiver';
 import { toArray } from '../_util/common';
+import { saveConditionToDatabase, getConditionToDatabase } from '../_util/requestConfig';
 import { history } from 'umi';
 import ConditionList from './conditionList';
 import LayoutContext from './LayoutContext';
@@ -45,7 +46,6 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
       title: '',
       callBack: null,
     },
-    currentUserName: localStorage.getItem('currentName') ? `${localStorage.getItem('currentName')}-condition` : 'noUser-condition',
     currentPage: history?.location?.pathname || '',
   };
 
@@ -77,7 +77,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
           collapsed: false
         }
       )
-      return 
+      return
     }
   }
 
@@ -140,31 +140,30 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
     });
   }
 
-  saveCondition = (ctx: any, name: string) => {
-    const { currentPage, currentUserName } = this.state;
+  saveCondition = async (ctx: any, name: string) => {
+    const { currentPage } = this.state;
+    const { ConditionRequestConfig } = this.props;
     const fieldsValue = ctx.form.getFieldsValue();
-    let totalCondition = JSON.parse(localStorage.getItem(currentUserName) || '{}');
-    if (totalCondition[currentPage]) {
-      totalCondition[currentPage][name] = fieldsValue;
-    } else {
-      totalCondition[currentPage] = {
-        [name]: fieldsValue
-      }
-    }
-    localStorage.setItem(currentUserName, JSON.stringify(totalCondition))
+    const totalCondition = await getConditionToDatabase(currentPage, ConditionRequestConfig) || [];
+    totalCondition.push({
+      name,
+      condition: fieldsValue
+    })
+    saveConditionToDatabase(currentPage, totalCondition,  ConditionRequestConfig)
   }
 
   renderFormAction = (locale) => {
     const { layout } = this.context;
     const { collapsed, currentPage, currentUserName } = this.state;
-    const { ctxGetter, getFilterKeyLabel, getFilterValueLabel, isHorizontally, hasFieldsValue } = this.props;
+    const { ctxGetter, getFilterKeyLabel, getFilterValueLabel, isHorizontally, hasFieldsValue, isQueryTableForm, ConditionRequestConfig } = this.props;
     let actionsRender = []
 
     if (!isHorizontally) {
-      
+
       actionsRender = [
         {
           type: 'button',
+          visible: isQueryTableForm ? true: false,
           props: {
             type: 'default',
             children: '保存为条件',
@@ -188,7 +187,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                   message.success('条件已保存至“条件库”');
                   this.setState({
                     modalInfo: {
-                      ...modalInfo, 
+                      ...modalInfo,
                       modalVisible: false
                     }
                   })
@@ -203,13 +202,14 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
               <ConditionList
                 formRef={ctx}
                 isHorizontally={isHorizontally}
-                tableRef={ctxGetter} 
-                currentPage={currentPage} 
-                currentUserName={currentUserName}
+                tableRef={ctxGetter}
+                currentPage={currentPage}
+                ConditionRequestConfig={ConditionRequestConfig}
                 getFilterValueLabel={getFilterValueLabel}
                 getFilterKeyLabel={getFilterKeyLabel}
               />
             ),
+          visible: isQueryTableForm ? true: false,
           // props: {
           //   children: (<Button>sss</Button>)
           //   // children: (ctx: any) => (<ConditionList  currentPage={currentPage} currentUserName={currentUserName} />),
@@ -246,7 +246,8 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                 </span>}
             </LayoutContext.Consumer>
             </span>
-          )
+          ),
+          visible: isQueryTableForm ? true: false,
         },
       ]
     } else {
@@ -254,6 +255,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
         ...(toArray(this.props.actionsRender)),
           {
             type: 'button',
+            visible: isQueryTableForm ? true: false,
             props: {
               type: 'default',
               children: '保存为条件',
@@ -277,7 +279,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                     message.success('条件已保存至“条件库”');
                     this.setState({
                       modalInfo: {
-                        ...modalInfo, 
+                        ...modalInfo,
                         modalVisible: false
                       }
                     })
@@ -315,20 +317,22 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                   </span>}
               </LayoutContext.Consumer>
               </span>
-            )
+            ),
+            visible: isQueryTableForm ? true: false,
           },
           {
             type: (ctx: any) => (
                 <ConditionList
                   formRef={ctx}
                   isHorizontally={isHorizontally}
-                  tableRef={ctxGetter} 
-                  currentPage={currentPage} 
-                  currentUserName={currentUserName}
+                  tableRef={ctxGetter}
+                  currentPage={currentPage}
+                  ConditionRequestConfig={ConditionRequestConfig}
                   getFilterValueLabel={getFilterValueLabel}
                   getFilterKeyLabel={getFilterKeyLabel}
                 />
               ),
+            visible: isQueryTableForm ? true: false,
             // props: {
             //   children: (<Button>sss</Button>)
             //   // children: (ctx: any) => (<ConditionList  currentPage={currentPage} currentUserName={currentUserName} />),
@@ -367,7 +371,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
       //   {({isHorizontally, updateLayout}: any) => (
       //   )}
       // </LayoutContext.Consumer>
-      
+
     );
   };
 
@@ -435,14 +439,14 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                           }}
                         />
                       </a>
-                  </div> 
+                  </div>
                 : <></>
               }
               </>
             );
           }}
-          
-        
+
+
         </LocaleReceiver>
         <Modal
           width={485}
