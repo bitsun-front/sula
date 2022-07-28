@@ -51,8 +51,8 @@ export default class ConditionList extends React.Component {
 
   setConditionData = async() => {
     const { currentPage, ConditionRequestConfig } = this.props;
-    let totalCondition = await getConditionToDatabase(ConditionRequestConfig);
-    let currentPageCondition = totalCondition[currentPage] || {};
+    let totalCondition = await getConditionToDatabase(currentPage, ConditionRequestConfig);
+    let currentPageCondition = Object.fromEntries(totalCondition.map((i: any) => [i.name, i.condition])) || {};
     this.setState({
       currentPageCondition,
       currentChecked: ''
@@ -73,9 +73,7 @@ export default class ConditionList extends React.Component {
               style={{padding: '0px'}}
               type='link'
               onClick={async () => {
-                let totalCondition = await getConditionToDatabase(ConditionRequestConfig);
-                delete totalCondition[currentPage];
-                saveConditionToDatabase(totalCondition, ConditionRequestConfig)
+                saveConditionToDatabase(currentPage, [], ConditionRequestConfig)
                 this.setState({
                   currentPageCondition: {},
                   currentChecked: ''
@@ -119,10 +117,14 @@ export default class ConditionList extends React.Component {
                                     message.warning('名称未修改.');
                                     return;
                                   }
-                                  let totalCondition = await getConditionToDatabase(ConditionRequestConfig);
-                                  totalCondition[currentPage][newName] =  JSON.parse(JSON.stringify(totalCondition?.[currentPage]?.[key] || {}));
-                                  delete totalCondition[currentPage][key];
-                                  saveConditionToDatabase(totalCondition, ConditionRequestConfig)
+                                  let totalCondition = await getConditionToDatabase(currentPage, ConditionRequestConfig);
+                                  totalCondition = totalCondition.map((i: any) => {
+                                    if(i.name === key) {
+                                      i.name = newName
+                                    }
+                                    return i
+                                  })
+                                  saveConditionToDatabase(currentPage, totalCondition, ConditionRequestConfig)
                                   this.setState({
                                     currentPageCondition: totalCondition[currentPage] || {},
                                     editNameModal: {
@@ -154,9 +156,9 @@ export default class ConditionList extends React.Component {
                           cancelText="取消"
                           onConfirm={async(e) => {
                             e.stopPropagation();
-                            let totalCondition = await getConditionToDatabase(ConditionRequestConfig);
-                            delete totalCondition[currentPage][key];
-                            saveConditionToDatabase(totalCondition,ConditionRequestConfig)
+                            let totalCondition = await getConditionToDatabase(currentPage,ConditionRequestConfig);
+                            totalCondition = totalCondition.filter((i: any) => i?.name === key)
+                            saveConditionToDatabase(currentPage, totalCondition,ConditionRequestConfig)
                             this.setState({
                               currentPageCondition: totalCondition[currentPage] || {},
                               currentChecked: currentChecked === key ? '' : currentChecked,

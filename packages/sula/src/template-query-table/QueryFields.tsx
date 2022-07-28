@@ -144,15 +144,12 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
     const { currentPage } = this.state;
     const { ConditionRequestConfig } = this.props;
     const fieldsValue = ctx.form.getFieldsValue();
-    let totalCondition = await getConditionToDatabase(ConditionRequestConfig);
-    if (totalCondition[currentPage]) {
-      totalCondition[currentPage][name] = fieldsValue;
-    } else {
-      totalCondition[currentPage] = {
-        [name]: fieldsValue
-      }
-    }
-    saveConditionToDatabase(totalCondition, ConditionRequestConfig)
+    const totalCondition = await getConditionToDatabase(currentPage, ConditionRequestConfig) || [];
+    totalCondition.push({
+      name,
+      condition: fieldsValue
+    })
+    saveConditionToDatabase(currentPage, totalCondition,  ConditionRequestConfig)
   }
 
   renderFormAction = (locale) => {

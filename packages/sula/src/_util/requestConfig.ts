@@ -1,25 +1,34 @@
 import {  request } from '../index';
+import isObject from 'lodash/isObject';
 
 
-export function saveConditionToDatabase(conditionData: any, ConditionRequestConfig: any) {
+export function saveConditionToDatabase(code: string, detail: any, ConditionRequestConfig: any) {
   request({
-    url: '/user/appConfig/saveUserConfig',
+    url: '/user/appConfig/saveUserCondition',
     method: 'POST',
     convertParams: () => {
       return {
-        customCondition: JSON.stringify(conditionData),
+        code,
+        detail: JSON.stringify(detail),
       };
     },
     ...(ConditionRequestConfig?.saveConfig || {})
   })
 }
 
-export async function getConditionToDatabase (ConditionRequestConfig: any) {
+export async function getConditionToDatabase (code: string,ConditionRequestConfig: any) {
   try {
     const response = await request({
-      url: '/user/appConfig/getUserConfig',
-      ...(ConditionRequestConfig?.getConfig || {})
+      url: `/user/appConfig/getUserCondition`,
+      method: 'PATCH',
+      convertParams: () => {
+        return { code };
+      },
+      ...(ConditionRequestConfig?.getConfig || {}),
     });
-    return JSON.parse(response?.data?.customCondition || response?.customCondition || '{}')
+
+    const resData = response?.data || response
+    const handleResData = isObject(resData) ? '[]' : resData
+    return JSON.parse(handleResData)
   } catch (error) {}
 }
