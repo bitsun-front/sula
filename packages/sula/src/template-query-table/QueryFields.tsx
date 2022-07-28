@@ -154,8 +154,8 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
 
   renderFormAction = (locale) => {
     const { layout } = this.context;
-    const { collapsed, currentPage } = this.state;
-    const { ctxGetter, getFilterKeyLabel, getFilterValueLabel, isHorizontally, hasFieldsValue, ConditionRequestConfig } = this.props;
+    const { collapsed, currentPage, currentUserName } = this.state;
+    const { ctxGetter, getFilterKeyLabel, getFilterValueLabel, isHorizontally, hasFieldsValue, isQueryTableForm, ConditionRequestConfig } = this.props;
     let actionsRender = []
 
     if (!isHorizontally) {
@@ -163,6 +163,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
       actionsRender = [
         {
           type: 'button',
+          visible: isQueryTableForm ? true: false,
           props: {
             type: 'default',
             children: '保存为条件',
@@ -208,6 +209,11 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                 getFilterKeyLabel={getFilterKeyLabel}
               />
             ),
+          visible: isQueryTableForm ? true: false,
+          // props: {
+          //   children: (<Button>sss</Button>)
+          //   // children: (ctx: any) => (<ConditionList  currentPage={currentPage} currentUserName={currentUserName} />),
+          // },
         },
         {
           type: (ctx: any) => (
@@ -240,7 +246,8 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                 </span>}
             </LayoutContext.Consumer>
             </span>
-          )
+          ),
+          visible: isQueryTableForm ? true: false,
         },
       ]
     } else {
@@ -248,6 +255,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
         ...(toArray(this.props.actionsRender)),
           {
             type: 'button',
+            visible: isQueryTableForm ? true: false,
             props: {
               type: 'default',
               children: '保存为条件',
@@ -309,7 +317,8 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                   </span>}
               </LayoutContext.Consumer>
               </span>
-            )
+            ),
+            visible: isQueryTableForm ? true: false,
           },
           {
             type: (ctx: any) => (
@@ -323,6 +332,11 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                   getFilterKeyLabel={getFilterKeyLabel}
                 />
               ),
+            visible: isQueryTableForm ? true: false,
+            // props: {
+            //   children: (<Button>sss</Button>)
+            //   // children: (ctx: any) => (<ConditionList  currentPage={currentPage} currentUserName={currentUserName} />),
+            // },
           },
       ];
     }

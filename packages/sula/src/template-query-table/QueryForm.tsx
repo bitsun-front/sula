@@ -26,7 +26,8 @@ const QueryForm: React.ForwardRefRenderFunction<FormInstance, QueryFormProps> = 
     hasBottomBorder,
     getFilterKeyLabel,
     getFilterValueLabel,
-    isHorizontally,
+    isHorizontally=true,
+    isQueryTableForm,
     ...restProps
   } = props;
   const [form] = Form.useForm(restProps.form);
@@ -62,6 +63,7 @@ const QueryForm: React.ForwardRefRenderFunction<FormInstance, QueryFormProps> = 
     >
       <QueryFields
         fields={fields}
+        isQueryTableForm={isQueryTableForm}
         hasFieldsValue={hasFieldsValue}
         ctxGetter={restProps.ctxGetter}
         getFilterKeyLabel={getFilterKeyLabel}
