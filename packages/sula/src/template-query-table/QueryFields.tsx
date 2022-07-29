@@ -154,7 +154,7 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
 
   renderFormAction = (locale) => {
     const { layout } = this.context;
-    const { collapsed, currentPage, currentUserName } = this.state;
+    const { collapsed, currentPage } = this.state;
     const { ctxGetter, getFilterKeyLabel, getFilterValueLabel, isHorizontally, hasFieldsValue, isQueryTableForm, ConditionRequestConfig } = this.props;
     let actionsRender = []
 
@@ -210,10 +210,6 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
               />
             ),
           visible: isQueryTableForm ? true: false,
-          // props: {
-          //   children: (<Button>sss</Button>)
-          //   // children: (ctx: any) => (<ConditionList  currentPage={currentPage} currentUserName={currentUserName} />),
-          // },
         },
         {
           type: (ctx: any) => (
@@ -333,10 +329,6 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
                 />
               ),
             visible: isQueryTableForm ? true: false,
-            // props: {
-            //   children: (<Button>sss</Button>)
-            //   // children: (ctx: any) => (<ConditionList  currentPage={currentPage} currentUserName={currentUserName} />),
-            // },
           },
       ];
     }
