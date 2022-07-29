@@ -51,7 +51,7 @@ export default class ConditionList extends React.Component {
 
   setConditionData = async() => {
     const { currentPage, ConditionRequestConfig } = this.props;
-    let totalCondition = await getConditionToDatabase(currentPage, ConditionRequestConfig);
+    let totalCondition = await getConditionToDatabase(currentPage, ConditionRequestConfig) || [];
     let currentPageCondition = Object.fromEntries(totalCondition.map((i: any) => [i.name, i.condition])) || {};
     this.setState({
       currentPageCondition,
@@ -96,6 +96,7 @@ export default class ConditionList extends React.Component {
                       })
                       if (tableRef && formRef) {
                         formRef?.form.resetFields();
+                        tableRef()?.table?.resetTable(false)
                         formRef?.form.setFieldsValue(currentPageCondition[key]);
                         tableRef()?.table?.refreshTable(null, currentPageCondition[key], null, true)
                       }
@@ -126,7 +127,7 @@ export default class ConditionList extends React.Component {
                                   })
                                   saveConditionToDatabase(currentPage, totalCondition, ConditionRequestConfig)
                                   this.setState({
-                                    currentPageCondition: totalCondition[currentPage] || {},
+                                    currentPageCondition: Object.fromEntries(totalCondition.map((i: any) => [i.name, i.condition])) || {},
                                     editNameModal: {
                                       modalVisible: false
                                     },
@@ -157,10 +158,10 @@ export default class ConditionList extends React.Component {
                           onConfirm={async(e) => {
                             e.stopPropagation();
                             let totalCondition = await getConditionToDatabase(currentPage,ConditionRequestConfig);
-                            totalCondition = totalCondition.filter((i: any) => i?.name === key)
+                            totalCondition = totalCondition.filter((i: any) => i?.name !== key)
                             saveConditionToDatabase(currentPage, totalCondition,ConditionRequestConfig)
                             this.setState({
-                              currentPageCondition: totalCondition[currentPage] || {},
+                              currentPageCondition: Object.fromEntries(totalCondition.map((i: any) => [i.name, i.condition])) || {},
                               currentChecked: currentChecked === key ? '' : currentChecked,
                             })
                           }}
