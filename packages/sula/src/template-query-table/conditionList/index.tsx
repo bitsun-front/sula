@@ -51,7 +51,7 @@ export default class ConditionList extends React.Component {
 
   setConditionData = async() => {
     const { currentPage, ConditionRequestConfig } = this.props;
-    let totalCondition = await getConditionToDatabase(currentPage, ConditionRequestConfig);
+    let totalCondition = await getConditionToDatabase(currentPage, ConditionRequestConfig) || [];
     let currentPageCondition = Object.fromEntries(totalCondition.map((i: any) => [i.name, i.condition])) || {};
     this.setState({
       currentPageCondition,
