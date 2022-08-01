@@ -60,11 +60,22 @@
 }
 
 .isHorizontally {
-  padding: 10px 20px;
+  height: 100%;
+  padding: 10px 0;
   width: 288px;
   display: inherit; //左右布局时取消form fields和action的flex布局
-
+  &>.ant-row {
+    padding: 0 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  
+  .sula-form-action-landscape {
+    width: 268px;
+    margin: 0 0 10px 20px;
+  }
   .ant-row {
+    height: calc(100% - 96px);
     display: inherit;
     .ant-form-item {
       margin-bottom: 5px !important;
@@ -81,6 +92,31 @@
       padding: 0px !important;
     }
   }
+
+  // 滚动条
+/* 滚动槽（轨道）宽高 */
+.ant-row::-webkit-scrollbar {
+  width: 5px; /*对垂直流动条有效*/
+  height: 5px; /*对水平流动条有效*/
+  // background-color:red
+}
+/* 滚动槽（轨道）样式 */
+.ant-row::-webkit-scrollbar-track {
+  background-color: #ffffff;
+  border-radius: 8px;
+}
+
+/*定义滑块颜色、内阴影及圆角*/
+.ant-row::-webkit-scrollbar-thumb {
+  border-radius: 7px;
+  background-color: #CECECE;
+}
+
+/*定义两端按钮的样式*/
+.ant-row::-webkit-scrollbar-button {
+  display: none;
+}
+
 }
 
 .sula-template-query-table-collapsed {
