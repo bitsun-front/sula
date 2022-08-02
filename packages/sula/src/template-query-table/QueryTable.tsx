@@ -328,7 +328,7 @@ export default class QueryTable extends React.Component<Props> {
     return false;
   }
 
-  //获取form筛选条件值对应label
+  //获取form筛选条件值对应label 
   getFilterValueLabel = (key: string, value: any) => {
     const { getFieldSource } = this.formRef.current || {};
     const { columns, fields } = this.props;
