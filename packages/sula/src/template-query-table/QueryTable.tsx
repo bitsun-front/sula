@@ -89,28 +89,41 @@ export default class QueryTable extends React.Component<Props> {
   }
 
   componentDidMount() {
-    const { autoInit, initialValues } = this.props;
+    const { autoInit, initialValues, isFullScreen } = this.props;
     if (autoInit && this.remoteDataSource) {
       this.tableRef.current.refreshTable(null, initialValues, null, true);
     }
-    this.setSliderFormHeight();
-    window.onresize = () => {
-      this.setSliderFormHeight();
+    this.setSliderFormHeight(isFullScreen);
+    
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (!this.judgeIsEmpty(nextProps.isFullScreen) && nextProps.isFullScreen !== this.props.isFullScreen) {
+      this.setSliderFormHeight(nextProps.isFullScreen);
     }
   }
 
-  setSliderFormHeight = () => {
-    const clientHeight = document.documentElement.clientHeight;
-    const outerHeight = window.outerHeight;
-    let newHeight = 500;
-    if (this.checkFull()) {
-      newHeight = outerHeight - 126;
-    } else {
-      newHeight = clientHeight - 126;
+  judgeIsEmpty = (value: any) => {
+    if (value == null || value == undefined || String(value).trim() == '') {
+      return true;
     }
-    this.setState({
-      sliderFormHeight: newHeight
-    })
+    return false;
+  };
+
+  setSliderFormHeight = (isFullScreen: boolean) => {
+    setTimeout(() => {
+      const clientHeight = document.documentElement.clientHeight;
+      const outerHeight = window.screen.height;
+      let newHeight = 500;
+      if (isFullScreen) {
+        newHeight = outerHeight - 136;
+      } else {
+        newHeight = clientHeight - 136;
+      }
+      this.setState({
+        sliderFormHeight: newHeight
+      })
+    }, 0)
   }
 
   hasActionsRender = () => {
@@ -178,7 +191,7 @@ export default class QueryTable extends React.Component<Props> {
       },
     ];
     return (
-      <div className='queryFormContainer' style={!isHorizontally ? {background: '#ffffff', borderTop: '1px #E1E2E3 solid', height: `${this.state.sliderFormHeight}px`, overflowY: 'scroll', overflowX: 'hidden'} : {}}>
+      <div className='queryFormContainer' style={!isHorizontally ? {background: '#ffffff', borderTop: '1px #E1E2E3 solid', height: `${this.state.sliderFormHeight}px`, overflow: 'hidden'} : {}}>
         <QueryForm
           {...formProps}
           ctxGetter={() => {
@@ -310,6 +323,11 @@ export default class QueryTable extends React.Component<Props> {
     this.tableRef?.current?.refreshTable(null, newFieldsValue, null, true);
   }
 
+  isTimeString = (str: any) => {
+    if (str && str._isAMomentObject) return true;
+    return false;
+  }
+
   //获取form筛选条件值对应label
   getFilterValueLabel = (key: string, value: any) => {
     const { getFieldSource } = this.formRef.current || {};
@@ -342,11 +360,11 @@ export default class QueryTable extends React.Component<Props> {
     //没有数据源的情况下判断是否为日期格式
     if (Array.isArray(value)) {
       return value.map(item => {
-        return moment(item).isValid() ? moment(item).format('YYYY-MM-DD') : item
+        return this.isTimeString(item) ? moment(item).format('YYYY-MM-DD') : item
       })
     }
 
-    return moment(value).isValid() ? moment(value).format('YYYY-MM-DD') : value;
+    return this.isTimeString(value) ? moment(value).format('YYYY-MM-DD') : value;
   }
 
   getFilterKeyLabel = (filterKey) => {
