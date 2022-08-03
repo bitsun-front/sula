@@ -25,6 +25,9 @@
 
 .queryFormContainer {
   flex-shrink: 0 !important;
+  &>div {
+    height: 100%;
+  }
   .ant-form {
     height: 100%;
   }
@@ -130,6 +133,17 @@
   .span-active {
     & > span {
       color: #005CFF;
+      position: relative;
+    }
+
+    &>span::after {
+      position: absolute;
+      content: '';
+      bottom: -10px;
+      width: calc(100% + 10px);
+      left: -5px;
+      height: 2px;
+      background-color: #005CFF;
     }
     
   }
