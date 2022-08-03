@@ -233,13 +233,14 @@ const Form: React.FunctionComponent<FormProps> = (props, ref) => {
                             <span className='status-label-index'>{index+1}</span>
                           </div>
                           <div className='status-label-operate'>
-                            <div>{item.text}</div>
+                            <div style={!item.isDone ? {height: '40px', lineHeight: '40px'} : {}}>{item.text}</div>
                             {
                               item.isDone ? (
                                 <div title={`${item.modifyUserName || '--'} ${item.modifyTime || '--'}`}>{`${item.modifyUserName || '--'} ${item.modifyTime || '--'}`}</div>
                               ) : null
                             }
                           </div>
+                          <div style={{clear: 'both'}}></div>
                         </div>
                       )
                     })

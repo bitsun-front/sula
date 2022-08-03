@@ -212,9 +212,9 @@
 .form-status-label {
   height: 48px;
   margin-right: 12px;
-  flex-grow: 1;
-  flex-shrink: 1;
-  display: flex;
+  // flex-grow: 1;
+  // flex-shrink: 1;
+  display: inline-block;
   position: relative;
   background-color: #B0B4B7;
   align-items: center;
@@ -297,27 +297,43 @@
   font-family: Montserrat;
   font-size: 14px;line-height: 24px;
   text-align: center;
-  margin: 0 12px 0 20px;
+  margin: 0 6px 0 20px;
 }
 
 .status-label-key {
-  flex-grow: 0;
-  flex-shrink: 0;
+  width: 50px;
+  height: 100%;
+  display: inline-flex;
+  float: left;
+  // flex-grow: 0;
+  // flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
 }
 
 .status-label-operate {
-  flex-grow: 1;
-  flex-shrink: 1;
+  // flex-grow: 1;
+  // flex-shrink: 1;
+  float: left;
+  width: calc(100% - 50px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  height: 100%;
+  margin: 4px 0;
   &>div {
+    font-size: 12px;
     height: 20px;
     line-height: 20px;
     color: #FFFFFF;
-    font-size: 14px;
     font-family: PingFangSC;
-    width: 95%;
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+  }
+  &>div:first-child {
+    font-size: 14px;
+    font-weight: 600;
   }
 }
 

@@ -6,25 +6,36 @@ export default class FieldContainer extends React.Component {
     return (
       <Form
         isFormPage={true}
-        mode='create'
+        mode='edit'
         initialValues={{
           input2: 'hyhAAAAAAAAAAAAAAAA'
         }}
         formStatusMapping={[
           {
             text: '状态1',
-            value: 1
+            value: 1,
+            modifyUserName: 'aaaaa',
+            modifyTime: '2022-09-01 12:20:20',
+            isDone: true,
           },
           {
             text: '状态2',
-            value: 2
+            value: 2,
+            modifyUserName: 'aaaaa',
+            modifyTime: '2022-09-01 12:20:20',
+            isDone: true,
           },
           {
             text: '状态3',
+            modifyUserName: 'aaaaa',
+            modifyTime: '2022-09-01 12:20:20',
+            isDone: true,
             value: 3
           },
           {
             text: '状态4',
+            modifyUserName: 'aaaaa',
+            modifyTime: '2022-09-01 12:20:20',
             value: 4
           },
           
