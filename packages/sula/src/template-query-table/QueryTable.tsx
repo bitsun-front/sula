@@ -449,7 +449,7 @@ export default class QueryTable extends React.Component<Props> {
           <div style={{position: 'relative'}}>
             <Table
               {...tableProps}
-              className={cx(tableProps.className, `${prefixCls}`)}
+              className={cx(tableProps.className, `${prefixCls}`, `${summary ? 'has-bssula-summary' : ''}`)}
               rowSelection={rowSelection}
               columns={finalColumns}
               actionsRender={actionsRender}
