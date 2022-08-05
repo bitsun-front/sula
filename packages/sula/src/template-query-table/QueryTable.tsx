@@ -116,9 +116,9 @@ export default class QueryTable extends React.Component<Props> {
       const outerHeight = window.screen.height;
       let newHeight = 500;
       if (isFullScreen) {
-        newHeight = outerHeight - 136;
+        newHeight = outerHeight - 142;
       } else {
-        newHeight = clientHeight - 136;
+        newHeight = clientHeight - 142;
       }
       this.setState({
         sliderFormHeight: newHeight
@@ -449,7 +449,7 @@ export default class QueryTable extends React.Component<Props> {
           <div style={{position: 'relative'}}>
             <Table
               {...tableProps}
-              className={cx(tableProps.className, `${prefixCls}`)}
+              className={cx(tableProps.className, `${prefixCls}`, `${summary ? 'has-bssula-summary' : ''}`)}
               rowSelection={rowSelection}
               columns={finalColumns}
               actionsRender={actionsRender}
