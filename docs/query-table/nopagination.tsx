@@ -421,12 +421,13 @@ export default class BasicDemo extends React.Component {
           triggerQueryData={(filters) => {
             this.updateData(filters)
           }}
+          // noConditionOpts={false}
           triggerResetData={true}
           initialValues={{
             name567567567:'rod'
           }}
           ref={this.ref}
-          isHorizontally={false}
+          // isHorizontally={false}
           statusMapping={[
             {
               label: '全部',

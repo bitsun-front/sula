@@ -137,7 +137,7 @@ export default class QueryTable extends React.Component<Props> {
   };
 
   renderForm = (locale, isHorizontally) => {
-    const { formProps, layout, itemLayout, fields, initialValues, visibleFieldsCount, triggerResetData, queryActionCallback, resetActionCallback } = this.props;
+    const { formProps, layout, itemLayout, fields, initialValues, visibleFieldsCount, triggerResetData, queryActionCallback, resetActionCallback, noConditionOpts } = this.props;
     const formActionsRender = formProps?.actionsRender ?? [
       {
         type: 'button',
@@ -209,7 +209,7 @@ export default class QueryTable extends React.Component<Props> {
           actionsRender={formActionsRender}
           getFilterKeyLabel={this.getFilterKeyLabel}
           getFilterValueLabel={this.getFilterValueLabel}
-          isQueryTableForm={true}
+          isQueryTableForm={this.judgeIsEmpty(noConditionOpts) ? true : !noConditionOpts}
           isHorizontally={isHorizontally}
         />
       </div>
