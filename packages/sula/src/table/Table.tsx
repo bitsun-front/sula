@@ -187,8 +187,11 @@ const RefTable: React.FunctionComponent<TableProps> = (props, ref) => {
     return false;
   };
   let filterValues = tableProps?.getCurrentFormValue?.() || {};
-  console.log(filterValues)
-  const filterFields = Object.keys(filterValues).filter(item => !judgeIsEmpty(filterValues[item]));
+  const filterFields = Object.keys(filterValues).filter(item => {
+    let formFields = props.queryFormFields || [];
+    if (formFields.find(field => item === field.name)?.notShowLabel) return false;
+    return !judgeIsEmpty(filterValues[item]);
+  });
 
   if (!tableProps.title && (props.actionsRender || props.leftActionsRender)) {
     tableProps.title = (currentPageData) => {

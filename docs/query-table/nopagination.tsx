@@ -6,6 +6,7 @@ const queryFields: QueryTableProps['fields'] = [
   {
     name: 'nat',
     label: '国家国家国',
+    notShowLabel: true,
     initialSource: [
       {
         text: '国家A',
