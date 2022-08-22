@@ -137,7 +137,7 @@ export default class QueryTable extends React.Component<Props> {
   };
 
   renderForm = (locale, isHorizontally) => {
-    const { formProps, layout, itemLayout, fields, initialValues, visibleFieldsCount, triggerResetData, queryActionCallback, resetActionCallback } = this.props;
+    const { formProps, layout, itemLayout, fields, initialValues, visibleFieldsCount, triggerResetData, queryActionCallback, resetActionCallback, noConditionOpts } = this.props;
     const formActionsRender = formProps?.actionsRender ?? [
       {
         type: 'button',
@@ -209,7 +209,7 @@ export default class QueryTable extends React.Component<Props> {
           actionsRender={formActionsRender}
           getFilterKeyLabel={this.getFilterKeyLabel}
           getFilterValueLabel={this.getFilterValueLabel}
-          isQueryTableForm={true}
+          isQueryTableForm={this.judgeIsEmpty(noConditionOpts) ? true : !noConditionOpts}
           isHorizontally={isHorizontally}
         />
       </div>
@@ -328,7 +328,22 @@ export default class QueryTable extends React.Component<Props> {
     return false;
   }
 
-  //获取form筛选条件值对应label 
+  getSourceName = (source, value) => {
+    let labelName = value;
+    const loop = (data: Array<any>) => {
+      data.forEach(item => {
+        if (item.value === value) {
+          labelName = item.text || item.name || item.label || item.title || item.value;
+        } else if (item.children && Array.isArray(item.children)) {
+          loop(item.children);
+        }
+      })
+    }
+    loop(source);
+    return labelName;
+  }
+
+  //获取form筛选条件值对应label
   getFilterValueLabel = (key: string, value: any) => {
     const { getFieldSource } = this.formRef.current || {};
     const { columns, fields } = this.props;
@@ -349,11 +364,10 @@ export default class QueryTable extends React.Component<Props> {
     //当筛选条件项存在
     if (source) {
       if (typeof(value) === 'number' || typeof(value) === 'string') {
-        return source.find(item => item.value == value)?.text || source.find(item => item.value == value)?.label || value
+        return this.getSourceName(source, value);
       }
       if (Array.isArray(value)) {
-        return value.map(itemValue =>
-          source.find(sourceItem => sourceItem.value == itemValue)?.text || source.find(sourceItem => sourceItem.value == itemValue)?.label || itemValue)
+        return value.map(itemValue => this.getSourceName(source, itemValue))
       }
     }
 
@@ -397,6 +411,7 @@ export default class QueryTable extends React.Component<Props> {
     this.tableRef?.current?.clearRowSelection();
     this.tableRef?.current?.refreshTable(null, currentFieldsValue, null, true);
   };
+  
 
   renderTable = () => {
     const { status, isHorizontally } = this.state;
@@ -461,6 +476,7 @@ export default class QueryTable extends React.Component<Props> {
               getCurrentFormValue={this.getCurrentFormValue}
               getFilterValueLabel={this.getFilterValueLabel}
               getFilterKeyLabel={this.getFilterKeyLabel}
+              queryFormFields={this.props.fields || []}
               tagColor={tagColor}
               triggerQueryData={triggerQueryData}
               triggerResetData={triggerResetData}

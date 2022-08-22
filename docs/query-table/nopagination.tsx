@@ -6,6 +6,7 @@ const queryFields: QueryTableProps['fields'] = [
   {
     name: 'nat',
     label: '国家国家国',
+    notShowLabel: true,
     initialSource: [
       {
         text: '国家A',
@@ -421,12 +422,13 @@ export default class BasicDemo extends React.Component {
           triggerQueryData={(filters) => {
             this.updateData(filters)
           }}
+          // noConditionOpts={false}
           triggerResetData={true}
           initialValues={{
             name567567567:'rod'
           }}
           ref={this.ref}
-          isHorizontally={false}
+          // isHorizontally={false}
           statusMapping={[
             {
               label: '全部',
