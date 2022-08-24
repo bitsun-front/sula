@@ -62,8 +62,28 @@ class ContextStore {
 
       refreshTable: this.refreshTable,
       resetTable: this.resetTable,
+
+      getExportParams: this.getExortParams,
     };
   };
+
+  public getExortParams = () => {
+    const { pagination, filters, sorter } = this.getControls();
+    const finalSorter = omit(sorter, ['column', 'field']);
+    let params = pagination
+      ? {
+          pageSize: pagination.pageSize,
+          current: pagination.current,
+          filters,
+          sorter: finalSorter,
+        }
+      : {
+          filters,
+          sorter: finalSorter,
+        };
+
+    return params;
+  }
 
   public refreshTable = (
     pagination?: Pagination,

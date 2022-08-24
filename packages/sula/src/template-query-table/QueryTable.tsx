@@ -156,6 +156,7 @@ export default class QueryTable extends React.Component<Props> {
             args: [{ current: 1 }, '#{result}'],
           },
           (ctx: any) => {
+            debugger
             if(queryActionCallback) {
               const querySearchParams = ctx?.result;
               queryActionCallback(querySearchParams)
