@@ -94,7 +94,7 @@ export default class QueryTable extends React.Component<Props> {
       this.tableRef.current.refreshTable(null, initialValues, null, true);
     }
     this.setSliderFormHeight(isFullScreen);
-    
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -139,6 +139,9 @@ export default class QueryTable extends React.Component<Props> {
   getExportParams = () => {
     const formValues = this.formRef.current.getFieldsValue();
     const paramsTable = this.tableRef.current.getExportParams()
+    if(paramsTable instanceof Array){
+      return paramsTable
+    }
     const needConvertParams = {
       ...paramsTable,
       filters: {
@@ -527,7 +530,7 @@ export default class QueryTable extends React.Component<Props> {
     this.tableRef?.current?.clearRowSelection();
     this.tableRef?.current?.refreshTable(null, currentFieldsValue, null, true);
   };
-  
+
 
   renderTable = () => {
     const { status, isHorizontally } = this.state;
