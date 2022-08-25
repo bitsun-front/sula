@@ -425,8 +425,8 @@ export default class BasicDemo extends React.Component {
         <Button onClick={this.test}>测试</Button>
         <span>我是现在的状态{statusNum}</span>
         <QueryTable
+          rowSelection={{}}
           triggerQueryData={(filters) => {
-            debugger
             this.updateData(filters)
           }}
           // noConditionOpts={false}
