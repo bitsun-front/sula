@@ -394,10 +394,7 @@ export default class BasicDemo extends React.Component {
   }
 
   test = () => {
-    debugger
-    console.log('getFormParams', this.ref.current.formRef.current.getFieldsValue())
-    console.log('getExportParams', this.ref.current.tableRef.current.getExportParams())
-    console.log(this.ref)
+    console.log(this.ref.current.getExportParams())
   }
 
   updateData = (filters) => {
