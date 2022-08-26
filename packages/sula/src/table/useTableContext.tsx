@@ -71,7 +71,7 @@ class ContextStore {
     const {getSelectedRows} = this.getTable()
     const { pagination, filters, sorter, selectedRowKeys } = this.getControls();
     const finalSorter = omit(sorter, ['column', 'field']);
-    let params = selectedRowKeys?.length ? getSelectedRows() : pagination
+    let params = pagination
       ? {
           pageSize: pagination.pageSize,
           current: pagination.current,
@@ -82,7 +82,6 @@ class ContextStore {
           filters,
           sorter: finalSorter,
         };
-    console.log(params,'controls');
     return params;
   }
 
