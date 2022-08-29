@@ -15,6 +15,7 @@ import { Input, Space, Button, Radio, Checkbox, Tabs, Badge  } from 'antd';
 import { MoreOutlined, SearchOutlined, CaretDownOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import DropFilterSelect from './dropFilterComponent/dropFilterSelect';
 import moment from 'moment';
+import arrow_top from '../assets/arrow_top.png';
 
 type FormPropsPicks = 'fields' | 'initialValues' | 'layout' | 'itemLayout';
 type TablePropsPicks =
@@ -66,6 +67,7 @@ export default class QueryTable extends React.Component<Props> {
     this.state = {
       isHorizontally: props.isHorizontally === undefined ? true : props.isHorizontally,
       status: {},
+      showSideMenu: true,
       sliderFormHeight: 500
     }
   }
@@ -137,6 +139,7 @@ export default class QueryTable extends React.Component<Props> {
   };
 
   renderForm = (locale, isHorizontally) => {
+    const { showSideMenu } = this.state;
     const { formProps, layout, itemLayout, fields, initialValues, visibleFieldsCount, triggerResetData, queryActionCallback, resetActionCallback, noConditionOpts } = this.props;
     const formActionsRender = formProps?.actionsRender ?? [
       {
@@ -191,27 +194,58 @@ export default class QueryTable extends React.Component<Props> {
       },
     ];
     return (
-      <div className='queryFormContainer' style={!isHorizontally ? {background: '#ffffff', borderTop: '1px #E1E2E3 solid', height: `${this.state.sliderFormHeight}px`, overflow: 'hidden'} : {}}>
-        <QueryForm
-          {...formProps}
-          ctxGetter={() => {
-            return {
-              table: this.tableRef.current,
-            };
-          }}
-          ref={this.formRef}
-          hasBottomBorder={this.hasActionsRender()}
-          layout={layout}
-          itemLayout={itemLayout}
-          fields={fields}
-          initialValues={initialValues}
-          visibleFieldsCount={visibleFieldsCount}
-          actionsRender={formActionsRender}
-          getFilterKeyLabel={this.getFilterKeyLabel}
-          getFilterValueLabel={this.getFilterValueLabel}
-          isQueryTableForm={this.judgeIsEmpty(noConditionOpts) ? true : !noConditionOpts}
-          isHorizontally={isHorizontally}
-        />
+      <div style={{position: 'relative'}}>
+        <div 
+          className='queryFormContainer' 
+          style={!isHorizontally ? {
+            background: '#ffffff', 
+            borderTop: '1px #E1E2E3 solid', 
+            height: `${this.state.sliderFormHeight}px`, 
+            overflow: 'hidden', 
+            width: showSideMenu ? '288px' : '0px',
+            opacity: showSideMenu ? 1 : 0,
+            } : {}}
+        >
+          <QueryForm
+            {...formProps}
+            ctxGetter={() => {
+              return {
+                table: this.tableRef.current,
+              };
+            }}
+            ref={this.formRef}
+            hasBottomBorder={this.hasActionsRender()}
+            layout={layout}
+            itemLayout={itemLayout}
+            fields={fields}
+            initialValues={initialValues}
+            visibleFieldsCount={visibleFieldsCount}
+            actionsRender={formActionsRender}
+            getFilterKeyLabel={this.getFilterKeyLabel}
+            getFilterValueLabel={this.getFilterValueLabel}
+            isQueryTableForm={this.judgeIsEmpty(noConditionOpts) ? true : !noConditionOpts}
+            isHorizontally={isHorizontally}
+          />
+        </div>
+        {
+          !isHorizontally && 
+          <div 
+            className='queryFormCollapse'
+            onClick={() => {
+              this.setState({
+                showSideMenu: !showSideMenu
+              })
+            }}
+          >
+            <img 
+              src={arrow_top}
+              style={{
+                width: '14px',
+                transform: showSideMenu ? 'rotate(90deg)' : 'rotate(270deg)'
+              }}
+            />
+          </div>
+        }
       </div>
     );
   };

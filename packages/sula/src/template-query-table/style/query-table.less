@@ -25,6 +25,10 @@
 
 .queryFormContainer {
   flex-shrink: 0 !important;
+  margin-right: 10px;
+  position: relative;
+  transition: 0.5s;
+  -webkit-transition: 0.5s; /* Safari */
   .ant-form {
     height: 100%;
   }
@@ -58,14 +62,28 @@
   background: #fff;
 }
 
+.queryFormCollapse {
+  position: absolute;
+  width: 9px;
+  height: 64px;
+  background-color: #ffffff;
+  border-radius: 0 4px 4px 0;
+  top: 50%;
+  right: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .ant-popover {
   z-index: 1055 !important;
 }
 
 
 .suitClass {
-  width: calc(100% - 293px);
+  width: calc(100% - 303px);
   flex-shrink: 1;
+  flex-grow: 1;
 }
 
 .table-bssula-summary {
