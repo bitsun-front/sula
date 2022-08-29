@@ -15,6 +15,7 @@ import { Input, Space, Button, Radio, Checkbox, Tabs, Badge  } from 'antd';
 import { MoreOutlined, SearchOutlined, CaretDownOutlined, EyeInvisibleOutlined } from '@ant-design/icons';
 import DropFilterSelect from './dropFilterComponent/dropFilterSelect';
 import moment from 'moment';
+import arrow_top from '../assets/arrow_top.png';
 
 type FormPropsPicks = 'fields' | 'initialValues' | 'layout' | 'itemLayout';
 type TablePropsPicks =
@@ -66,6 +67,7 @@ export default class QueryTable extends React.Component<Props> {
     this.state = {
       isHorizontally: props.isHorizontally === undefined ? true : props.isHorizontally,
       status: {},
+      showSideMenu: true,
       sliderFormHeight: 500
     }
   }
@@ -94,7 +96,7 @@ export default class QueryTable extends React.Component<Props> {
       this.tableRef.current.refreshTable(null, initialValues, null, true);
     }
     this.setSliderFormHeight(isFullScreen);
-    
+
   }
 
   componentWillReceiveProps(nextProps) {
@@ -136,7 +138,124 @@ export default class QueryTable extends React.Component<Props> {
     );
   };
 
+  getExportParams = () => {
+    const formValues = this.formRef.current.getFieldsValue();
+    const paramsTable = this.tableRef.current.getExportParams()
+    const needConvertParams = {
+      ...paramsTable,
+      filters: {
+        ...paramsTable.filters,
+        ...formValues
+      }
+    }
+
+    const params = { ...needConvertParams.filters };
+    // 数组对象处理,对带有特殊标记的name进行处理
+    for (const key in params) {
+      if (Object.prototype.hasOwnProperty.call(params, key)) {
+        const element = params[key];
+        if (element && key.indexOf('*number*') >= 0) {
+          const dataParams = key.split('*number*');
+          dataParams.forEach((value, index) => {
+            params[value] = element[index];
+          });
+          delete params[key];
+        } else if (element && key.indexOf('*address*') >= 0) {
+          const dataParams = key.split('*address*');
+          dataParams.forEach((value, index) => {
+            params[value] = element.PCDCode[index];
+          });
+          delete params[key];
+        } else if (element && key.indexOf('*costType*') >= 0) {
+          const dataParams = key.split('*costType*');
+          // eslint-disable-next-line prefer-destructuring
+          params[dataParams[0]] = element[1];
+          delete params[key];
+        } else if (element && key.indexOf('*fullDate*') >= 0) {
+          const dataParams = key.split('*fullDate*');
+          dataParams.forEach((value, index) => {
+            if (index === 0) {
+              params[value] = moment(element[index])
+                .millisecond(0)
+                .second(0)
+                .minute(0)
+                .hour(0)
+                .format('YYYY-MM-DD HH:mm:ss');
+            } else {
+              params[value] = moment(element[index])
+                .millisecond(59)
+                .second(59)
+                .minute(59)
+                .hour(23)
+                .format('YYYY-MM-DD HH:mm:ss');
+            }
+          });
+          delete params[key];
+        } else if (element && key.indexOf('*date*') >= 0) {
+          const dataParams = key.split('*date*');
+          dataParams.forEach((value, index) => {
+            if (index === 0) {
+              params[value] = moment(element[index]).format('YYYY-MM-DD');
+            } else {
+              params[value] = moment(element[index]).format('YYYY-MM-DD');
+            }
+          });
+          delete params[key];
+        } else if (element && key.indexOf('*size*') >= 0) {
+          const dataParams = key.split('*size*')[0];
+          params[dataParams] = typeof element === 'string' ? element.toUpperCase() : element;
+          delete params[key];
+        } else if (element && key.indexOf('*') >= 0) {
+          const dataParams = key.split('*');
+          dataParams.forEach((value, index) => {
+            params[value] = element[index].format('YYYY-MM-DD HH:mm:ss');
+          });
+          delete params[key];
+        } else if (Array.isArray(element)) {
+          params[key] = element.join(',');
+        }
+      }
+    }
+
+    let finalParams = {};
+
+    if (JSON.stringify(params) === '{}') {
+      finalParams = { ...finalParams };
+    }
+
+    for (const key in params) {
+      if (this.isValidateValue(params[key])) {
+        finalParams[key] = params[key];
+      }
+    }
+
+    // 排序动作触发
+    let sorter;
+    if (Object.keys(needConvertParams.sorter).length) {
+      if (needConvertParams.sorter.order === 'ascend') {
+        sorter = `asc-${needConvertParams.sorter.columnKey}`;
+      } else if (needConvertParams.sorter.order === 'descend') {
+        sorter = `desc-${needConvertParams.sorter.columnKey}`;
+      }
+    }
+    return {
+      pageSize: needConvertParams.pageSize,
+      currentPage: needConvertParams.current,
+      ...finalParams,
+      sorter,
+      selectedRows: this.tableRef.current.getSelectedRows()
+    };
+  }
+
+  isValidateValue = (value: any) => {
+    if (value == null || value === undefined || String(value).trim() === '') {
+      return false;
+    }
+    return true;
+  };
+
   renderForm = (locale, isHorizontally) => {
+    const { showSideMenu } = this.state;
     const { formProps, layout, itemLayout, fields, initialValues, visibleFieldsCount, triggerResetData, queryActionCallback, resetActionCallback, noConditionOpts } = this.props;
     const formActionsRender = formProps?.actionsRender ?? [
       {
@@ -191,27 +310,58 @@ export default class QueryTable extends React.Component<Props> {
       },
     ];
     return (
-      <div className='queryFormContainer' style={!isHorizontally ? {background: '#ffffff', borderTop: '1px #E1E2E3 solid', height: `${this.state.sliderFormHeight}px`, overflow: 'hidden'} : {}}>
-        <QueryForm
-          {...formProps}
-          ctxGetter={() => {
-            return {
-              table: this.tableRef.current,
-            };
-          }}
-          ref={this.formRef}
-          hasBottomBorder={this.hasActionsRender()}
-          layout={layout}
-          itemLayout={itemLayout}
-          fields={fields}
-          initialValues={initialValues}
-          visibleFieldsCount={visibleFieldsCount}
-          actionsRender={formActionsRender}
-          getFilterKeyLabel={this.getFilterKeyLabel}
-          getFilterValueLabel={this.getFilterValueLabel}
-          isQueryTableForm={this.judgeIsEmpty(noConditionOpts) ? true : !noConditionOpts}
-          isHorizontally={isHorizontally}
-        />
+      <div style={{position: 'relative'}}>
+        <div 
+          className='queryFormContainer' 
+          style={!isHorizontally ? {
+            background: '#ffffff', 
+            borderTop: '1px #E1E2E3 solid', 
+            height: `${this.state.sliderFormHeight}px`, 
+            overflow: 'hidden', 
+            width: showSideMenu ? '288px' : '0px',
+            opacity: showSideMenu ? 1 : 0,
+            } : {}}
+        >
+          <QueryForm
+            {...formProps}
+            ctxGetter={() => {
+              return {
+                table: this.tableRef.current,
+              };
+            }}
+            ref={this.formRef}
+            hasBottomBorder={this.hasActionsRender()}
+            layout={layout}
+            itemLayout={itemLayout}
+            fields={fields}
+            initialValues={initialValues}
+            visibleFieldsCount={visibleFieldsCount}
+            actionsRender={formActionsRender}
+            getFilterKeyLabel={this.getFilterKeyLabel}
+            getFilterValueLabel={this.getFilterValueLabel}
+            isQueryTableForm={this.judgeIsEmpty(noConditionOpts) ? true : !noConditionOpts}
+            isHorizontally={isHorizontally}
+          />
+        </div>
+        {
+          !isHorizontally && 
+          <div 
+            className='queryFormCollapse'
+            onClick={() => {
+              this.setState({
+                showSideMenu: !showSideMenu
+              })
+            }}
+          >
+            <img 
+              src={arrow_top}
+              style={{
+                width: '14px',
+                transform: showSideMenu ? 'rotate(270deg)' : 'rotate(90deg)'
+              }}
+            />
+          </div>
+        }
       </div>
     );
   };
@@ -411,7 +561,7 @@ export default class QueryTable extends React.Component<Props> {
     this.tableRef?.current?.clearRowSelection();
     this.tableRef?.current?.refreshTable(null, currentFieldsValue, null, true);
   };
-  
+
 
   renderTable = () => {
     const { status, isHorizontally } = this.state;
