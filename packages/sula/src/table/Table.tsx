@@ -45,6 +45,7 @@ export interface ColumnProps extends Omit<AColumnProps<any>, 'render'> {
   tableHeadFilterKey?: string;
   customerFilterOptions?: filterOption[];
   customerFilterType?: string;
+  customerDropFilterProps?: any;
 }
 
 export interface filterOption {
@@ -161,7 +162,6 @@ const RefTable: React.FunctionComponent<TableProps> = (props, ref) => {
   // =============== Table 级别 ===============
 
   const controls = getControls();
-
   tableProps.dataSource = controls.dataSource;
   tableProps.pagination = controls.pagination;
 
@@ -187,7 +187,11 @@ const RefTable: React.FunctionComponent<TableProps> = (props, ref) => {
     return false;
   };
   let filterValues = tableProps?.getCurrentFormValue?.() || {};
-  const filterFields = Object.keys(filterValues).filter(item => !judgeIsEmpty(filterValues[item]));
+  const filterFields = Object.keys(filterValues).filter(item => {
+    let formFields = props.queryFormFields || [];
+    if (formFields.find(field => item === field.name)?.notShowLabel) return false;
+    return !judgeIsEmpty(filterValues[item]);
+  });
 
   if (!tableProps.title && (props.actionsRender || props.leftActionsRender)) {
     tableProps.title = (currentPageData) => {
@@ -201,11 +205,11 @@ const RefTable: React.FunctionComponent<TableProps> = (props, ref) => {
           />
           {
             !!filterFields.length && (
-              <div key={filterFields.length}  style={{padding: '10px 0 0'}}>
+              <div key={filterFields.length}  style={{marginTop:'-8px', height: '40px', display: 'flex', alignItems: 'center', overflow: 'hidden'}}>
                 {
                   filterFields
                   .map(item => (
-                    <Tag style={{padding: '3px 5px', marginBottom: '10px', backgroundColor:'#F7F8FB', border: '1px solid #CFCFD0', color: '#000000'}} closable onClose={() => {tableProps?.onCloseTag?.(item)}}>
+                    <Tag style={{padding: '3px 5px', backgroundColor:'#F7F8FB', border: '1px solid #CFCFD0', color: '#000000', height: '24px', lineHeight: '18px'}} closable onClose={() => {tableProps?.onCloseTag?.(item)}}>
                         {`${tableProps?.getFilterKeyLabel?.(item)}: ${tableProps?.getFilterValueLabel?.(item, filterValues[item])}`}
                         &nbsp;&nbsp;
                     </Tag>

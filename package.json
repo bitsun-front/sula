@@ -1,5 +1,5 @@
 {
-  "private": true,
+  "private": false,
   "scripts": {
     "start": "npm run dev",
     "dev": "dumi dev",

@@ -4,6 +4,14 @@
   &-right {
     .formActionPosition(flex-end);
   }
+
+  &-landscape {
+    order: 1;
+    display: flex;
+    align-items: center;
+    justify-content: left;
+  }
+
   &-center {
     .formActionPosition(center);
   }
@@ -21,7 +29,7 @@
     z-index: 9; // siderMenu need >= 10
   }
 
-  // &-vertical {
+  // &-vertical { 
   //   &-middle {
   //     margin-top: 30px;
   //   }
@@ -34,9 +42,301 @@
   // }
 }
 
-
 .formActionPosition(@position) {
   display: flex;
   align-items: center;
   justify-content: @position;
+}
+
+.bitsun-form-class {
+  padding: 10px 60px 26px !important;
+  background-color: #FFFFFF;
+  .sula-form-action-bottom {
+    height: 48px;
+    box-shadow: 0 -4px 8px 0 rgba(215,215,215,0.50);
+    .ant-space {
+      gap: 20px;
+    }
+    button {
+      height: 28px;
+    } 
+  }
+  .ant-form-item-label > label {
+    font-size: 14px;
+    font-family: PingFangSC;
+    color: #292929;
+  }
+}
+
+.white-card.bitsun-form-card-class {
+  .ant-card-body {
+    background-color: #FFFFFF;
+    padding: 0px;
+  }
+  .ant-form-item {
+    margin-right: 0px !important;
+  }
+}
+
+.bitsun-form-card-class[level="1"] {
+  &>.ant-card-body {
+    margin-bottom: 10px;
+  }
+}
+
+.bitsun-form-card-class {
+  .ant-card-head {
+    border: 0px;
+    padding: 0px;
+  }
+
+  .ant-form-item {
+    margin-bottom: 0px;
+    padding-bottom: 12px;
+  }
+
+  .ant-card-body {
+    padding: 12px 0 0;
+    margin-top: -4px;
+    background-color: #F3F3F3;
+  }
+
+  .ant-card-head-title {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    color: #000000;
+    font-weight: 600;
+    font-family: PingFangSC;
+    background-color: #FFFFFF;
+    padding: 8px 0;
+    margin: 0px;
+    .title-left-line {
+      display: inline-block;
+      width: 4px;
+      height: 100%;
+      background-color: #005CFF;
+      height: 20px;
+      margin-right: 16px;
+    }
+  }
+
+
+}
+
+.bitsun-form-card-class.ant-card-bordered {
+  border: 0px;
+}
+
+.field-group-hidden {
+  .ant-card-body {
+    display: none !important;
+  }
+}
+
+.container-button {
+  min-width: 88px;
+  padding: 0 5px;
+  height: 24px;
+  border: 1px solid #E1E2E3;
+  border-bottom-left-radius: 5px;
+  border-bottom-right-radius: 5px;
+  font-size: 12px;
+  color: #000000;
+  line-height: 24px;
+  display: inline-block;
+  vertical-align: middle;
+  cursor: pointer;
+}
+
+.form-guide {
+  cursor: pointer;
+  position: fixed;
+  right: 5px;
+  color: #B1BAD4;
+  padding: 5px 0;
+  width: 48px;
+  z-index: 10;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: #141620;
+  .form-guide-top {
+    padding: 0px 10px;
+    display: flex;
+    justify-content: center;
+  }
+  border-radius: 5px;
+  .form-guide-center {
+    border-top: 1px solid #6E7588;
+    border-bottom: 1px solid #6E7588;
+    padding: 0px 10px;
+  }
+  .form-guide-item {
+    width: 28px;
+    padding: 5px 0;
+    display: block;
+    word-break: break-all;
+    color: #B1BAD4;
+    font-size: 14px;
+    line-height: 16px;
+    position: relative;
+  }
+  .form-guide-item::after {
+    content: '';
+    display: block;
+    width: 15px;
+    height: 1px;
+    background-color: #6E7588;
+    position: absolute;
+    bottom: 0px;
+    left: 7px;
+  }
+
+  .form-guide-bottom {
+    padding: 5px 10px;
+    display: flex;
+    justify-content: center;
+  }
+  .form-guide-item:last-child::after {
+    content: '';
+    display: none;
+    width: 15px;
+    height: 1px;
+    background-color: #6E7588;
+    position: absolute;
+    bottom: 0px;
+    left: 7px;
+  }
+}
+
+.form-status-label {
+  height: 48px;
+  margin-right: 12px;
+  // flex-grow: 1;
+  // flex-shrink: 1;
+  display: inline-block;
+  position: relative;
+  background-color: #B0B4B7;
+  align-items: center;
+}
+.choosed-status-label.form-status-label {
+  background-color: #005CFF;
+}
+
+.form-status-label:last-child {
+  margin-right: 0px;
+}
+
+.form-status-label:first-child::after {
+  position: absolute;
+  display: block;
+  content: '';
+  right: -48px;
+  top: 0;
+  width: 48px;
+  height: 48px;
+  border: 24px solid;
+  border-color: transparent transparent transparent transparent;
+  border-left: 12px solid #B0B4B7;
+}
+
+.choosed-status-label.form-status-label::after {
+  border-left: 12px solid #005CFF;
+}
+
+.choosed-status-label.form-status-label:not(:first-child):not(:last-child)::after {
+  border-left: 12px solid #005CFF;
+}
+
+.form-status-label:last-child::after {
+  position: absolute;
+  display: block;
+  content: '';
+  left: 0;
+  top: 0;
+  width: 48px;
+  height: 48px;
+  border: 24px solid;
+  border-color: transparent transparent transparent transparent;
+  border-left: 12px solid #ffffff;
+}
+
+.form-status-label:not(:first-child):not(:last-child)::before {
+  position: absolute;
+  display: block;
+  content: '';
+  left: 0;
+  top: 0;
+  width: 48px;
+  height: 48px;
+  border: 24px solid;
+  border-color: transparent transparent transparent transparent;
+  border-left: 12px solid #ffffff;
+}
+
+.form-status-label:not(:first-child):not(:last-child)::after {
+  position: absolute;
+  display: block;
+  content: '';
+  right: -48px;
+  top: 0;
+  width: 48px;
+  height: 48px;
+  border: 24px solid;
+  border-color: transparent transparent transparent transparent;
+  border-left: 12px solid #B0B4B7;
+}
+
+.status-label-index {
+  display: inline-block;
+  width: 24px;
+  height: 24px;
+  border: 1px solid #FFFFFF;
+  color: #FFFFFF;
+  border-radius: 50%;
+  font-family: Montserrat;
+  font-size: 14px;line-height: 24px;
+  text-align: center;
+  margin: 0 6px 0 20px;
+}
+
+.status-label-key {
+  width: 50px;
+  height: 100%;
+  display: inline-flex;
+  float: left;
+  // flex-grow: 0;
+  // flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+}
+
+.status-label-operate {
+  // flex-grow: 1;
+  // flex-shrink: 1;
+  float: left;
+  width: calc(100% - 50px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  height: 100%;
+  margin: 4px 0;
+  &>div {
+    font-size: 12px;
+    height: 20px;
+    line-height: 20px;
+    color: #FFFFFF;
+    font-family: PingFangSC;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  &>div:first-child {
+    font-size: 14px;
+    font-weight: 600;
+  }
+}
+
+.only-one-child.form-status-label::after,.only-one-child.form-status-label::before {
+  border-left: 0px;
 }

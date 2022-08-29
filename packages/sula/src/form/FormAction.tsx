@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Author: rodchen
+ * @Date: 2022-04-17 20:21:59
+ * @LastEditTime: 2022-07-03 21:00:47
+ * @LastEditors: rodchen
+ */
 import React from 'react';
 import cx from 'classnames';
 import assign from 'lodash/assign';
@@ -23,9 +30,9 @@ export default class FormAction extends React.Component<FormActinProps> {
   };
 
   render() {
-    const { actionsPosition, actionsRender, style, className, children } = this.props;
+    const { actionsPosition, actionsRender, style, className, children, landscape } = this.props;
 
-    const { formContext, layout, itemLayout } = this.context;
+    const { formContext, layout, itemLayout, sort } = this.context;
 
     const { getCtx } = formContext.getInternalHooks(HOOK_MARK);
 
@@ -36,7 +43,7 @@ export default class FormAction extends React.Component<FormActinProps> {
             history: configContext.history,
           });
 
-          const cls = cx(className, actionsPosition && `sula-form-action-${actionsPosition}`);
+          const cls = cx(className, actionsPosition && `sula-form-action-${landscape ? 'landscape' : actionsPosition}`);
 
           const actionsElem = children || triggerRenderPlugin(ctx, actionsRender);
           const actionsContainer = (

@@ -1,12 +1,21 @@
 import React from 'react';
 import DownOutlined from '@ant-design/icons/DownOutlined';
+import SettingOutlined from '@ant-design/icons/SettingOutlined';
+import { Button, Modal, Form, Row, Col, Input, Dropdown, Tooltip, message } from 'antd';
 import cx from 'classnames';
 import { getItemSpan } from '../form/utils/layoutUtil';
 import FieldGroupContext from '../form/FieldGroupContext';
+import { MenuFoldOutlined } from '@ant-design/icons'
 import { FieldGroup, Field, FormAction, FieldProps, FormInstance, FormProps } from '../form';
 import './style/query-fields.less';
 import LocaleReceiver from '../localereceiver';
 import { toArray } from '../_util/common';
+import { saveConditionToDatabase, getConditionToDatabase } from '../_util/requestConfig';
+import { history } from 'umi';
+import ConditionList from './conditionList';
+import LayoutContext from './LayoutContext';
+import position_left from '../assets/position_left.svg';
+import position_top from '../assets/position_top.svg';
 
 export interface QueryFieldsProps {
   fields: FieldProps[];
@@ -17,6 +26,8 @@ export interface QueryFieldsProps {
   getFormInstance: () => FormInstance;
 }
 
+let firstRender = 0;
+
 export default class QueryFields extends React.Component<QueryFieldsProps> {
   static contextType = FieldGroupContext;
 
@@ -25,20 +36,53 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
     fields: [],
   };
 
+  formRef = React.createRef<FormInstance>();
+
   state = {
     collapsed: true,
+    modalInfo: {
+      modalVisible: false,
+      type: 'create',
+      title: '',
+      callBack: null,
+    },
+    currentPage: history?.location?.pathname || '',
   };
+
+  componentDidMount(props) {
+    console.log(this.props.formRef)
+  }
 
   getVisibleFieldsCount = (): number => {
-    if (this.props.visibleFieldsCount === true) {
+    let count = this.props.visibleFieldsCount;
+    if (count === true) {
       return this.props.fields.length;
     }
+    const clientWicth = document.documentElement.clientWidth;
 
-    return this.props.visibleFieldsCount!;
+    // let queryFieldsWidth = clientWicth - 520;
+
+    // if(queryFieldsWidth > 1224) {
+    //   count++;
+    //   return count;
+    // }
+
+    return count!;
   };
 
+  componentWillReceiveProps(nextProps) {
+    if(!this.props.isHorizontally && nextProps.isHorizontally) {
+      this.setState(
+        {
+          collapsed: false
+        }
+      )
+      return
+    }
+  }
+
   renderFields = () => {
-    const { fields } = this.props;
+    const { fields, isHorizontally, getFormInstance } = this.props;
 
     const { matchedPoint, itemLayout } = this.context;
 
@@ -47,20 +91,33 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
     let allSpan = 0;
     let visibleAllSpan = 0;
 
-    const visibleFieldsCount = this.getVisibleFieldsCount();
+    let visibleFieldsCount = this.getVisibleFieldsCount();
+
 
     const finalFields = fields.map((field, index) => {
       fieldsNameList.push(field.name);
       const isVisible = index < visibleFieldsCount;
       const itemSpan = getItemSpan(itemLayout, matchedPoint, field.itemLayout);
       allSpan += itemSpan;
-      if (isVisible) {
+      if (isVisible || !isHorizontally) {
         visibleAllSpan += itemSpan;
       }
-      return <Field {...field} initialVisible={isVisible} key={field.name} />;
+      return <Field {...field} initialVisible={isVisible || !isHorizontally} key={field.name} />;
     });
+
     this.expandSpan = 24 - (allSpan % 24);
     this.collapseSpan = 24 - (visibleAllSpan % 24);
+
+    if(!isHorizontally && firstRender) {
+      const formInstance = getFormInstance();
+      fields.forEach((field, index) => {
+        if (index >= visibleFieldsCount) {
+          formInstance.setFieldVisible(field.name, true);
+        }
+      });
+    }
+
+    firstRender = 1;
 
     return finalFields;
   };
@@ -83,89 +140,326 @@ export default class QueryFields extends React.Component<QueryFieldsProps> {
     });
   }
 
+  saveCondition = async (ctx: any, name: string) => {
+    const { currentPage } = this.state;
+    const { ConditionRequestConfig } = this.props;
+    const fieldsValue = ctx.form.getFieldsValue();
+    const totalCondition = await getConditionToDatabase(currentPage, ConditionRequestConfig) || [];
+    totalCondition.push({
+      name,
+      condition: fieldsValue
+    })
+    saveConditionToDatabase(currentPage, totalCondition,  ConditionRequestConfig)
+  }
+
   renderFormAction = (locale) => {
     const { layout } = this.context;
-    const { collapsed } = this.state;
-    const actionsRender = [
-      ...(toArray(this.props.actionsRender)),
-      ...(this.hasMoreQueryFields()
-        ? [
-            {
-              type: () => (
-                <a>
-                  <span>{collapsed ? locale.expandText : locale.collapseText}</span>
-                  <DownOutlined
-                    style={{
-                      transition: '0.3s all',
-                      transform: `rotate(${collapsed ? 0 : 0.5}turn)`,
-                    }}
-                  />
-                </a>
-              ),
-              action: () => {
-                this.setState(
-                  {
-                    collapsed: !collapsed,
-                  },
-                  () => {
-                    this.updateVisibleFields();
-                  },
-                );
+    const { collapsed, currentPage } = this.state;
+    const { ctxGetter, getFilterKeyLabel, getFilterValueLabel, isHorizontally, hasFieldsValue, isQueryTableForm, ConditionRequestConfig } = this.props;
+    let actionsRender = []
+
+    if (!isHorizontally) {
+
+      actionsRender = [
+        {
+          type: 'button',
+          visible: isQueryTableForm ? true: false,
+          props: {
+            type: 'default',
+            children: '保存为条件',
+            style: {
+              width: '94px',
+              border: !hasFieldsValue ? '1px solid #d9d9d9' : '1px solid #005CFF',
+              color: !hasFieldsValue ? 'rgba(0, 0, 0, 0.25)' : '#005CFF',
+              padding: '0 12px',
+              marginRight: '10px'
+            },
+          },
+          disabled: !hasFieldsValue,
+          action: (ctx: any) => {
+            const { modalInfo } = this.state;
+            this.setState({
+              modalInfo: {
+                ...modalInfo,
+                modalVisible: true,
+                callBack: (name: string) => {
+                  this.saveCondition(ctx, name);
+                  message.success('条件已保存至“条件库”');
+                  this.setState({
+                    modalInfo: {
+                      ...modalInfo,
+                      modalVisible: false
+                    }
+                  })
+                }
+              }
+            })
+          }
+        },
+        ...(toArray(this.props.actionsRender).concat([]).reverse()),
+        {
+          type: (ctx: any) => (
+              <ConditionList
+                formRef={ctx}
+                isHorizontally={isHorizontally}
+                tableRef={ctxGetter}
+                currentPage={currentPage}
+                ConditionRequestConfig={ConditionRequestConfig}
+                getFilterValueLabel={getFilterValueLabel}
+                getFilterKeyLabel={getFilterKeyLabel}
+              />
+            ),
+          visible: isQueryTableForm ? true: false,
+        },
+        {
+          type: (ctx: any) => (
+            <span>
+              <LayoutContext.Consumer>
+                {({ isHorizontally, updateLayout }: any) => <span
+                  style={{
+                    display: 'flex',
+                    alignItems:'center',
+                    justifyContent: 'center',
+                    width: '32px',
+                    height: '32px',
+                    border: '0.89px solid #D9D9D9',
+                    boxSizing: 'border-box',
+                    borderRadius: '5px',
+                    marginRight: '10px',
+                    marginTop: '10px',
+                    marginLeft: '10px',
+                    cursor: 'pointer'
+                  }}
+                >
+                  <Tooltip placement="top" title={'横排'}>
+                    <img
+                      src={position_left}
+                      width={24}
+                      onClick={() => {
+                        updateLayout(!isHorizontally)
+                      }} />
+                  </Tooltip>
+                </span>}
+            </LayoutContext.Consumer>
+            </span>
+          ),
+          visible: isQueryTableForm ? true: false,
+        },
+      ]
+    } else {
+      actionsRender = [
+        ...(toArray(this.props.actionsRender)),
+          {
+            type: 'button',
+            visible: isQueryTableForm ? true: false,
+            props: {
+              type: 'default',
+              children: '保存为条件',
+              style: {
+                width: '94px',
+                border: !hasFieldsValue ? '1px solid #d9d9d9' : '1px solid #005CFF',
+                color: !hasFieldsValue ? 'rgba(0, 0, 0, 0.25)' : '#005CFF',
+                padding: '0 12px',
+                marginRight: '10px'
               },
             },
-          ]
-        : []),
-    ];
+            disabled: !hasFieldsValue,
+            action: (ctx: any) => {
+              const { modalInfo } = this.state;
+              this.setState({
+                modalInfo: {
+                  ...modalInfo,
+                  modalVisible: true,
+                  callBack: (name: string) => {
+                    this.saveCondition(ctx, name);
+                    message.success('条件已保存至“条件库”');
+                    this.setState({
+                      modalInfo: {
+                        ...modalInfo,
+                        modalVisible: false
+                      }
+                    })
+                  }
+                },
+              })
+            }
+          },
+          {
+            type: (ctx: any) => (
+              <span>
+                <LayoutContext.Consumer>
+                  {({ isHorizontally, updateLayout }: any) => <span
+                    style={{
+                      display: 'flex',
+                      alignItems:'center',
+                      justifyContent: 'center',
+                      width: '32px',
+                      height: '32px',
+                      border: '0.89px solid #D9D9D9',
+                      boxSizing: 'border-box',
+                      borderRadius: '5px',
+                      marginRight: '10px',
+                      cursor: 'pointer'
+                    }}
+                  >
+                    <Tooltip placement="top" title={'竖排'}>
+                      <img
+                        src={position_top}
+                        width={24}
+                        onClick={() => {
+                          updateLayout(!isHorizontally)
+                        }} />
+                    </Tooltip>
+                  </span>}
+              </LayoutContext.Consumer>
+              </span>
+            ),
+            visible: isQueryTableForm ? true: false,
+          },
+          {
+            type: (ctx: any) => (
+                <ConditionList
+                  formRef={ctx}
+                  isHorizontally={isHorizontally}
+                  tableRef={ctxGetter}
+                  currentPage={currentPage}
+                  ConditionRequestConfig={ConditionRequestConfig}
+                  getFilterValueLabel={getFilterValueLabel}
+                  getFilterKeyLabel={getFilterKeyLabel}
+                />
+              ),
+            visible: isQueryTableForm ? true: false,
+          },
+      ];
+    }
+
 
     const finalSpan = this.state.collapsed ? this.collapseSpan : this.expandSpan;
     const layoutProps = {} as any;
 
-    if (finalSpan === 24) {
-      layoutProps.actionsPosition = 'right';
-      layoutProps.style = {
-        marginBottom: 24,
-      };
-    } else {
-      layoutProps.style = {
-        display: 'flex',
-        justifyContent: 'flex-end',
-        ...(layout === 'vertical' ? { marginTop: 30 } : {}),
-      };
-    }
+    layoutProps.actionsPosition = 'right';
+    layoutProps.style = {
+      // marginBottom: 24,
+    };
+    // if (finalSpan === 24) {
+    // } else {
+    //   layoutProps.style = {
+    //     display: 'flex',
+    //     justifyContent: 'flex-end',
+    //     ...(layout === 'vertical' ? { marginTop: 30 } : {}),
+    //   };
+    // }
 
     return (
-      <FormAction
+        <FormAction
         itemLayout={{
           span: finalSpan,
         }}
         {...layoutProps}
         actionsRender={actionsRender}
+        landscape={!isHorizontally}
       />
+      // <LayoutContext.Consumer>
+      //   {({isHorizontally, updateLayout}: any) => (
+      //   )}
+      // </LayoutContext.Consumer>
+
     );
   };
 
+  handleSubmit = () => {
+
+    const {
+      modalInfo: { callBack },
+    } = this.state;
+    this.formRef?.current?.validateFields()
+      .then(values => {
+        callBack && callBack(values.name);
+      });
+
+  }
+
+  handleModalClose = () => {
+    this.setState({
+      modalInfo: {
+        modalVisible: false
+      }
+    })
+  }
+
   render() {
-    const { hasBottomBorder } = this.props;
+    const { hasBottomBorder, isHorizontally } = this.props;
+    console.log(isHorizontally)
+    const { modalInfo, collapsed } = this.state;
     return (
-      <LocaleReceiver>
-        {(locale) => {
-          return (
-            <FieldGroup
-              container={{
-                type: 'div',
-                props: {
-                  className: cx(`sula-template-query-table-fields-wrapper`, {
-                    [`sula-template-query-table-fields-divider`]: hasBottomBorder,
-                  }),
-                },
-              }}
-            >
-              {this.renderFields()}
-              {this.renderFormAction(locale)}
-            </FieldGroup>
-          );
-        }}
-      </LocaleReceiver>
+      <>
+        <LocaleReceiver>
+          {(locale) => {
+            return (
+              <>
+                <FieldGroup
+                isHorizontally={isHorizontally}
+                container={{
+                  type: 'div',
+                  props: {
+                    className: cx(!isHorizontally ? 'sula-template-query-table-fields-wrapper isHorizontally' : `sula-template-query-table-fields-wrapper`),
+                    style: {'margin-bottom': this.hasMoreQueryFields() ? '-15px' : '0px'}
+                  },
+                }}
+              >
+                {this.renderFields()}
+                {this.renderFormAction(locale)}
+              </FieldGroup>
+              {this.hasMoreQueryFields() && isHorizontally
+                ? <div className='sula-template-query-table-collapsed sula-template-query-table-fields-divider'>
+                    <a onClick={() => {
+                      this.setState(
+                        {
+                          collapsed: !collapsed,
+                        },
+                        () => {
+                          this.updateVisibleFields();
+                        },
+                      );
+                    }}>
+                        <span>{collapsed ? locale.expandText : locale.collapseText}</span>
+                        &nbsp;<DownOutlined
+                          style={{
+                            fontSize: '10px',
+                            transition: '0.3s all',
+                            transform: `rotate(${collapsed ? 0 : 0.5}turn)`,
+                          }}
+                        />
+                      </a>
+                  </div>
+                : <></>
+              }
+              </>
+            );
+          }}
+
+
+        </LocaleReceiver>
+        <Modal
+          width={485}
+          bodyStyle={{ paddingLeft: '48px'}}
+          destroyOnClose
+          title={modalInfo.title || <span style={{fontSize: '18px', color: '#000000', fontWeight: '500'}}>条件命名</span>}
+          visible={modalInfo.modalVisible}
+          onOk={this.handleSubmit}
+          onCancel={this.handleModalClose}
+        >
+          <Form ref={this.formRef}>
+            <Row>
+              <Col span={24}>
+                <Form.Item name='name' label="名称">
+                  <Input style={{ width: '339px',marginLeft: '5px' }} />
+                </Form.Item>
+              </Col>
+            </Row>
+          </Form>
+        </Modal>
+      </>
     );
   }
 }

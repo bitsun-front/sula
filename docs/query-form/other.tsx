@@ -7,7 +7,7 @@ const queryFields = Array(10)
     return {
       name: `input${index}`,
       label: `Input${index}`,
-      field: 'input',
+      field: 'inputnumber',
     };
   });
 
@@ -25,6 +25,7 @@ export default class BasicDemo extends React.Component {
         <div style={{ background: 'rgb(241, 242, 246)', padding: 16, marginTop: 16 }}>
           <QueryForm
             ref={this.formRef}
+            isHorizontally={true}
             layout="horizontal"
             labelAlign="left"
             onValuesChange={(_, allValues) => {

@@ -14,6 +14,7 @@ import { NameListMap, matchNameList } from '../_util/NameListMap';
 import { FormInstance, FormProps } from './Form';
 import transStore from '../_util/filterStore';
 import { toArray } from '../_util/common';
+import { triggerActionPlugin } from '../rope/triggerPlugin';
 
 export type FieldsValue = { name: FieldNamePath; value: any }[];
 
@@ -58,6 +59,7 @@ class ContextStore {
       setFieldValue: this.setFieldValue,
       setFieldsValue: this.setFieldsValue,
       setFields: this.setFields,
+      refreshForm: this.refreshForm,
 
       getInternalHooks: this.getInternalHooks,
     };
@@ -109,7 +111,7 @@ class ContextStore {
   public setFieldVisible = (name: FieldNamePath, visible: boolean) => {
     const field = this.getField(name);
 
-    field.setVisible(visible);
+    field && field.setVisible(visible);
   };
 
   public setFieldDisabled = (name: FieldNamePath, disabled: boolean) => {
@@ -171,6 +173,22 @@ class ContextStore {
 
       // 3. 通知更新
       this.notifyFieldReRender(finalStore);
+    }
+  };
+
+  public refreshForm = () => {
+    const { onRemoteValuesStart, onRemoteValuesEnd, mode, remoteValues } = this.formProps;
+    if (mode !== 'create' && remoteValues) {
+      const ctx = this.getCtx();
+      onRemoteValuesStart && onRemoteValuesStart();
+      triggerActionPlugin(ctx, remoteValues)
+        .then((fieldsValue: any) => {
+          ctx.form.setFieldsValue(fieldsValue);
+          onRemoteValuesEnd && onRemoteValuesEnd();
+        })
+        .catch(() => {
+          onRemoteValuesEnd && onRemoteValuesEnd();
+        });
     }
   };
 

@@ -20,7 +20,7 @@ export default {
   selectedRecords: '已选 {{count}} 项',
 
   // List
-  copyText: '拷贝',
+  copyText: '复制',
   addText: '添加',
   deleteText: '删除',
 };

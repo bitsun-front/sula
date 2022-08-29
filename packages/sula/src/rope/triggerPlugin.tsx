@@ -84,7 +84,6 @@ export const triggerPlugin = (
       transedConfig.props = assign({}, transedConfig.props, funcProps);
     }
   }
-
   // TODO
   return sula[name](transedConfig.type, ctx, transedConfig);
 };
@@ -134,7 +133,7 @@ export const triggerRenderPlugin = (
   }
 
   return (
-    <Space>
+    <Space size="10">
       {arrayConf.map((conf, index) => {
         const actionNode = triggerSingleRenderPlugin(lazyCtx, conf);
         return React.cloneElement(actionNode, { key: index });
@@ -185,7 +184,7 @@ export const ButtonListWrapper = ({children}: {children: Element | any}) => {
     <Menu>
       {
         moreOperate.map((item: any,index:number) => (
-          <Menu.Item key={index}>
+          <Menu.Item className='more-btn-action' key={index}>
             {item}
           </Menu.Item>
         ))

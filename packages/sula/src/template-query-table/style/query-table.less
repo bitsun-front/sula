@@ -23,6 +23,153 @@
   }
 }
 
+.queryFormContainer {
+  flex-shrink: 0 !important;
+  margin-right: 10px;
+  position: relative;
+  transition: 0.5s;
+  -webkit-transition: 0.5s; /* Safari */
+  .ant-form {
+    height: 100%;
+  }
+}
+
+// 滚动条
+/* 滚动槽（轨道）宽高 */
+.queryFormContainer::-webkit-scrollbar {
+  width: 5px; /*对垂直流动条有效*/
+  height: 5px; /*对水平流动条有效*/
+  // background-color:red
+}
+/* 滚动槽（轨道）样式 */
+.queryFormContainer::-webkit-scrollbar-track {
+  background-color: #ffffff;
+  border-radius: 8px;
+}
+
+/*定义滑块颜色、内阴影及圆角*/
+.queryFormContainer::-webkit-scrollbar-thumb {
+  border-radius: 7px;
+  background-color: #CECECE;
+}
+
+/*定义两端按钮的样式*/
+.queryFormContainer::-webkit-scrollbar-button {
+  display: none;
+}
+
+.queryFormContainer::-webkit-scrollbar-thumb:window-inactive {
+  background: #fff;
+}
+
+.queryFormCollapse {
+  position: absolute;
+  width: 9px;
+  height: 64px;
+  background-color: #ffffff;
+  border-radius: 0 4px 4px 0;
+  top: 50%;
+  margin-top: -64px;
+  right: 0px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.ant-popover {
+  z-index: 1055 !important;
+}
+
+
+.suitClass {
+  width: calc(100% - 303px);
+  flex-shrink: 1;
+  flex-grow: 1;
+}
+
+.table-bssula-summary {
+  position: absolute;
+  bottom: 48px;
+  left: 10px;
+
+  & > span {
+    display: inline-block;
+    margin-right: 20px;
+    font-family: PingFangSC-Regular;
+    font-weight: 400;
+    font-size: 14px;
+    color: #000000;
+    letter-spacing: 0;
+    text-align: left;
+    line-height: 20px;
+  }
+
+  &-count {
+    font-weight: 600;
+  }
+}
+
+.has-bssula-summary {
+  .ant-table-pagination.ant-pagination {
+    margin: 38px 0 16px 0;
+  }
+}
+
+.sula-table-status {
+  background-color: #ffffff;
+  height: 48px;
+  padding: 14px 0px 14px 0px;
+  position: absolute;
+  width: 100%;
+  left: 0px;
+  top: -48px;
+  z-index: 2;
+
+  div {
+    background: #F3F3F3;
+    height: 12px;
+  }
+
+  div {
+    display: inline-block;
+    padding-left: 10px;
+    width: 84px;
+    margin-right: 10px;
+    padding-bottom: 12px;
+    font-family: PingFangSC-Medium;
+    font-weight: 500;
+    font-size: 14px;
+    color: #000000;
+    background-color: #ffffff;
+    letter-spacing: 0;
+    line-height: 30px;
+    cursor: pointer;
+
+
+    &:first-child {
+      margin-left: 12px;
+    }
+  }
+
+  .span-active {
+    & > span {
+      color: #005CFF;
+      position: relative;
+    }
+
+    &>span::after {
+      position: absolute;
+      content: '';
+      bottom: -10px;
+      width: calc(100% + 10px);
+      left: -5px;
+      height: 2px;
+      background-color: #005CFF;
+    }
+    
+  }
+}
+
 .header-filter-radio {
   width: 260px;
   box-sizing: border-box;

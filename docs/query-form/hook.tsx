@@ -7,7 +7,7 @@ const queryFields = Array(10)
     return {
       name: `input${index}`,
       label: `Input${index}`,
-      field: 'input',
+      field: 'inputnumber',
     };
   });
 
@@ -27,6 +27,7 @@ const BasicDemo = () => {
       <div style={{ background: 'rgb(241, 242, 246)', padding: 16, marginTop: 16 }}>
         <QueryForm
           form={form}
+          isHorizontally={true}
           layout="horizontal"
           labelAlign="left"
           onValuesChange={(_, allValues) => {

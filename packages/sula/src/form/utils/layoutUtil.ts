@@ -1,3 +1,10 @@
+/*
+ * @Description: 
+ * @Author: rodchen
+ * @Date: 2022-04-17 20:21:59
+ * @LastEditTime: 2022-07-03 18:37:50
+ * @LastEditors: rodchen
+ */
 import isNumber from 'lodash/isNumber';
 import { ItemLayout, Layout, NormalizedItemLayout } from '../FieldGroup';
 
@@ -11,7 +18,7 @@ export function getItemLayout(
   const finalSpan = getItemSpan(itemLayout, matchedPonint);
 
   let finalOffset = isNumber(offset) ? offset : 0;
-  let finalGutter = isNumber(gutter) ? gutter : 24;
+  let finalGutter = isNumber(gutter) ? gutter : 0;    // 设置默认值
 
   let finalWrapperCol;
   let finalLabelCol;

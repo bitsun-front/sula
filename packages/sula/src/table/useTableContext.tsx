@@ -62,8 +62,28 @@ class ContextStore {
 
       refreshTable: this.refreshTable,
       resetTable: this.resetTable,
+
+      getExportParams: this.getExortParams,
     };
   };
+
+  public getExortParams = () => {
+    const {getSelectedRows} = this.getTable()
+    const { pagination, filters, sorter, selectedRowKeys } = this.getControls();
+    const finalSorter = omit(sorter, ['column', 'field']);
+    let params = pagination
+      ? {
+          pageSize: pagination.pageSize,
+          current: pagination.current,
+          filters,
+          sorter: finalSorter,
+        }
+      : {
+          filters,
+          sorter: finalSorter,
+        };
+    return params;
+  }
 
   public refreshTable = (
     pagination?: Pagination,
@@ -309,7 +329,7 @@ class ContextStore {
   private requestDataSource() {
     const { pagination, filters, sorter } = this.getControls();
     const finalSorter = omit(sorter, ['column', 'field']);
-    const params = pagination
+    let params = pagination
       ? {
           pageSize: pagination.pageSize,
           current: pagination.current,
@@ -320,6 +340,17 @@ class ContextStore {
           filters,
           sorter: finalSorter,
         };
+
+    if (typeof this.tableProps.triggerQueryData === 'function') {
+      const result = this.tableProps.triggerQueryData(filters);
+      params = {
+        ...params,
+        filters: {
+          ...filters,
+          ...(result || {})
+        }
+      }
+    }
 
     return triggerActionPlugin(
       this.getCtx(),

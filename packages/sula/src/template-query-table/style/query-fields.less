@@ -1,14 +1,149 @@
 @import (reference) '~antd/lib/style/themes/index';
+@labelwidth: 110px;
+@colwidth: 200px;
+
 
 .sula-template-query-table-fields {
   &-wrapper {
+    position: relative;
     border-radius: 2px 2px 0 0;
-    padding: 24px 24px 0 24px;
+    padding: 16px 8px 0;
+    // padding-right: 386px;
     background-color: @card-background;
     overflow: hidden;
+    display: flex;
+    align-items: baseline;
+
+    .ant-row {
+      flex-grow: 1;
+      flex-shrink: 1;
+      // max-width: 1554px;
+      // margin-right: 20px;
+      .ant-col-8 {
+        // flex: none;
+        // max-width: 386px;
+        order: 2;
+      }
+
+      .ant-form-item {
+        margin-right: 20px;
+        margin-bottom: 16px;
+      }
+
+      .ant-form-item-label {
+        width: 100px;
+        // max-width: @labelwidth;
+        // flex-basis: @labelwidth;
+        // flex: none;
+        order: 1;
+      }
+    
+      .ant-form-item-control {
+        // min-width: @colwidth;
+        // max-width: @colwidth;
+        // flex-basis: @colwidth;
+        // flex: none;
+        order: 2;
+        // width: 100%;
+        width: 100px;
+      }
+    }
+    .sula-form-action-right {
+      flex-grow: 0;
+      flex-shrink: 0;
+    }
   }
 
   &-divider {
     border-bottom: 1px solid @border-color-split;
   }
+}
+
+.isHorizontally {
+  height: 100%;
+  padding: 10px 0;
+  width: 288px;
+  display: inherit; //左右布局时取消form fields和action的flex布局
+  &>.ant-row {
+    padding: 0 20px;
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  
+  .sula-form-action-landscape {
+    width: 268px;
+    margin: 0 0 10px 20px;
+  }
+  .ant-row {
+    height: calc(100% - 96px);
+    display: inherit;
+    .ant-form-item {
+      margin-bottom: 5px !important;
+    }
+    .ant-form-item-control {
+      width: 248px !important;
+      max-width: 248px;
+      flex-basis: 248px;
+      flex: none;
+      order: 2;
+      margin-bottom: 6px;
+    }
+    .ant-form-item-label {
+      padding: 0px !important;
+    }
+  }
+
+  //  滚动条  
+/* 滚动槽（轨道）宽高 */
+.ant-row::-webkit-scrollbar {
+  width: 5px; /*对垂直流动条有效*/
+  height: 5px; /*对水平流动条有效*/
+  // background-color:red
+}
+/* 滚动槽（轨道）样式 */
+.ant-row::-webkit-scrollbar-track {
+  background-color: #ffffff;
+  border-radius: 8px;
+}
+
+/*定义滑块颜色、内阴影及圆角*/
+.ant-row::-webkit-scrollbar-thumb {
+  border-radius: 7px;
+  background-color: #CECECE;
+}
+
+/*定义两端按钮的样式*/
+.ant-row::-webkit-scrollbar-button {
+  display: none;
+}
+
+}
+
+.sula-template-query-table-collapsed {
+  position: relative;
+  top: 6px;
+  z-index: 10;
+  margin-bottom: 10px;
+  margin: 0 auto;
+  text-align: center;
+  font-size: 12px;
+
+  width:92px;
+  height: 0;            
+  border-top: 20px solid #FFFFFF;
+  border-left: 5px solid transparent;
+  border-right: 5px solid transparent;
+  border-radius: 100px;
+
+  a {
+    position: absolute;
+    width: 80px;
+    top: -20px;
+    left: 0px;
+  }
+}
+
+//统一解决form表单item之间间距 
+.ant-form-item {
+  margin-right: 20px !important;
 }

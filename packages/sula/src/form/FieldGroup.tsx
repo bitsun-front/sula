@@ -17,6 +17,9 @@ import { toArray } from '../_util/common';
 import FormAction from './FormAction';
 import { RenderPlugin } from '../types/plugin';
 import FormList from './FormList';
+import { CaretDownOutlined } from '@ant-design/icons';
+import arrow_top from '../assets/arrow_top.png';
+import './style/field.less';
 
 export type Layout = 'horizontal' | 'vertical' | 'inline';
 
@@ -64,6 +67,10 @@ export default class FieldGroup extends React.Component<FieldGroupProps> {
   private cancelRegisterField: () => void | null = null;
 
   private cancelRegisterFieldGroup: () => void | null = null;
+
+  state = {
+    fieldGroupVisible: true
+  }
 
   componentDidMount() {
     this.inited = true;
@@ -149,7 +156,7 @@ export default class FieldGroup extends React.Component<FieldGroupProps> {
       const fieldKey = fieldConfig.name || `${this.groupName}-field-${index}`;
       let fieldElem;
       if (fieldConfig.container || fieldConfig.fields) {
-        fieldElem = <FieldGroup {...fieldConfig} key={fieldKey} />;
+        fieldElem = <FieldGroup isFormPage={this.props.isFormPage} {...fieldConfig} key={fieldKey} />;
       } else if (fieldConfig.render) {
         // 认为是render
         const renderPlugin = fieldConfig.render;
@@ -200,8 +207,9 @@ export default class FieldGroup extends React.Component<FieldGroupProps> {
 
   private renderChildren = (ctx, props, extraConf) => {
     const { itemLayout } = extraConf;
-    const { fields } = props;
-    const { span, gutter } = itemLayout || {};
+    const { fields, isHorizontally, container, isFormPage } = props;
+    const { span, gutter } = itemLayout || { gutter: 0 };
+    itemLayout.gutter = itemLayout.gutter || 0; // 处理默认gutter值
 
     const children = fields ? this.transFieldToElems(ctx, fields) : props.children;
 
@@ -223,12 +231,64 @@ export default class FieldGroup extends React.Component<FieldGroupProps> {
       if (actionsElem) {
         return (
           <React.Fragment>
-            {children}
+            <div style={{display: this.state.fieldGroupVisible ? 'block' : 'none'}}>
+              {children}
+            </div>
             {actionsElem}
+            {
+              container?.props?.level === 2 && isFormPage ? 
+              <div style={{background: '#ffffff', textAlign: 'center'}}>
+                  <span 
+                    className='container-button'
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      this.setState({
+                        fieldGroupVisible: !this.state.fieldGroupVisible
+                      })
+                    }}
+                    >
+                    { container?.props?.title}
+                    <CaretDownOutlined 
+                      style={{
+                        transform: !this.state.fieldGroupVisible ? 'inherit' : 'rotate(180deg)',
+                        marginLeft: '5px'
+                      }} 
+                    />
+                  </span>
+              </div> : null
+            }
           </React.Fragment>
         );
       } else {
-        return children;
+        return (
+          <React.Fragment>
+            <div style={{display: this.state.fieldGroupVisible ? 'block' : 'none'}}>
+              {children}
+            </div>
+            {
+              container?.props?.level === 2 && isFormPage ? 
+              <div style={{background: '#ffffff', textAlign: 'center'}}>
+                <span 
+                    className='container-button'
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      this.setState({
+                        fieldGroupVisible: !this.state.fieldGroupVisible
+                      })
+                    }}
+                    >
+                    { container?.props?.title}
+                    <CaretDownOutlined 
+                      style={{
+                        transform: !this.state.fieldGroupVisible ? 'inherit' : 'rotate(180deg)',
+                        marginLeft: '5px'
+                      }} 
+                    />
+                  </span>
+              </div> : null
+            }
+          </React.Fragment>
+        );
       }
     }
 
@@ -279,12 +339,21 @@ export default class FieldGroup extends React.Component<FieldGroupProps> {
           </Row>,
         );
       } else {
-        finalChildren.push(
-          <Row gutter={gutter} key={rowKey}>
-            {groupFieldsElem}
-          </Row>,
-        );
-        finalChildren.push(actionsElem);
+        if (isHorizontally) {
+          finalChildren.push(
+            <Row gutter={gutter} key={rowKey}>
+              {groupFieldsElem}
+            </Row>,
+          );
+          finalChildren.push(actionsElem);
+        } else {
+          finalChildren.push(actionsElem);
+          finalChildren.push(
+            <Row gutter={gutter} key={rowKey}>
+              {groupFieldsElem}
+            </Row>,
+          );
+        }
       }
     }
 
@@ -292,8 +361,39 @@ export default class FieldGroup extends React.Component<FieldGroupProps> {
   };
 
   private renderFieldGroup = (ctx, props, extraConf) => {
-    const { container, isList } = props;
-    let finalContainer = container || {
+    const { container, isList, isFormPage } = props;
+    let defaultLevel = container?.props?.level || 1;
+    let finalContainer = container ? container.type === 'card' && isFormPage ? {
+      ...container,
+      props: {
+        ...container?.props,
+        title: defaultLevel === 1 ? (<>
+          <span className='title-left-line'></span>
+          <span style={{marginRight: '5px'}}>
+            {container?.props?.title}
+          </span>
+          <img 
+            width={24}
+            style={{
+              transform: this.state.fieldGroupVisible ? 'inherit' : 'rotate(180deg)',
+              cursor: 'pointer'
+            }}
+            src={arrow_top}
+            onClick={(e) => {
+              e.stopPropagation();
+              this.setState({
+                fieldGroupVisible: !this.state.fieldGroupVisible
+              })
+            }}
+          />
+        </>) : '',
+        className: `
+          bitsun-form-card-class 
+          ${!this.state.fieldGroupVisible && defaultLevel === 1 ? 'field-group-hidden' : ''} 
+          ${ container?.props?.isWhiteCard ? 'white-card' : ''}
+          `,
+      }
+    } : container : {
       type: () => (this.hasDependency ? <div /> : <React.Fragment />),
     };
 
@@ -302,7 +402,7 @@ export default class FieldGroup extends React.Component<FieldGroupProps> {
     }
 
     let containerNode = triggerRenderPlugin(ctx, finalContainer);
-
+    
     const children = isList ? props.children : this.renderChildren(ctx, props, extraConf);
 
     containerNode = React.cloneElement(containerNode as React.ReactElement, {
