@@ -357,7 +357,7 @@ export default class QueryTable extends React.Component<Props> {
               src={arrow_top}
               style={{
                 width: '14px',
-                transform: showSideMenu ? 'rotate(90deg)' : 'rotate(270deg)'
+                transform: showSideMenu ? 'rotate(270deg)' : 'rotate(90deg)'
               }}
             />
           </div>
