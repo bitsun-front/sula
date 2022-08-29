@@ -1,5 +1,6 @@
 import React from 'react';
 import { QueryTable, request } from 'sula';
+import { Button } from 'antd';
 import { UserOutlined } from '@ant-design/icons';
 
 const queryFields: QueryTableProps['fields'] = [
@@ -392,6 +393,10 @@ export default class BasicDemo extends React.Component {
   componentDidMount() {
   }
 
+  test = () => {
+    console.log(this.ref.current.getExportParams())
+  }
+
   updateData = (filters) => {
     request({
       url: 'https://jsonplaceholder.typicode.com/todos/1',
@@ -417,8 +422,10 @@ export default class BasicDemo extends React.Component {
     const { summaryTotal, statusNum } = this.state;
     return (
       <div style={{ background: 'rgb(241, 242, 246)', padding: 16, marginTop: 16 }}>
+        <Button onClick={this.test}>测试</Button>
         <span>我是现在的状态{statusNum}</span>
         <QueryTable
+          rowSelection={{}}
           triggerQueryData={(filters) => {
             this.updateData(filters)
           }}
