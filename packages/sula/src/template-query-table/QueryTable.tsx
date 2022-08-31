@@ -117,10 +117,11 @@ export default class QueryTable extends React.Component<Props> {
       const clientHeight = document.documentElement.clientHeight;
       const outerHeight = window.screen.height;
       let newHeight = 500;
+      let cancelHeight = window.top == window ? 142 : 62;
       if (isFullScreen) {
-        newHeight = outerHeight - 142;
+        newHeight = outerHeight - cancelHeight;
       } else {
-        newHeight = clientHeight - 142;
+        newHeight = clientHeight - cancelHeight;
       }
       this.setState({
         sliderFormHeight: newHeight
@@ -513,7 +514,7 @@ export default class QueryTable extends React.Component<Props> {
     }
     //当筛选条件项存在
     if (source) {
-      if (typeof(value) === 'number' || typeof(value) === 'string') {
+      if (typeof(value) === 'number' || typeof(value) === 'string' || typeof(value) === 'boolean') {
         return this.getSourceName(source, value);
       }
       if (Array.isArray(value)) {
