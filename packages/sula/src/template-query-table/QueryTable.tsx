@@ -560,7 +560,7 @@ export default class QueryTable extends React.Component<Props> {
     let currentFieldsValue = getFieldsValue(true);
     this.tableRef?.current?.setFilters({[item.key]: item.value});
     this.tableRef?.current?.clearRowSelection();
-    this.tableRef?.current?.refreshTable(null, currentFieldsValue, null, true);
+    this.tableRef?.current?.refreshTable({current: 1}, currentFieldsValue, null, true);
   };
 
 

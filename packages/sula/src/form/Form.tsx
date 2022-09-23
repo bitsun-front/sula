@@ -262,7 +262,7 @@ const Form: React.FunctionComponent<FormProps> = (props, ref) => {
                   className='form-guide'
                 >
                   <div className='form-guide-top'>
-                    <img src={dragImg} />
+                    <img width={28} src={dragImg} />
                   </div>
                   <div className='form-guide-center'>
                     {
