@@ -179,7 +179,7 @@ const RefTable: React.FunctionComponent<TableProps> = (props, ref) => {
     };
   }
 
-  // 1.x版本屏蔽该功能
+  //  1.x版本屏蔽该功能
   const judgeIsEmpty = (value: any) => {
     if (value == null || value == undefined || String(value).trim() == '') {
       return true;
