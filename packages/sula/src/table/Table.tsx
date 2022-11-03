@@ -190,6 +190,7 @@ const RefTable: React.FunctionComponent<TableProps> = (props, ref) => {
   const filterFields = Object.keys(filterValues).filter(item => {
     let formFields = props.queryFormFields || [];
     if (formFields.find(field => item === field.name)?.notShowLabel) return false;
+    // 自定义扩展字段不展示查询label
     if (item === 'extensionFields') return false;
     return !judgeIsEmpty(filterValues[item]);
   });
