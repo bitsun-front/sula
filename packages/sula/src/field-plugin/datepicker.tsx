@@ -43,7 +43,8 @@ export default class SulaTimePicker extends React.Component<SulaDatePickerProps>
       }
     }
     return (
-      <DatePicker 
+      <DatePicker
+      allowClear 
       {...restProps}
       {...(valueFormat ? { onChange: this.onFormatChange } : {})}
       value={finalValue}

@@ -38,6 +38,7 @@ export default class SulaTimePicker extends React.Component<SulaTimePickerProps>
     }
     return (
       <TimePicker
+        allowClear
         {...restProps}
         {...(valueFormat ? { onChange: this.onFormatChange } : {})}
         value={finalValue}

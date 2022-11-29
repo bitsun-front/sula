@@ -26,6 +26,6 @@ export default class Cascader extends React.Component<CascaderProps> {
 
   render() {
     const { source = [], ...restProps } = this.props;
-    return <ACascader options={source} {...restProps} />;
+    return <ACascader allowClear options={source} {...restProps} />;
   }
 }

@@ -33,7 +33,7 @@ export default class TreeSelect extends React.Component<TreeSelectProps> {
   render() {
     const { source = [], ...restProps } = this.props;
     return (
-      <ATreeSelect {...restProps}>
+      <ATreeSelect allowClear {...restProps}>
         {source.map((item) => {
           return this.renderTreeNode(item);
         })}
