@@ -40,8 +40,8 @@ function registerFieldPlugins() {
   registerFieldPlugin('timepicker')(TimePicker, true, true);
   registerFieldPlugin('upload')(Upload, false, true);
   registerFieldPlugin('select')(Select, true, true);
-  registerFieldPlugin('checkboxgroup')(CheckboxGroup, true);
-  registerFieldPlugin('radiogroup')(RadioGroup, true);
+  registerFieldPlugin('checkboxgroup')(CheckboxGroup, true,true);
+  registerFieldPlugin('radiogroup')(RadioGroup, true,true);
 
   registerFieldPlugin('editable')(Editable, false, true);
 
