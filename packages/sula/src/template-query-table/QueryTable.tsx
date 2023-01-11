@@ -114,14 +114,16 @@ export default class QueryTable extends React.Component<Props> {
 
   setSliderFormHeight = (isFullScreen: boolean) => {
     setTimeout(() => {
-      const clientHeight = document.documentElement.clientHeight;
+      const clientHeight = window.top == window ? window.top?.document.body.clientHeight : (window.top?.document.body.clientHeight || 700) - 76;
+      let listTabHeight = document.querySelector(`.ant-tabs-tabpane-active .list_top_tab .ant-tabs-nav`) ? 
+          (document.querySelector(`.ant-tabs-tabpane-active .list_top_tab .ant-tabs-nav`)?.clientHeight || 48) : 0;
       const outerHeight = window.screen.height;
       let newHeight = 500;
       let cancelHeight = window.top == window ? 142 : 62;
       if (isFullScreen) {
-        newHeight = outerHeight - cancelHeight;
+        newHeight = outerHeight - cancelHeight - listTabHeight;
       } else {
-        newHeight = clientHeight - cancelHeight;
+        newHeight = clientHeight - cancelHeight - listTabHeight;
       }
       this.setState({
         sliderFormHeight: newHeight
