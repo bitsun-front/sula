@@ -5,7 +5,8 @@ import { RadioGroupProps as ARadioGroupProps, RadioProps } from 'antd/lib/radio'
 const RadioGroup = Radio.Group;
 
 type RadioItemProps = {
-  text: string;
+  text?: string;
+  label?: string;
 } & RadioProps;
 
 export interface RadioGroupProps extends ARadioGroupProps {
@@ -14,14 +15,16 @@ export interface RadioGroupProps extends ARadioGroupProps {
 
 export default class SulaRadioGroup extends React.Component<RadioGroupProps> {
   getValue = (props) => {
-    const { source = [], value } = props;
-    const getItem = (key) => source.find(item => item.value == key);
+    const { source = [], options = [], value } = props;
+    const handleSource = source?.length && source || options;
+    const getItem = (key) => handleSource.find(item => item.value == key);
     const getShowText = (key) => getItem(key)?.text || getItem(key)?.label || key;
     return Array.isArray(value) ? value.map(itemValue => getShowText(itemValue)).join(',') : getShowText(value);
   }
 
   render() {
-    const { source = [], ctx, viewPageEdit=false, ...restProps } = this.props;
+    const { source = [], options = [], ctx, viewPageEdit=false, ...restProps } = this.props;
+    const handleSource = source?.length && source || options;
     return ctx?.mode === 'view' && !viewPageEdit ?
       <span
         style={{
@@ -33,7 +36,7 @@ export default class SulaRadioGroup extends React.Component<RadioGroupProps> {
         {this.getValue(this.props)}
       </span> : (
         <RadioGroup {...restProps}>
-          {source.map((item: RadioItemProps) => {
+          {handleSource.map((item: RadioItemProps) => {
             const { text, label, value, ...restProps } = item;
             return <Radio value={value} key={value} {...restProps}>{text || label}</Radio>;
           })}

@@ -18,10 +18,10 @@ export interface SelectProps extends ASelectProps<any> {
 
 export default class Select extends React.Component<SelectProps> {
   renderOption = (item: SelectSourceItem) => {
-    const { text, value, ...restProps } = item;
+    const { text, label, value, ...restProps } = item;
     return (
       <ASelect.Option value={value} key={value} {...restProps}>
-        {text}
+        {text || label}
       </ASelect.Option>
     );
   };
@@ -37,25 +37,25 @@ export default class Select extends React.Component<SelectProps> {
   };
 
   getFinalValueLabel = (props) => {
-    const { source = [], value } = props;
+    const { source = [], options = [], value } = props;
+    const handleSource = source?.length && source || options;
     let newSource: any[] = [];
-    source.map(item => {
+    handleSource.map(item => {
       if ((item as SelectGroupItem).children) {
         newSource.push([...item.children])
       } else {
         newSource.push(item);
       }
     })
-    return Array.isArray(value) ? 
-    value.map(itemValue => newSource.find(item => item.value === itemValue)?.text || itemValue)
-    .join(',')
-     :
-    newSource.find(item => item.value === value)?.text || value;
+    const getItem = (key) => newSource.find(item => item.value == key);
+    const getShowText = (key) => getItem(key)?.text || getItem(key)?.label || key;
+    return Array.isArray(value) ? value.map(itemValue => getShowText(itemValue)).join(',') : getShowText(value);
   }
 
   render() {
-    const { source = [], ctx, viewPageEdit=false, ...restProps } = this.props;
-    return ctx?.mode === 'view' && !viewPageEdit ? 
+    const { source = [], options = [], ctx, viewPageEdit=false, ...restProps } = this.props;
+    const handleSource = source?.length && source || options;
+    return ctx?.mode === 'view' && !viewPageEdit ?
       <span
         style={{
           fontSize: '14px',
@@ -66,7 +66,7 @@ export default class Select extends React.Component<SelectProps> {
         {this.getFinalValueLabel(this.props)}
       </span> : (
       <ASelect {...restProps} >
-        {source.map((item) => {
+        {handleSource.map((item) => {
           if ((item as SelectGroupItem).children) {
             return this.renderGroupOptions(item as SelectGroupItem);
           }
