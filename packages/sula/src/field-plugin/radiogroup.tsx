@@ -15,11 +15,9 @@ export interface RadioGroupProps extends ARadioGroupProps {
 export default class SulaRadioGroup extends React.Component<RadioGroupProps> {
   getValue = (props) => {
     const { source = [], value } = props;
-    return Array.isArray(value) ?
-      value.map(itemValue => source.find(item => item.value === itemValue)?.text || itemValue)
-        .join(',')
-      :
-      source.find(item => item.value === value)?.text || value;
+    const getItem = (key) => source.find(item => item.value == key);
+    const getShowText = (key) => getItem(key)?.text || getItem(key)?.label || key;
+    return Array.isArray(value) ? value.map(itemValue => getShowText(itemValue)).join(',') : getShowText(value);
   }
 
   render() {
@@ -36,8 +34,8 @@ export default class SulaRadioGroup extends React.Component<RadioGroupProps> {
       </span> : (
         <RadioGroup {...restProps}>
           {source.map((item: RadioItemProps) => {
-            const { text, value, ...restProps } = item;
-            return <Radio value={value} key={value} {...restProps}>{text}</Radio>;
+            const { text, label, value, ...restProps } = item;
+            return <Radio value={value} key={value} {...restProps}>{text || label}</Radio>;
           })}
         </RadioGroup>
       );

@@ -6,11 +6,9 @@ const CheckboxGroup = Checkbox.Group;
 export default class SulaCheckboxGroup extends React.Component {
   getValue = (props) => {
     const { source = [], value } = props;
-    return Array.isArray(value) ?
-      value.map(itemValue => source.find(item => item.value === itemValue)?.text || itemValue)
-        .join(',')
-      :
-      source.find(item => item.value === value)?.text || value;
+    const getItem = (key) => source.find(item => item.value == key);
+    const getShowText = (key) => getItem(key)?.text || getItem(key)?.label || key;
+    return Array.isArray(value) ? value.map(itemValue => getShowText(itemValue)).join(',') : getShowText(value);
   }
 
   render() {
@@ -30,7 +28,7 @@ export default class SulaCheckboxGroup extends React.Component {
         options={source.map((item) => {
           return {
             ...item,
-            label: item.text,
+            label: item.text || item.label,
           };
         })}
       />
